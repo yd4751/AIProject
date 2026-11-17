@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% set active = 'subs' %}
+{% block title %}订阅 · NewsStation{% endblock %}
+
+{% block content %}
+<section class="pagehead">
+  <div>
+    <h1>订阅</h1>
+    <p class="hint">关键字或标签命中新报道时记入站内时间线；配了 SMTP 再发一封合并摘要</p>
+  </div>
+  <form method="post" action="/fetch"><button type="submit">立即抓取并匹配</button></form>
+</section>
+
+{% if added %}<div class="notice">订阅已添加，下一轮抓取后开始匹配。</div>{% endif %}
+{% if error %}<div class="notice err">关键字与标签至少要填一个。</div>{% endif %}
+
+<section class="card">
+  <div class="card-head">
+    <h2>新增订阅</h2>
+    <span class="hint">关键字与标签同时填写时取「并且」</span>
+  </div>
+  <form method="post" action="/subscriptions/add" class="subform">
+    <div class="field">
+      <label for="keyword">关键字</label>
+      <input id="keyword" name="keyword" type="text" placeholder="英伟达, 财报 | NVIDIA">
+      <span class="hint">逗号或竖线分隔多个词，任一命中即可；匹配标题与摘要，英文不区分大小写</span>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label for="f-region">地区</label>
+        <select id="f-region" name="region">
+          <option value="">不限</option>
+          {% for o in options.region %}<option value="{{ o.value }}">{{ o.label }}</option>{% endfor %}
+        </select>
+      </div>
+      <div class="field">
+        <label for="f-industry">行业</label>
+        <select id="f-industry" name="industry">
+          <option value="">不限</option>
+          {% for o in options.industry %}<option value="{{ o.value }}">{{ o.label }}</option>{% endfor %}
+        </select>
+      </div>
+      <div class="field">
+        <label for="f-type">类型</label>
+        <select id="f-type" name="type">
+          <option value="">不限</option>
+          {% for o in options.type %}<option value="{{ o.value }}">{{ o.label }}</option>{% endfor %}
+        </select>
+      </div>
+    </div>
+    <div class="subform-foot">
+      <label class="check"><input type="checkbox" name="notify_email" checked> 邮件通知</label>
+      <button type="submit">添加订阅</button>
+      <span class="hint">{% if smtp_enabled %}SMTP 已配置：每轮抓取合成一封摘要，每订阅最多 {{ max_per_sub }} 条。{% else %}未配置 smtp.pass，当前仅站内通知（命中照常记录，不发邮件）。{% endif %}</span>
+    </div>
+  </form>
+</section>
+
+<section class="card">
+  <div class="card-head"><h2>我的订阅</h2><span class="hint">共 {{ subs|length }} 条</span></div>
+  <table class="tbl sublist">
+    <thead>
+      <tr><th>订阅</th><th>未读</th><th>创建</th><th>最近命中</th><th class="r">操作</th></tr>
+    </thead>
+    <tbody>
+      {% for s in subs %}
+      <tr>
+        <td>
+          <span class="name">{{ s.description }}</span>
+          <span class="id">#{{ s.id }} · {% if s.notify_email %}含邮件{% else %}仅站内{% endif %}</span>
+        </td>
+        <td>
+          {% if s.unread_count %}<span class="unread-badge static">{{ s.unread_count }} 未读</span>
+          {% else %}<span class="muted">已读</span>{% endif %}
+        </td>
+        <td>{{ s.created_at | localtime }}</td>
+        <td>{{ s.last_matched_at | localtime }}</td>
+        <td class="r nowrap">
+          {% if s.unread_count %}
+          <form class="inline-form" method="post" action="/subscriptions/{{ s.id }}/read"><button class="mini">标记已读</button></form>
+          {% endif %}
+          <form class="inline-form" method="post" action="/subscriptions/{{ s.id }}/delete"><button class="mini danger">删除</button></form>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="5" class="muted">还没有订阅，用上面的表单加一条。</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+
+<section class="card">
+  <div class="card-head"><h2>命中时间线</h2><span class="hint">最近 {{ hits|length }} 条 · 点击在站内阅读全文</span></div>
+  <ul class="hits">
+    {% for h in hits %}
+    <li class="hit {{ 'unread' if h.unread else '' }}">
+      <div class="meta">
+        <span class="chip">{{ h.description }}</span>
+        <span>热度 {{ '%.2f'|format(h.heat) }}</span>
+        <span>{{ h.matched_at | localtime }}</span>
+        {% if h.unread %}<span class="unread-badge static">新</span>{% endif %}
+      </div>
+      <a class="title" {{ tr_attr(h.title) }} href="{{ read_url(h.url) }}" data-read title="在站内阅读全文">{{ h.title }}</a>
+    </li>
+    {% else %}
+    <li class="muted">暂无命中。点右上角「立即抓取并匹配」，命中会出现在这里。</li>
+    {% endfor %}
+  </ul>
+</section>
+{% endblock %}

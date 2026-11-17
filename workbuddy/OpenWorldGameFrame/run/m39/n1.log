@@ -1,0 +1,509 @@
+time=2026-11-04T09:04:22.256+08:00 level=INFO msg="id partition" stride=4 offset=0 node=n1 maxNodes=4
+time=2026-11-04T09:04:22.266+08:00 level=INFO msg="remote scene declared" scene=2 node=n2 bounds=[512,0)-[1024,512)
+time=2026-11-04T09:04:22.266+08:00 level=INFO msg="remote scene declared" scene=3 node=n3 bounds=[1024,0)-[1536,512)
+time=2026-11-04T09:04:22.266+08:00 level=INFO msg="mobs spawned" scene=1 count=50 radius=200
+time=2026-11-04T09:04:22.266+08:00 level=INFO msg="openworld server starting" instance="" zone="" node=n1 nodeAddr=127.0.0.1:7003 disc=file discDir=run/m39/nodes scenes=1 gate=:7001 admin=:7002 tick=50ms go=go1.23.1
+time=2026-11-04T09:04:22.266+08:00 level=INFO msg="tcp server listening" addr=127.0.0.1:7003
+time=2026-11-04T09:04:22.267+08:00 level=INFO msg="component started" component=mesh
+time=2026-11-04T09:04:22.270+08:00 level=INFO msg="registered to discovery" node=n1 addr=127.0.0.1:7003 kind=file
+time=2026-11-04T09:04:22.270+08:00 level=INFO msg="component started" component=discovery
+time=2026-11-04T09:04:22.270+08:00 level=INFO msg="scene started" scene=1 tick=50ms systems=5
+time=2026-11-04T09:04:22.270+08:00 level=INFO msg="component started" component=scene-1
+time=2026-11-04T09:04:22.270+08:00 level=INFO msg="component started" component=dyn-scenes
+time=2026-11-04T09:04:22.283+08:00 level=INFO msg="tcp dial ok" addr=127.0.0.1:7103 remote=127.0.0.1:7103
+time=2026-11-04T09:04:22.283+08:00 level=INFO msg="member view changed" alive="[n1 n2]" joined=[] lost=[n3] scenes=2
+time=2026-11-04T09:04:22.784+08:00 level=INFO msg="tcp dial ok" addr=127.0.0.1:7203 remote=127.0.0.1:7203
+time=2026-11-04T09:04:23.085+08:00 level=INFO msg="component started" component=topo-reconcile
+time=2026-11-04T09:04:23.085+08:00 level=INFO msg="tcp server listening" addr=[::]:7001
+time=2026-11-04T09:04:23.085+08:00 level=INFO msg="component started" component=gate
+time=2026-11-04T09:04:23.085+08:00 level=INFO msg="admin server listening" addr=[::]:7002 endpoints="[/healthz /readyz /admin/state /admin/drain /admin/shutdown /metrics]"
+time=2026-11-04T09:04:23.085+08:00 level=INFO msg="component started" component=admin
+time=2026-11-04T09:04:23.085+08:00 level=INFO msg="app started" name=openworld-server components=7 uptime_from=2026-11-04T09:04:22+08:00
+time=2026-11-04T09:04:23.287+08:00 level=INFO msg="member view changed" alive="[n1 n2 n3]" joined=[n3] lost=[] scenes=3
+time=2026-11-04T09:04:39.463+08:00 level=INFO msg="login ok" conn=1 player=bot-0 remote=127.0.0.1:59179
+time=2026-11-04T09:04:39.464+08:00 level=INFO msg="enter scene" player=bot-0 entity=204 scene=1 node=n1
+time=2026-11-04T09:04:39.465+08:00 level=INFO msg="login ok" conn=2 player=bot-1 remote=127.0.0.1:59180
+time=2026-11-04T09:04:39.465+08:00 level=INFO msg="enter scene" player=bot-1 entity=208 scene=1 node=n1
+time=2026-11-04T09:04:39.470+08:00 level=INFO msg="login ok" conn=3 player=bot-2 remote=127.0.0.1:59181
+time=2026-11-04T09:04:39.470+08:00 level=INFO msg="enter scene" player=bot-2 entity=212 scene=1 node=n1
+time=2026-11-04T09:04:39.475+08:00 level=INFO msg="login ok" conn=4 player=bot-3 remote=127.0.0.1:59182
+time=2026-11-04T09:04:39.475+08:00 level=INFO msg="enter scene" player=bot-3 entity=216 scene=1 node=n1
+time=2026-11-04T09:04:39.480+08:00 level=INFO msg="login ok" conn=5 player=bot-4 remote=127.0.0.1:59183
+time=2026-11-04T09:04:39.481+08:00 level=INFO msg="enter scene" player=bot-4 entity=220 scene=1 node=n1
+time=2026-11-04T09:04:39.485+08:00 level=INFO msg="login ok" conn=6 player=bot-5 remote=127.0.0.1:59184
+time=2026-11-04T09:04:39.485+08:00 level=INFO msg="enter scene" player=bot-5 entity=224 scene=1 node=n1
+time=2026-11-04T09:04:39.490+08:00 level=INFO msg="login ok" conn=7 player=bot-6 remote=127.0.0.1:59185
+time=2026-11-04T09:04:39.490+08:00 level=INFO msg="enter scene" player=bot-6 entity=228 scene=1 node=n1
+time=2026-11-04T09:04:39.495+08:00 level=INFO msg="login ok" conn=8 player=bot-7 remote=127.0.0.1:59186
+time=2026-11-04T09:04:39.495+08:00 level=INFO msg="enter scene" player=bot-7 entity=232 scene=1 node=n1
+time=2026-11-04T09:04:39.500+08:00 level=INFO msg="login ok" conn=9 player=bot-8 remote=127.0.0.1:59187
+time=2026-11-04T09:04:39.500+08:00 level=INFO msg="enter scene" player=bot-8 entity=236 scene=1 node=n1
+time=2026-11-04T09:04:39.505+08:00 level=INFO msg="login ok" conn=10 player=bot-9 remote=127.0.0.1:59188
+time=2026-11-04T09:04:39.505+08:00 level=INFO msg="enter scene" player=bot-9 entity=240 scene=1 node=n1
+time=2026-11-04T09:04:39.510+08:00 level=INFO msg="login ok" conn=11 player=bot-10 remote=127.0.0.1:59189
+time=2026-11-04T09:04:39.510+08:00 level=INFO msg="enter scene" player=bot-10 entity=244 scene=1 node=n1
+time=2026-11-04T09:04:39.515+08:00 level=INFO msg="login ok" conn=12 player=bot-11 remote=127.0.0.1:59190
+time=2026-11-04T09:04:39.515+08:00 level=INFO msg="enter scene" player=bot-11 entity=248 scene=1 node=n1
+time=2026-11-04T09:04:39.520+08:00 level=INFO msg="login ok" conn=13 player=bot-12 remote=127.0.0.1:59191
+time=2026-11-04T09:04:39.520+08:00 level=INFO msg="enter scene" player=bot-12 entity=252 scene=1 node=n1
+time=2026-11-04T09:04:39.526+08:00 level=INFO msg="login ok" conn=14 player=bot-13 remote=127.0.0.1:59192
+time=2026-11-04T09:04:39.526+08:00 level=INFO msg="enter scene" player=bot-13 entity=256 scene=1 node=n1
+time=2026-11-04T09:04:39.530+08:00 level=INFO msg="login ok" conn=15 player=bot-14 remote=127.0.0.1:59193
+time=2026-11-04T09:04:39.531+08:00 level=INFO msg="enter scene" player=bot-14 entity=260 scene=1 node=n1
+time=2026-11-04T09:04:39.535+08:00 level=INFO msg="login ok" conn=16 player=bot-15 remote=127.0.0.1:59194
+time=2026-11-04T09:04:39.536+08:00 level=INFO msg="enter scene" player=bot-15 entity=264 scene=1 node=n1
+time=2026-11-04T09:04:39.540+08:00 level=INFO msg="login ok" conn=17 player=bot-16 remote=127.0.0.1:59195
+time=2026-11-04T09:04:39.540+08:00 level=INFO msg="enter scene" player=bot-16 entity=268 scene=1 node=n1
+time=2026-11-04T09:04:39.545+08:00 level=INFO msg="login ok" conn=18 player=bot-17 remote=127.0.0.1:59196
+time=2026-11-04T09:04:39.545+08:00 level=INFO msg="enter scene" player=bot-17 entity=272 scene=1 node=n1
+time=2026-11-04T09:04:39.550+08:00 level=INFO msg="login ok" conn=19 player=bot-18 remote=127.0.0.1:59197
+time=2026-11-04T09:04:39.550+08:00 level=INFO msg="enter scene" player=bot-18 entity=276 scene=1 node=n1
+time=2026-11-04T09:04:39.556+08:00 level=INFO msg="login ok" conn=20 player=bot-19 remote=127.0.0.1:59198
+time=2026-11-04T09:04:39.556+08:00 level=INFO msg="enter scene" player=bot-19 entity=280 scene=1 node=n1
+time=2026-11-04T09:04:39.560+08:00 level=INFO msg="login ok" conn=21 player=bot-20 remote=127.0.0.1:59199
+time=2026-11-04T09:04:39.560+08:00 level=INFO msg="enter scene" player=bot-20 entity=284 scene=1 node=n1
+time=2026-11-04T09:04:39.565+08:00 level=INFO msg="login ok" conn=22 player=bot-21 remote=127.0.0.1:59200
+time=2026-11-04T09:04:39.566+08:00 level=INFO msg="enter scene" player=bot-21 entity=288 scene=1 node=n1
+time=2026-11-04T09:04:39.570+08:00 level=INFO msg="login ok" conn=23 player=bot-22 remote=127.0.0.1:59201
+time=2026-11-04T09:04:39.570+08:00 level=INFO msg="enter scene" player=bot-22 entity=292 scene=1 node=n1
+time=2026-11-04T09:04:39.575+08:00 level=INFO msg="login ok" conn=24 player=bot-23 remote=127.0.0.1:59202
+time=2026-11-04T09:04:39.575+08:00 level=INFO msg="enter scene" player=bot-23 entity=296 scene=1 node=n1
+time=2026-11-04T09:04:39.581+08:00 level=INFO msg="login ok" conn=25 player=bot-24 remote=127.0.0.1:59203
+time=2026-11-04T09:04:39.581+08:00 level=INFO msg="enter scene" player=bot-24 entity=300 scene=1 node=n1
+time=2026-11-04T09:04:39.586+08:00 level=INFO msg="login ok" conn=26 player=bot-25 remote=127.0.0.1:59204
+time=2026-11-04T09:04:39.586+08:00 level=INFO msg="enter scene" player=bot-25 entity=304 scene=1 node=n1
+time=2026-11-04T09:04:39.591+08:00 level=INFO msg="login ok" conn=27 player=bot-26 remote=127.0.0.1:59205
+time=2026-11-04T09:04:39.591+08:00 level=INFO msg="enter scene" player=bot-26 entity=308 scene=1 node=n1
+time=2026-11-04T09:04:39.595+08:00 level=INFO msg="login ok" conn=28 player=bot-27 remote=127.0.0.1:59206
+time=2026-11-04T09:04:39.596+08:00 level=INFO msg="enter scene" player=bot-27 entity=312 scene=1 node=n1
+time=2026-11-04T09:04:39.601+08:00 level=INFO msg="login ok" conn=29 player=bot-28 remote=127.0.0.1:59207
+time=2026-11-04T09:04:39.601+08:00 level=INFO msg="enter scene" player=bot-28 entity=316 scene=1 node=n1
+time=2026-11-04T09:04:39.605+08:00 level=INFO msg="login ok" conn=30 player=bot-29 remote=127.0.0.1:59208
+time=2026-11-04T09:04:39.605+08:00 level=INFO msg="enter scene" player=bot-29 entity=320 scene=1 node=n1
+time=2026-11-04T09:04:39.610+08:00 level=INFO msg="login ok" conn=31 player=bot-30 remote=127.0.0.1:59209
+time=2026-11-04T09:04:39.610+08:00 level=INFO msg="enter scene" player=bot-30 entity=324 scene=1 node=n1
+time=2026-11-04T09:04:39.616+08:00 level=INFO msg="login ok" conn=32 player=bot-31 remote=127.0.0.1:59210
+time=2026-11-04T09:04:39.616+08:00 level=INFO msg="enter scene" player=bot-31 entity=328 scene=1 node=n1
+time=2026-11-04T09:04:39.620+08:00 level=INFO msg="login ok" conn=33 player=bot-32 remote=127.0.0.1:59211
+time=2026-11-04T09:04:39.621+08:00 level=INFO msg="enter scene" player=bot-32 entity=332 scene=1 node=n1
+time=2026-11-04T09:04:39.625+08:00 level=INFO msg="login ok" conn=34 player=bot-33 remote=127.0.0.1:59212
+time=2026-11-04T09:04:39.625+08:00 level=INFO msg="enter scene" player=bot-33 entity=336 scene=1 node=n1
+time=2026-11-04T09:04:39.633+08:00 level=INFO msg="login ok" conn=35 player=bot-34 remote=127.0.0.1:59213
+time=2026-11-04T09:04:39.633+08:00 level=INFO msg="enter scene" player=bot-34 entity=340 scene=1 node=n1
+time=2026-11-04T09:04:39.636+08:00 level=INFO msg="login ok" conn=36 player=bot-35 remote=127.0.0.1:59214
+time=2026-11-04T09:04:39.636+08:00 level=INFO msg="enter scene" player=bot-35 entity=344 scene=1 node=n1
+time=2026-11-04T09:04:39.641+08:00 level=INFO msg="login ok" conn=37 player=bot-36 remote=127.0.0.1:59215
+time=2026-11-04T09:04:39.641+08:00 level=INFO msg="enter scene" player=bot-36 entity=348 scene=1 node=n1
+time=2026-11-04T09:04:39.646+08:00 level=INFO msg="login ok" conn=38 player=bot-37 remote=127.0.0.1:59216
+time=2026-11-04T09:04:39.646+08:00 level=INFO msg="enter scene" player=bot-37 entity=352 scene=1 node=n1
+time=2026-11-04T09:04:39.651+08:00 level=INFO msg="login ok" conn=39 player=bot-38 remote=127.0.0.1:59217
+time=2026-11-04T09:04:39.652+08:00 level=INFO msg="enter scene" player=bot-38 entity=356 scene=1 node=n1
+time=2026-11-04T09:04:39.656+08:00 level=INFO msg="login ok" conn=40 player=bot-39 remote=127.0.0.1:59218
+time=2026-11-04T09:04:39.656+08:00 level=INFO msg="enter scene" player=bot-39 entity=360 scene=1 node=n1
+time=2026-11-04T09:04:39.661+08:00 level=INFO msg="login ok" conn=41 player=bot-40 remote=127.0.0.1:59219
+time=2026-11-04T09:04:39.661+08:00 level=INFO msg="enter scene" player=bot-40 entity=364 scene=1 node=n1
+time=2026-11-04T09:04:39.666+08:00 level=INFO msg="login ok" conn=42 player=bot-41 remote=127.0.0.1:59220
+time=2026-11-04T09:04:39.666+08:00 level=INFO msg="enter scene" player=bot-41 entity=368 scene=1 node=n1
+time=2026-11-04T09:04:39.671+08:00 level=INFO msg="login ok" conn=43 player=bot-42 remote=127.0.0.1:59221
+time=2026-11-04T09:04:39.671+08:00 level=INFO msg="enter scene" player=bot-42 entity=372 scene=1 node=n1
+time=2026-11-04T09:04:39.676+08:00 level=INFO msg="login ok" conn=44 player=bot-43 remote=127.0.0.1:59222
+time=2026-11-04T09:04:39.676+08:00 level=INFO msg="enter scene" player=bot-43 entity=376 scene=1 node=n1
+time=2026-11-04T09:04:39.682+08:00 level=INFO msg="login ok" conn=45 player=bot-44 remote=127.0.0.1:59223
+time=2026-11-04T09:04:39.682+08:00 level=INFO msg="enter scene" player=bot-44 entity=380 scene=1 node=n1
+time=2026-11-04T09:04:39.686+08:00 level=INFO msg="login ok" conn=46 player=bot-45 remote=127.0.0.1:59224
+time=2026-11-04T09:04:39.686+08:00 level=INFO msg="enter scene" player=bot-45 entity=384 scene=1 node=n1
+time=2026-11-04T09:04:39.691+08:00 level=INFO msg="login ok" conn=47 player=bot-46 remote=127.0.0.1:59225
+time=2026-11-04T09:04:39.691+08:00 level=INFO msg="enter scene" player=bot-46 entity=388 scene=1 node=n1
+time=2026-11-04T09:04:39.696+08:00 level=INFO msg="login ok" conn=48 player=bot-47 remote=127.0.0.1:59226
+time=2026-11-04T09:04:39.696+08:00 level=INFO msg="enter scene" player=bot-47 entity=392 scene=1 node=n1
+time=2026-11-04T09:04:39.701+08:00 level=INFO msg="login ok" conn=49 player=bot-48 remote=127.0.0.1:59227
+time=2026-11-04T09:04:39.701+08:00 level=INFO msg="enter scene" player=bot-48 entity=396 scene=1 node=n1
+time=2026-11-04T09:04:39.706+08:00 level=INFO msg="login ok" conn=50 player=bot-49 remote=127.0.0.1:59228
+time=2026-11-04T09:04:39.706+08:00 level=INFO msg="enter scene" player=bot-49 entity=400 scene=1 node=n1
+time=2026-11-04T09:04:39.712+08:00 level=INFO msg="login ok" conn=51 player=bot-50 remote=127.0.0.1:59229
+time=2026-11-04T09:04:39.712+08:00 level=INFO msg="enter scene" player=bot-50 entity=404 scene=1 node=n1
+time=2026-11-04T09:04:39.717+08:00 level=INFO msg="login ok" conn=52 player=bot-51 remote=127.0.0.1:59230
+time=2026-11-04T09:04:39.717+08:00 level=INFO msg="enter scene" player=bot-51 entity=408 scene=1 node=n1
+time=2026-11-04T09:04:39.722+08:00 level=INFO msg="login ok" conn=53 player=bot-52 remote=127.0.0.1:59231
+time=2026-11-04T09:04:39.722+08:00 level=INFO msg="enter scene" player=bot-52 entity=412 scene=1 node=n1
+time=2026-11-04T09:04:39.727+08:00 level=INFO msg="login ok" conn=54 player=bot-53 remote=127.0.0.1:59232
+time=2026-11-04T09:04:39.727+08:00 level=INFO msg="enter scene" player=bot-53 entity=416 scene=1 node=n1
+time=2026-11-04T09:04:39.732+08:00 level=INFO msg="login ok" conn=55 player=bot-54 remote=127.0.0.1:59233
+time=2026-11-04T09:04:39.732+08:00 level=INFO msg="enter scene" player=bot-54 entity=420 scene=1 node=n1
+time=2026-11-04T09:04:39.738+08:00 level=INFO msg="login ok" conn=56 player=bot-55 remote=127.0.0.1:59234
+time=2026-11-04T09:04:39.738+08:00 level=INFO msg="enter scene" player=bot-55 entity=424 scene=1 node=n1
+time=2026-11-04T09:04:39.743+08:00 level=INFO msg="login ok" conn=57 player=bot-56 remote=127.0.0.1:59235
+time=2026-11-04T09:04:39.743+08:00 level=INFO msg="enter scene" player=bot-56 entity=428 scene=1 node=n1
+time=2026-11-04T09:04:39.748+08:00 level=INFO msg="login ok" conn=58 player=bot-57 remote=127.0.0.1:59236
+time=2026-11-04T09:04:39.748+08:00 level=INFO msg="enter scene" player=bot-57 entity=432 scene=1 node=n1
+time=2026-11-04T09:04:39.753+08:00 level=INFO msg="login ok" conn=59 player=bot-58 remote=127.0.0.1:59237
+time=2026-11-04T09:04:39.753+08:00 level=INFO msg="enter scene" player=bot-58 entity=436 scene=1 node=n1
+time=2026-11-04T09:04:39.758+08:00 level=INFO msg="login ok" conn=60 player=bot-59 remote=127.0.0.1:59238
+time=2026-11-04T09:04:39.758+08:00 level=INFO msg="enter scene" player=bot-59 entity=440 scene=1 node=n1
+time=2026-11-04T09:04:39.762+08:00 level=INFO msg="login ok" conn=61 player=bot-60 remote=127.0.0.1:59239
+time=2026-11-04T09:04:39.762+08:00 level=INFO msg="enter scene" player=bot-60 entity=444 scene=1 node=n1
+time=2026-11-04T09:04:39.768+08:00 level=INFO msg="login ok" conn=62 player=bot-61 remote=127.0.0.1:59240
+time=2026-11-04T09:04:39.768+08:00 level=INFO msg="enter scene" player=bot-61 entity=448 scene=1 node=n1
+time=2026-11-04T09:04:39.772+08:00 level=INFO msg="login ok" conn=63 player=bot-62 remote=127.0.0.1:59241
+time=2026-11-04T09:04:39.773+08:00 level=INFO msg="enter scene" player=bot-62 entity=452 scene=1 node=n1
+time=2026-11-04T09:04:39.777+08:00 level=INFO msg="login ok" conn=64 player=bot-63 remote=127.0.0.1:59242
+time=2026-11-04T09:04:39.778+08:00 level=INFO msg="enter scene" player=bot-63 entity=456 scene=1 node=n1
+time=2026-11-04T09:04:39.784+08:00 level=INFO msg="login ok" conn=65 player=bot-64 remote=127.0.0.1:59243
+time=2026-11-04T09:04:39.784+08:00 level=INFO msg="enter scene" player=bot-64 entity=460 scene=1 node=n1
+time=2026-11-04T09:04:39.788+08:00 level=INFO msg="login ok" conn=66 player=bot-65 remote=127.0.0.1:59244
+time=2026-11-04T09:04:39.788+08:00 level=INFO msg="enter scene" player=bot-65 entity=464 scene=1 node=n1
+time=2026-11-04T09:04:39.793+08:00 level=INFO msg="login ok" conn=67 player=bot-66 remote=127.0.0.1:59245
+time=2026-11-04T09:04:39.794+08:00 level=INFO msg="enter scene" player=bot-66 entity=468 scene=1 node=n1
+time=2026-11-04T09:04:39.798+08:00 level=INFO msg="login ok" conn=68 player=bot-67 remote=127.0.0.1:59246
+time=2026-11-04T09:04:39.799+08:00 level=INFO msg="enter scene" player=bot-67 entity=472 scene=1 node=n1
+time=2026-11-04T09:04:39.803+08:00 level=INFO msg="login ok" conn=69 player=bot-68 remote=127.0.0.1:59247
+time=2026-11-04T09:04:39.803+08:00 level=INFO msg="enter scene" player=bot-68 entity=476 scene=1 node=n1
+time=2026-11-04T09:04:39.808+08:00 level=INFO msg="login ok" conn=70 player=bot-69 remote=127.0.0.1:59248
+time=2026-11-04T09:04:39.809+08:00 level=INFO msg="enter scene" player=bot-69 entity=480 scene=1 node=n1
+time=2026-11-04T09:04:39.813+08:00 level=INFO msg="login ok" conn=71 player=bot-70 remote=127.0.0.1:59249
+time=2026-11-04T09:04:39.814+08:00 level=INFO msg="enter scene" player=bot-70 entity=484 scene=1 node=n1
+time=2026-11-04T09:04:39.818+08:00 level=INFO msg="login ok" conn=72 player=bot-71 remote=127.0.0.1:59250
+time=2026-11-04T09:04:39.819+08:00 level=INFO msg="enter scene" player=bot-71 entity=488 scene=1 node=n1
+time=2026-11-04T09:04:39.823+08:00 level=INFO msg="login ok" conn=73 player=bot-72 remote=127.0.0.1:59251
+time=2026-11-04T09:04:39.823+08:00 level=INFO msg="enter scene" player=bot-72 entity=492 scene=1 node=n1
+time=2026-11-04T09:04:39.828+08:00 level=INFO msg="login ok" conn=74 player=bot-73 remote=127.0.0.1:59252
+time=2026-11-04T09:04:39.828+08:00 level=INFO msg="enter scene" player=bot-73 entity=496 scene=1 node=n1
+time=2026-11-04T09:04:39.833+08:00 level=INFO msg="login ok" conn=75 player=bot-74 remote=127.0.0.1:59253
+time=2026-11-04T09:04:39.833+08:00 level=INFO msg="enter scene" player=bot-74 entity=500 scene=1 node=n1
+time=2026-11-04T09:04:39.838+08:00 level=INFO msg="login ok" conn=76 player=bot-75 remote=127.0.0.1:59254
+time=2026-11-04T09:04:39.839+08:00 level=INFO msg="enter scene" player=bot-75 entity=504 scene=1 node=n1
+time=2026-11-04T09:04:39.844+08:00 level=INFO msg="login ok" conn=77 player=bot-76 remote=127.0.0.1:59255
+time=2026-11-04T09:04:39.844+08:00 level=INFO msg="enter scene" player=bot-76 entity=508 scene=1 node=n1
+time=2026-11-04T09:04:39.850+08:00 level=INFO msg="login ok" conn=78 player=bot-77 remote=127.0.0.1:59256
+time=2026-11-04T09:04:39.855+08:00 level=INFO msg="enter scene" player=bot-77 entity=512 scene=1 node=n1
+time=2026-11-04T09:04:39.857+08:00 level=INFO msg="login ok" conn=79 player=bot-78 remote=127.0.0.1:59257
+time=2026-11-04T09:04:39.857+08:00 level=INFO msg="enter scene" player=bot-78 entity=516 scene=1 node=n1
+time=2026-11-04T09:04:39.862+08:00 level=INFO msg="login ok" conn=80 player=bot-79 remote=127.0.0.1:59258
+time=2026-11-04T09:04:39.863+08:00 level=INFO msg="enter scene" player=bot-79 entity=520 scene=1 node=n1
+time=2026-11-04T09:04:39.870+08:00 level=INFO msg="login ok" conn=81 player=bot-80 remote=127.0.0.1:59259
+time=2026-11-04T09:04:39.871+08:00 level=INFO msg="enter scene" player=bot-80 entity=524 scene=1 node=n1
+time=2026-11-04T09:04:39.874+08:00 level=INFO msg="login ok" conn=82 player=bot-81 remote=127.0.0.1:59260
+time=2026-11-04T09:04:39.874+08:00 level=INFO msg="enter scene" player=bot-81 entity=528 scene=1 node=n1
+time=2026-11-04T09:04:39.880+08:00 level=INFO msg="login ok" conn=83 player=bot-82 remote=127.0.0.1:59261
+time=2026-11-04T09:04:39.880+08:00 level=INFO msg="enter scene" player=bot-82 entity=532 scene=1 node=n1
+time=2026-11-04T09:04:39.885+08:00 level=INFO msg="login ok" conn=84 player=bot-83 remote=127.0.0.1:59262
+time=2026-11-04T09:04:39.885+08:00 level=INFO msg="enter scene" player=bot-83 entity=536 scene=1 node=n1
+time=2026-11-04T09:04:39.891+08:00 level=INFO msg="login ok" conn=85 player=bot-84 remote=127.0.0.1:59263
+time=2026-11-04T09:04:39.891+08:00 level=INFO msg="enter scene" player=bot-84 entity=540 scene=1 node=n1
+time=2026-11-04T09:04:39.896+08:00 level=INFO msg="login ok" conn=86 player=bot-85 remote=127.0.0.1:59264
+time=2026-11-04T09:04:39.896+08:00 level=INFO msg="enter scene" player=bot-85 entity=544 scene=1 node=n1
+time=2026-11-04T09:04:39.900+08:00 level=INFO msg="login ok" conn=87 player=bot-86 remote=127.0.0.1:59265
+time=2026-11-04T09:04:39.901+08:00 level=INFO msg="enter scene" player=bot-86 entity=548 scene=1 node=n1
+time=2026-11-04T09:04:39.907+08:00 level=INFO msg="login ok" conn=88 player=bot-87 remote=127.0.0.1:59266
+time=2026-11-04T09:04:39.907+08:00 level=INFO msg="enter scene" player=bot-87 entity=552 scene=1 node=n1
+time=2026-11-04T09:04:39.911+08:00 level=INFO msg="login ok" conn=89 player=bot-88 remote=127.0.0.1:59267
+time=2026-11-04T09:04:39.911+08:00 level=INFO msg="enter scene" player=bot-88 entity=556 scene=1 node=n1
+time=2026-11-04T09:04:39.916+08:00 level=INFO msg="login ok" conn=90 player=bot-89 remote=127.0.0.1:59268
+time=2026-11-04T09:04:39.917+08:00 level=INFO msg="enter scene" player=bot-89 entity=560 scene=1 node=n1
+time=2026-11-04T09:04:39.922+08:00 level=INFO msg="login ok" conn=91 player=bot-90 remote=127.0.0.1:59269
+time=2026-11-04T09:04:39.922+08:00 level=INFO msg="enter scene" player=bot-90 entity=564 scene=1 node=n1
+time=2026-11-04T09:04:39.927+08:00 level=INFO msg="login ok" conn=92 player=bot-91 remote=127.0.0.1:59270
+time=2026-11-04T09:04:39.928+08:00 level=INFO msg="enter scene" player=bot-91 entity=568 scene=1 node=n1
+time=2026-11-04T09:04:39.934+08:00 level=INFO msg="login ok" conn=93 player=bot-92 remote=127.0.0.1:59271
+time=2026-11-04T09:04:39.934+08:00 level=INFO msg="enter scene" player=bot-92 entity=572 scene=1 node=n1
+time=2026-11-04T09:04:39.939+08:00 level=INFO msg="login ok" conn=94 player=bot-93 remote=127.0.0.1:59272
+time=2026-11-04T09:04:39.939+08:00 level=INFO msg="enter scene" player=bot-93 entity=576 scene=1 node=n1
+time=2026-11-04T09:04:39.945+08:00 level=INFO msg="login ok" conn=95 player=bot-94 remote=127.0.0.1:59273
+time=2026-11-04T09:04:39.946+08:00 level=INFO msg="enter scene" player=bot-94 entity=580 scene=1 node=n1
+time=2026-11-04T09:04:39.951+08:00 level=INFO msg="login ok" conn=96 player=bot-95 remote=127.0.0.1:59274
+time=2026-11-04T09:04:39.951+08:00 level=INFO msg="enter scene" player=bot-95 entity=584 scene=1 node=n1
+time=2026-11-04T09:04:39.957+08:00 level=INFO msg="login ok" conn=97 player=bot-96 remote=127.0.0.1:59275
+time=2026-11-04T09:04:39.957+08:00 level=INFO msg="enter scene" player=bot-96 entity=588 scene=1 node=n1
+time=2026-11-04T09:04:39.962+08:00 level=INFO msg="login ok" conn=98 player=bot-97 remote=127.0.0.1:59276
+time=2026-11-04T09:04:39.962+08:00 level=INFO msg="enter scene" player=bot-97 entity=592 scene=1 node=n1
+time=2026-11-04T09:04:39.966+08:00 level=INFO msg="login ok" conn=99 player=bot-98 remote=127.0.0.1:59277
+time=2026-11-04T09:04:39.967+08:00 level=INFO msg="enter scene" player=bot-98 entity=596 scene=1 node=n1
+time=2026-11-04T09:04:39.971+08:00 level=INFO msg="login ok" conn=100 player=bot-99 remote=127.0.0.1:59278
+time=2026-11-04T09:04:39.972+08:00 level=INFO msg="enter scene" player=bot-99 entity=600 scene=1 node=n1
+time=2026-11-04T09:04:40.421+08:00 level=INFO msg="session rebound" player=bot-37 entity=352 scene=n2/scene:2
+time=2026-11-04T09:04:40.931+08:00 level=INFO msg="session rebound" player=bot-88 entity=556 scene=n2/scene:2
+time=2026-11-04T09:04:41.985+08:00 level=INFO msg="session rebound" player=bot-54 entity=420 scene=n2/scene:2
+time=2026-11-04T09:04:42.821+08:00 level=INFO msg="session rebound" player=bot-20 entity=284 scene=n2/scene:2
+time=2026-11-04T09:04:43.370+08:00 level=INFO msg="session rebound" player=bot-33 entity=336 scene=n2/scene:2
+time=2026-11-04T09:04:46.521+08:00 level=INFO msg="session rebound" player=bot-41 entity=368 scene=n2/scene:2
+time=2026-11-04T09:04:46.821+08:00 level=INFO msg="session rebound" player=bot-79 entity=520 scene=n2/scene:2
+time=2026-11-04T09:04:48.021+08:00 level=INFO msg="session rebound" player=bot-92 entity=572 scene=n2/scene:2
+time=2026-11-04T09:04:48.670+08:00 level=INFO msg="session rebound" player=bot-68 entity=476 scene=n2/scene:2
+time=2026-11-04T09:04:51.618+08:00 level=INFO msg="session rebound" player=bot-48 entity=396 scene=n2/scene:2
+time=2026-11-04T09:04:51.618+08:00 level=INFO msg="session rebound" player=bot-2 entity=212 scene=n2/scene:2
+time=2026-11-04T09:04:51.778+08:00 level=INFO msg="session rebound" player=bot-64 entity=460 scene=n2/scene:2
+time=2026-11-04T09:04:52.121+08:00 level=INFO msg="session rebound" player=bot-14 entity=260 scene=n2/scene:2
+time=2026-11-04T09:04:52.370+08:00 level=INFO msg="session rebound" player=bot-38 entity=356 scene=n2/scene:2
+time=2026-11-04T09:04:56.821+08:00 level=INFO msg="session rebound" player=bot-22 entity=292 scene=n2/scene:2
+time=2026-11-04T09:04:57.121+08:00 level=INFO msg="session rebound" player=bot-31 entity=328 scene=n2/scene:2
+time=2026-11-04T09:04:58.471+08:00 level=INFO msg="session rebound" player=bot-52 entity=412 scene=n2/scene:2
+time=2026-11-04T09:04:59.520+08:00 level=INFO msg="session rebound" player=bot-18 entity=276 scene=n2/scene:2
+time=2026-11-04T09:05:04.170+08:00 level=INFO msg="session rebound" player=bot-11 entity=248 scene=n2/scene:2
+time=2026-11-04T09:05:04.452+08:00 level=INFO msg="session closed" player=bot-12 conn=13 duration=25s bytesIn=6943 bytesOut=735 framesOut=29
+time=2026-11-04T09:05:04.452+08:00 level=INFO msg="session closed" player=bot-88 conn=89 duration=25s bytesIn=7289 bytesOut=6109 framesOut=236
+time=2026-11-04T09:05:04.452+08:00 level=INFO msg="session closed" player=bot-91 conn=92 duration=25s bytesIn=7289 bytesOut=23066 framesOut=891
+time=2026-11-04T09:05:04.452+08:00 level=INFO msg="session closed" player=bot-90 conn=91 duration=25s bytesIn=7289 bytesOut=9710 framesOut=381
+time=2026-11-04T09:05:04.452+08:00 level=INFO msg="session closed" player=bot-33 conn=34 duration=25s bytesIn=7367 bytesOut=7724 framesOut=298
+time=2026-11-04T09:05:04.453+08:00 level=INFO msg="session closed" player=bot-83 conn=84 duration=25s bytesIn=7289 bytesOut=6621 framesOut=257
+time=2026-11-04T09:05:04.453+08:00 level=INFO msg="session closed" player=bot-87 conn=88 duration=25s bytesIn=7289 bytesOut=17214 framesOut=665
+time=2026-11-04T09:05:04.453+08:00 level=INFO msg="session closed" player=bot-85 conn=86 duration=25s bytesIn=7289 bytesOut=5962 framesOut=232
+time=2026-11-04T09:05:04.453+08:00 level=INFO msg="session closed" player=bot-84 conn=85 duration=25s bytesIn=7289 bytesOut=22728 framesOut=878
+time=2026-11-04T09:05:04.453+08:00 level=INFO msg="session closed" player=bot-86 conn=87 duration=25s bytesIn=7289 bytesOut=7696 framesOut=301
+time=2026-11-04T09:05:04.453+08:00 level=INFO msg="session closed" player=bot-89 conn=90 duration=25s bytesIn=7259 bytesOut=4727 framesOut=186
+time=2026-11-04T09:05:04.453+08:00 level=INFO msg="session closed" player=bot-53 conn=54 duration=25s bytesIn=7341 bytesOut=10693 framesOut=421
+time=2026-11-04T09:05:04.453+08:00 level=INFO msg="session closed" player=bot-52 conn=53 duration=25s bytesIn=7341 bytesOut=4596 framesOut=180
+time=2026-11-04T09:05:04.454+08:00 level=INFO msg="session closed" player=bot-49 conn=50 duration=25s bytesIn=7341 bytesOut=23089 framesOut=892
+time=2026-11-04T09:05:04.454+08:00 level=INFO msg="session closed" player=bot-50 conn=51 duration=25s bytesIn=7341 bytesOut=7258 framesOut=283
+time=2026-11-04T09:05:04.454+08:00 level=INFO msg="session closed" player=bot-47 conn=48 duration=25s bytesIn=7341 bytesOut=3146 framesOut=123
+time=2026-11-04T09:05:04.454+08:00 level=INFO msg="session closed" player=bot-73 conn=74 duration=25s bytesIn=7315 bytesOut=10347 framesOut=401
+time=2026-11-04T09:05:04.454+08:00 level=INFO msg="session closed" player=bot-71 conn=72 duration=25s bytesIn=7315 bytesOut=23303 framesOut=900
+time=2026-11-04T09:05:04.454+08:00 level=INFO msg="session closed" player=bot-68 conn=69 duration=25s bytesIn=7315 bytesOut=11839 framesOut=458
+time=2026-11-04T09:05:04.454+08:00 level=INFO msg="session closed" player=bot-72 conn=73 duration=25s bytesIn=7315 bytesOut=17937 framesOut=692
+time=2026-11-04T09:05:04.455+08:00 level=INFO msg="session closed" player=bot-69 conn=70 duration=25s bytesIn=7315 bytesOut=24556 framesOut=952
+time=2026-11-04T09:05:04.455+08:00 level=INFO msg="session closed" player=bot-67 conn=68 duration=25s bytesIn=7315 bytesOut=11301 framesOut=437
+time=2026-11-04T09:05:04.455+08:00 level=INFO msg="session closed" player=bot-31 conn=32 duration=25s bytesIn=7367 bytesOut=1166 framesOut=46
+time=2026-11-04T09:05:04.455+08:00 level=INFO msg="session closed" player=bot-25 conn=26 duration=25s bytesIn=7367 bytesOut=17536 framesOut=679
+time=2026-11-04T09:05:04.455+08:00 level=INFO msg="session closed" player=bot-24 conn=25 duration=25s bytesIn=7352 bytesOut=5026 framesOut=196
+time=2026-11-04T09:05:04.455+08:00 level=INFO msg="session closed" player=bot-64 conn=65 duration=25s bytesIn=7315 bytesOut=13302 framesOut=516
+time=2026-11-04T09:05:04.455+08:00 level=INFO msg="session closed" player=bot-32 conn=33 duration=25s bytesIn=7367 bytesOut=5880 framesOut=230
+time=2026-11-04T09:05:04.456+08:00 level=INFO msg="session closed" player=bot-27 conn=28 duration=25s bytesIn=6632 bytesOut=169 framesOut=7
+time=2026-11-04T09:05:04.456+08:00 level=INFO msg="session closed" player=bot-29 conn=30 duration=25s bytesIn=7367 bytesOut=8225 framesOut=318
+time=2026-11-04T09:05:04.456+08:00 level=INFO msg="session closed" player=bot-66 conn=67 duration=25s bytesIn=7315 bytesOut=10154 framesOut=393
+time=2026-11-04T09:05:04.456+08:00 level=INFO msg="session closed" player=bot-5 conn=6 duration=25s bytesIn=7392 bytesOut=16037 framesOut=617
+time=2026-11-04T09:05:04.456+08:00 level=INFO msg="session closed" player=bot-10 conn=11 duration=25s bytesIn=6658 bytesOut=169 framesOut=7
+time=2026-11-04T09:05:04.456+08:00 level=INFO msg="session closed" player=bot-9 conn=10 duration=25s bytesIn=7392 bytesOut=8198 framesOut=317
+time=2026-11-04T09:05:04.456+08:00 level=INFO msg="session closed" player=bot-4 conn=5 duration=25s bytesIn=7392 bytesOut=6035 framesOut=236
+time=2026-11-04T09:05:04.456+08:00 level=INFO msg="session closed" player=bot-11 conn=12 duration=25s bytesIn=6658 bytesOut=202 framesOut=8
+time=2026-11-04T09:05:04.457+08:00 level=INFO msg="session closed" player=bot-13 conn=14 duration=25s bytesIn=7363 bytesOut=4300 framesOut=169
+time=2026-11-04T09:05:04.457+08:00 level=INFO msg="session closed" player=bot-6 conn=7 duration=25s bytesIn=7392 bytesOut=9988 framesOut=387
+time=2026-11-04T09:05:04.457+08:00 level=INFO msg="session closed" player=bot-8 conn=9 duration=25s bytesIn=7392 bytesOut=8597 framesOut=332
+time=2026-11-04T09:05:04.457+08:00 level=INFO msg="session closed" player=bot-48 conn=49 duration=25s bytesIn=7341 bytesOut=9968 framesOut=385
+time=2026-11-04T09:05:04.457+08:00 level=INFO msg="session closed" player=bot-44 conn=45 duration=25s bytesIn=7341 bytesOut=4324 framesOut=169
+time=2026-11-04T09:05:04.457+08:00 level=INFO msg="session closed" player=bot-51 conn=52 duration=25s bytesIn=7341 bytesOut=4413 framesOut=170
+time=2026-11-04T09:05:04.457+08:00 level=INFO msg="session closed" player=bot-46 conn=47 duration=25s bytesIn=7341 bytesOut=9039 framesOut=353
+time=2026-11-04T09:05:04.457+08:00 level=INFO msg="session closed" player=bot-45 conn=46 duration=25s bytesIn=7341 bytesOut=4427 framesOut=171
+time=2026-11-04T09:05:04.458+08:00 level=INFO msg="session closed" player=bot-62 conn=63 duration=25s bytesIn=7289 bytesOut=13144 framesOut=514
+time=2026-11-04T09:05:04.458+08:00 level=INFO msg="session closed" player=bot-61 conn=62 duration=25s bytesIn=7289 bytesOut=1916 framesOut=75
+time=2026-11-04T09:05:04.458+08:00 level=INFO msg="session closed" player=bot-63 conn=64 duration=25s bytesIn=7289 bytesOut=9856 framesOut=382
+time=2026-11-04T09:05:04.458+08:00 level=INFO msg="session closed" player=bot-56 conn=57 duration=25s bytesIn=7289 bytesOut=4752 framesOut=185
+time=2026-11-04T09:05:04.458+08:00 level=INFO msg="session closed" player=bot-76 conn=77 duration=25s bytesIn=7263 bytesOut=8845 framesOut=343
+time=2026-11-04T09:05:04.458+08:00 level=INFO msg="session closed" player=bot-59 conn=60 duration=25s bytesIn=7289 bytesOut=24684 framesOut=956
+time=2026-11-04T09:05:04.458+08:00 level=INFO msg="session closed" player=bot-99 conn=100 duration=24s bytesIn=7222 bytesOut=13814 framesOut=537
+time=2026-11-04T09:05:04.458+08:00 level=INFO msg="session closed" player=bot-41 conn=42 duration=25s bytesIn=7315 bytesOut=13784 framesOut=535
+time=2026-11-04T09:05:04.459+08:00 level=INFO msg="session closed" player=bot-60 conn=61 duration=25s bytesIn=7289 bytesOut=10845 framesOut=419
+time=2026-11-04T09:05:04.459+08:00 level=INFO msg="session closed" player=bot-95 conn=96 duration=25s bytesIn=7222 bytesOut=20462 framesOut=801
+time=2026-11-04T09:05:04.459+08:00 level=INFO msg="session closed" player=bot-96 conn=97 duration=25s bytesIn=7222 bytesOut=24057 framesOut=932
+time=2026-11-04T09:05:04.459+08:00 level=INFO msg="session closed" player=bot-70 conn=71 duration=25s bytesIn=7285 bytesOut=4909 framesOut=193
+time=2026-11-04T09:05:04.459+08:00 level=INFO msg="session closed" player=bot-65 conn=66 duration=25s bytesIn=7315 bytesOut=23355 framesOut=902
+time=2026-11-04T09:05:04.459+08:00 level=INFO msg="session closed" player=bot-30 conn=31 duration=25s bytesIn=7352 bytesOut=3120 framesOut=125
+time=2026-11-04T09:05:04.459+08:00 level=INFO msg="session closed" player=bot-28 conn=29 duration=25s bytesIn=7367 bytesOut=8650 framesOut=334
+time=2026-11-04T09:05:04.461+08:00 level=INFO msg="session closed" player=bot-26 conn=27 duration=25s bytesIn=7367 bytesOut=5327 framesOut=207
+time=2026-11-04T09:05:04.461+08:00 level=INFO msg="session closed" player=bot-93 conn=94 duration=25s bytesIn=7222 bytesOut=11331 framesOut=437
+time=2026-11-04T09:05:04.461+08:00 level=INFO msg="session closed" player=bot-42 conn=43 duration=25s bytesIn=7315 bytesOut=20439 framesOut=794
+time=2026-11-04T09:05:04.461+08:00 level=INFO msg="session closed" player=bot-1 conn=2 duration=25s bytesIn=7366 bytesOut=14941 framesOut=579
+time=2026-11-04T09:05:04.462+08:00 level=INFO msg="session closed" player=bot-43 conn=44 duration=25s bytesIn=7315 bytesOut=13060 framesOut=514
+time=2026-11-04T09:05:04.462+08:00 level=INFO msg="session closed" player=bot-74 conn=75 duration=25s bytesIn=7263 bytesOut=5182 framesOut=202
+time=2026-11-04T09:05:04.462+08:00 level=INFO msg="session closed" player=bot-15 conn=16 duration=25s bytesIn=7341 bytesOut=5718 framesOut=221
+time=2026-11-04T09:05:04.462+08:00 level=INFO msg="session closed" player=bot-75 conn=76 duration=25s bytesIn=7263 bytesOut=2658 framesOut=104
+time=2026-11-04T09:05:04.462+08:00 level=INFO msg="session closed" player=bot-23 conn=24 duration=25s bytesIn=7341 bytesOut=10224 framesOut=395
+time=2026-11-04T09:05:04.462+08:00 level=INFO msg="session closed" player=bot-17 conn=18 duration=25s bytesIn=7341 bytesOut=11412 framesOut=446
+time=2026-11-04T09:05:04.462+08:00 level=INFO msg="session closed" player=bot-78 conn=79 duration=25s bytesIn=7263 bytesOut=21109 framesOut=820
+time=2026-11-04T09:05:04.462+08:00 level=INFO msg="session closed" player=bot-21 conn=22 duration=25s bytesIn=7341 bytesOut=9459 framesOut=365
+time=2026-11-04T09:05:04.462+08:00 level=INFO msg="session closed" player=bot-7 conn=8 duration=25s bytesIn=7377 bytesOut=5699 framesOut=224
+time=2026-11-04T09:05:04.463+08:00 level=INFO msg="session closed" player=bot-58 conn=59 duration=25s bytesIn=7289 bytesOut=13742 framesOut=534
+time=2026-11-04T09:05:04.463+08:00 level=INFO msg="session closed" player=bot-55 conn=56 duration=25s bytesIn=6554 bytesOut=169 framesOut=7
+time=2026-11-04T09:05:04.463+08:00 level=INFO msg="session closed" player=bot-54 conn=55 duration=25s bytesIn=6824 bytesOut=2099 framesOut=82
+time=2026-11-04T09:05:04.463+08:00 level=INFO msg="session closed" player=bot-57 conn=58 duration=25s bytesIn=7289 bytesOut=8746 framesOut=340
+time=2026-11-04T09:05:04.463+08:00 level=INFO msg="session closed" player=bot-38 conn=39 duration=25s bytesIn=7315 bytesOut=14382 framesOut=558
+time=2026-11-04T09:05:04.463+08:00 level=INFO msg="session closed" player=bot-40 conn=41 duration=25s bytesIn=7315 bytesOut=11781 framesOut=455
+time=2026-11-04T09:05:04.463+08:00 level=INFO msg="session closed" player=bot-98 conn=99 duration=24s bytesIn=7222 bytesOut=7722 framesOut=302
+time=2026-11-04T09:05:04.464+08:00 level=INFO msg="session closed" player=bot-39 conn=40 duration=25s bytesIn=7315 bytesOut=14840 framesOut=576
+time=2026-11-04T09:05:04.464+08:00 level=INFO msg="session closed" player=bot-18 conn=19 duration=25s bytesIn=7341 bytesOut=9226 framesOut=356
+time=2026-11-04T09:05:04.464+08:00 level=INFO msg="session closed" player=bot-97 conn=98 duration=25s bytesIn=7222 bytesOut=12663 framesOut=491
+time=2026-11-04T09:05:04.464+08:00 level=INFO msg="session closed" player=bot-22 conn=23 duration=25s bytesIn=7341 bytesOut=9287 framesOut=358
+time=2026-11-04T09:05:04.464+08:00 level=INFO msg="session closed" player=bot-16 conn=17 duration=25s bytesIn=7341 bytesOut=16907 framesOut=660
+time=2026-11-04T09:05:04.464+08:00 level=INFO msg="session closed" player=bot-92 conn=93 duration=25s bytesIn=7222 bytesOut=13452 framesOut=522
+time=2026-11-04T09:05:04.464+08:00 level=INFO msg="session closed" player=bot-37 conn=38 duration=25s bytesIn=7315 bytesOut=7853 framesOut=304
+time=2026-11-04T09:05:04.465+08:00 level=INFO msg="session closed" player=bot-35 conn=36 duration=25s bytesIn=7285 bytesOut=6404 framesOut=249
+time=2026-11-04T09:05:04.465+08:00 level=INFO msg="session closed" player=bot-81 conn=82 duration=25s bytesIn=7263 bytesOut=16112 framesOut=621
+time=2026-11-04T09:05:04.465+08:00 level=INFO msg="session closed" player=bot-80 conn=81 duration=25s bytesIn=7263 bytesOut=23775 framesOut=923
+time=2026-11-04T09:05:04.465+08:00 level=INFO msg="session closed" player=bot-82 conn=83 duration=25s bytesIn=7263 bytesOut=10893 framesOut=428
+time=2026-11-04T09:05:04.465+08:00 level=INFO msg="session closed" player=bot-77 conn=78 duration=25s bytesIn=7263 bytesOut=9435 framesOut=365
+time=2026-11-04T09:05:04.465+08:00 level=INFO msg="session closed" player=bot-3 conn=4 duration=25s bytesIn=7366 bytesOut=11856 framesOut=463
+time=2026-11-04T09:05:04.465+08:00 level=INFO msg="session closed" player=bot-0 conn=1 duration=25s bytesIn=7366 bytesOut=16406 framesOut=641
+time=2026-11-04T09:05:04.465+08:00 level=INFO msg="session closed" player=bot-36 conn=37 duration=25s bytesIn=7315 bytesOut=13337 framesOut=519
+time=2026-11-04T09:05:04.465+08:00 level=INFO msg="session closed" player=bot-2 conn=3 duration=25s bytesIn=7366 bytesOut=14225 framesOut=552
+time=2026-11-04T09:05:04.466+08:00 level=INFO msg="session closed" player=bot-34 conn=35 duration=25s bytesIn=7315 bytesOut=9937 framesOut=385
+time=2026-11-04T09:05:04.466+08:00 level=INFO msg="session closed" player=bot-19 conn=20 duration=25s bytesIn=7341 bytesOut=12017 framesOut=468
+time=2026-11-04T09:05:04.466+08:00 level=INFO msg="session closed" player=bot-79 conn=80 duration=25s bytesIn=7263 bytesOut=13784 framesOut=535
+time=2026-11-04T09:05:04.466+08:00 level=INFO msg="session closed" player=bot-14 conn=15 duration=25s bytesIn=7341 bytesOut=14242 framesOut=554
+time=2026-11-04T09:05:04.466+08:00 level=INFO msg="session closed" player=bot-20 conn=21 duration=25s bytesIn=7341 bytesOut=6008 framesOut=232
+time=2026-11-04T09:05:04.466+08:00 level=INFO msg="session closed" player=bot-94 conn=95 duration=25s bytesIn=7222 bytesOut=12803 framesOut=504
+time=2026-11-04T09:05:38.749+08:00 level=INFO msg="login ok" conn=101 player=bot-0 remote=127.0.0.1:59325
+time=2026-11-04T09:05:38.749+08:00 level=INFO msg="enter scene" player=bot-0 entity=580 scene=1 node=n1
+time=2026-11-04T09:05:38.751+08:00 level=INFO msg="login ok" conn=102 player=bot-1 remote=127.0.0.1:59327
+time=2026-11-04T09:05:38.751+08:00 level=INFO msg="enter scene" player=bot-1 entity=280 scene=1 node=n1
+time=2026-11-04T09:05:38.756+08:00 level=INFO msg="login ok" conn=103 player=bot-2 remote=127.0.0.1:59328
+time=2026-11-04T09:05:38.756+08:00 level=INFO msg="enter scene" player=bot-2 entity=340 scene=1 node=n1
+time=2026-11-04T09:05:38.761+08:00 level=INFO msg="login ok" conn=104 player=bot-3 remote=127.0.0.1:59329
+time=2026-11-04T09:05:38.761+08:00 level=INFO msg="enter scene" player=bot-3 entity=204 scene=1 node=n1
+time=2026-11-04T09:05:38.766+08:00 level=INFO msg="login ok" conn=105 player=bot-4 remote=127.0.0.1:59330
+time=2026-11-04T09:05:38.766+08:00 level=INFO msg="enter scene" player=bot-4 entity=216 scene=1 node=n1
+time=2026-11-04T09:05:38.771+08:00 level=INFO msg="login ok" conn=106 player=bot-5 remote=127.0.0.1:59331
+time=2026-11-04T09:05:38.771+08:00 level=INFO msg="enter scene" player=bot-5 entity=512 scene=1 node=n1
+time=2026-11-04T09:05:38.776+08:00 level=INFO msg="login ok" conn=107 player=bot-6 remote=127.0.0.1:59332
+time=2026-11-04T09:05:38.776+08:00 level=INFO msg="enter scene" player=bot-6 entity=524 scene=1 node=n1
+time=2026-11-04T09:05:38.781+08:00 level=INFO msg="login ok" conn=108 player=bot-7 remote=127.0.0.1:59333
+time=2026-11-04T09:05:38.781+08:00 level=INFO msg="enter scene" player=bot-7 entity=528 scene=1 node=n1
+time=2026-11-04T09:05:38.786+08:00 level=INFO msg="login ok" conn=109 player=bot-8 remote=127.0.0.1:59334
+time=2026-11-04T09:05:38.786+08:00 level=INFO msg="enter scene" player=bot-8 entity=344 scene=1 node=n1
+time=2026-11-04T09:05:38.791+08:00 level=INFO msg="login ok" conn=110 player=bot-9 remote=127.0.0.1:59335
+time=2026-11-04T09:05:38.791+08:00 level=INFO msg="enter scene" player=bot-9 entity=268 scene=1 node=n1
+time=2026-11-04T09:05:38.796+08:00 level=INFO msg="login ok" conn=111 player=bot-10 remote=127.0.0.1:59336
+time=2026-11-04T09:05:38.796+08:00 level=INFO msg="enter scene" player=bot-10 entity=360 scene=1 node=n1
+time=2026-11-04T09:05:38.802+08:00 level=INFO msg="login ok" conn=112 player=bot-11 remote=127.0.0.1:59337
+time=2026-11-04T09:05:38.802+08:00 level=INFO msg="enter scene" player=bot-11 entity=596 scene=1 node=n1
+time=2026-11-04T09:05:38.807+08:00 level=INFO msg="login ok" conn=113 player=bot-12 remote=127.0.0.1:59338
+time=2026-11-04T09:05:38.807+08:00 level=INFO msg="enter scene" player=bot-12 entity=364 scene=1 node=n1
+time=2026-11-04T09:05:38.812+08:00 level=INFO msg="login ok" conn=114 player=bot-13 remote=127.0.0.1:59339
+time=2026-11-04T09:05:38.812+08:00 level=INFO msg="enter scene" player=bot-13 entity=432 scene=1 node=n1
+time=2026-11-04T09:05:38.816+08:00 level=INFO msg="login ok" conn=115 player=bot-14 remote=127.0.0.1:59340
+time=2026-11-04T09:05:38.816+08:00 level=INFO msg="enter scene" player=bot-14 entity=424 scene=1 node=n1
+time=2026-11-04T09:05:38.821+08:00 level=INFO msg="login ok" conn=116 player=bot-15 remote=127.0.0.1:59341
+time=2026-11-04T09:05:38.821+08:00 level=INFO msg="enter scene" player=bot-15 entity=436 scene=1 node=n1
+time=2026-11-04T09:05:38.827+08:00 level=INFO msg="login ok" conn=117 player=bot-16 remote=127.0.0.1:59342
+time=2026-11-04T09:05:38.827+08:00 level=INFO msg="enter scene" player=bot-16 entity=232 scene=1 node=n1
+time=2026-11-04T09:05:38.831+08:00 level=INFO msg="login ok" conn=118 player=bot-17 remote=127.0.0.1:59343
+time=2026-11-04T09:05:38.831+08:00 level=INFO msg="enter scene" player=bot-17 entity=288 scene=1 node=n1
+time=2026-11-04T09:05:38.836+08:00 level=INFO msg="login ok" conn=119 player=bot-18 remote=127.0.0.1:59344
+time=2026-11-04T09:05:38.836+08:00 level=INFO msg="enter scene" player=bot-18 entity=516 scene=1 node=n1
+time=2026-11-04T09:05:38.841+08:00 level=INFO msg="login ok" conn=120 player=bot-19 remote=127.0.0.1:59345
+time=2026-11-04T09:05:38.841+08:00 level=INFO msg="enter scene" player=bot-19 entity=272 scene=1 node=n1
+time=2026-11-04T09:05:38.846+08:00 level=INFO msg="login ok" conn=121 player=bot-20 remote=127.0.0.1:59346
+time=2026-11-04T09:05:38.846+08:00 level=INFO msg="enter scene" player=bot-20 entity=296 scene=1 node=n1
+time=2026-11-04T09:05:38.852+08:00 level=INFO msg="login ok" conn=122 player=bot-21 remote=127.0.0.1:59347
+time=2026-11-04T09:05:38.852+08:00 level=INFO msg="enter scene" player=bot-21 entity=504 scene=1 node=n1
+time=2026-11-04T09:05:38.856+08:00 level=INFO msg="login ok" conn=123 player=bot-22 remote=127.0.0.1:59348
+time=2026-11-04T09:05:38.857+08:00 level=INFO msg="enter scene" player=bot-22 entity=376 scene=1 node=n1
+time=2026-11-04T09:05:38.862+08:00 level=INFO msg="login ok" conn=124 player=bot-23 remote=127.0.0.1:59349
+time=2026-11-04T09:05:38.862+08:00 level=INFO msg="enter scene" player=bot-23 entity=208 scene=1 node=n1
+time=2026-11-04T09:05:38.867+08:00 level=INFO msg="login ok" conn=125 player=bot-24 remote=127.0.0.1:59350
+time=2026-11-04T09:05:38.867+08:00 level=INFO msg="enter scene" player=bot-24 entity=372 scene=1 node=n1
+time=2026-11-04T09:05:38.872+08:00 level=INFO msg="login ok" conn=126 player=bot-25 remote=127.0.0.1:59351
+time=2026-11-04T09:05:38.872+08:00 level=INFO msg="enter scene" player=bot-25 entity=576 scene=1 node=n1
+time=2026-11-04T09:05:38.876+08:00 level=INFO msg="login ok" conn=127 player=bot-26 remote=127.0.0.1:59352
+time=2026-11-04T09:05:38.877+08:00 level=INFO msg="enter scene" player=bot-26 entity=316 scene=1 node=n1
+time=2026-11-04T09:05:38.883+08:00 level=INFO msg="login ok" conn=128 player=bot-27 remote=127.0.0.1:59353
+time=2026-11-04T09:05:38.884+08:00 level=INFO msg="enter scene" player=bot-27 entity=324 scene=1 node=n1
+time=2026-11-04T09:05:38.887+08:00 level=INFO msg="login ok" conn=129 player=bot-28 remote=127.0.0.1:59354
+time=2026-11-04T09:05:38.888+08:00 level=INFO msg="enter scene" player=bot-28 entity=464 scene=1 node=n1
+time=2026-11-04T09:05:38.891+08:00 level=INFO msg="login ok" conn=130 player=bot-29 remote=127.0.0.1:59355
+time=2026-11-04T09:05:38.892+08:00 level=INFO msg="enter scene" player=bot-29 entity=484 scene=1 node=n1
+time=2026-11-04T09:05:38.897+08:00 level=INFO msg="login ok" conn=131 player=bot-30 remote=127.0.0.1:59356
+time=2026-11-04T09:05:38.897+08:00 level=INFO msg="enter scene" player=bot-30 entity=588 scene=1 node=n1
+time=2026-11-04T09:05:38.902+08:00 level=INFO msg="login ok" conn=132 player=bot-31 remote=127.0.0.1:59357
+time=2026-11-04T09:05:38.903+08:00 level=INFO msg="enter scene" player=bot-31 entity=584 scene=1 node=n1
+time=2026-11-04T09:05:38.910+08:00 level=INFO msg="login ok" conn=133 player=bot-32 remote=127.0.0.1:59358
+time=2026-11-04T09:05:38.912+08:00 level=INFO msg="enter scene" player=bot-32 entity=444 scene=1 node=n1
+time=2026-11-04T09:05:38.913+08:00 level=INFO msg="login ok" conn=134 player=bot-33 remote=127.0.0.1:59359
+time=2026-11-04T09:05:38.914+08:00 level=INFO msg="enter scene" player=bot-33 entity=600 scene=1 node=n1
+time=2026-11-04T09:05:38.916+08:00 level=INFO msg="login ok" conn=135 player=bot-34 remote=127.0.0.1:59360
+time=2026-11-04T09:05:38.917+08:00 level=INFO msg="enter scene" player=bot-34 entity=440 scene=1 node=n1
+time=2026-11-04T09:05:38.922+08:00 level=INFO msg="login ok" conn=136 player=bot-35 remote=127.0.0.1:59361
+time=2026-11-04T09:05:38.922+08:00 level=INFO msg="enter scene" player=bot-35 entity=428 scene=1 node=n1
+time=2026-11-04T09:05:38.927+08:00 level=INFO msg="login ok" conn=137 player=bot-36 remote=127.0.0.1:59362
+time=2026-11-04T09:05:38.927+08:00 level=INFO msg="enter scene" player=bot-36 entity=456 scene=1 node=n1
+time=2026-11-04T09:05:38.932+08:00 level=INFO msg="login ok" conn=138 player=bot-37 remote=127.0.0.1:59363
+time=2026-11-04T09:05:38.933+08:00 level=INFO msg="enter scene" player=bot-37 entity=452 scene=1 node=n1
+time=2026-11-04T09:05:38.937+08:00 level=INFO msg="login ok" conn=139 player=bot-38 remote=127.0.0.1:59364
+time=2026-11-04T09:05:38.937+08:00 level=INFO msg="enter scene" player=bot-38 entity=388 scene=1 node=n1
+time=2026-11-04T09:05:38.941+08:00 level=INFO msg="login ok" conn=140 player=bot-39 remote=127.0.0.1:59365
+time=2026-11-04T09:05:38.942+08:00 level=INFO msg="enter scene" player=bot-39 entity=236 scene=1 node=n1
+time=2026-11-04T09:05:38.948+08:00 level=INFO msg="login ok" conn=141 player=bot-40 remote=127.0.0.1:59366
+time=2026-11-04T09:05:38.948+08:00 level=INFO msg="enter scene" player=bot-40 entity=228 scene=1 node=n1
+time=2026-11-04T09:05:38.953+08:00 level=INFO msg="login ok" conn=142 player=bot-41 remote=127.0.0.1:59367
+time=2026-11-04T09:05:38.953+08:00 level=INFO msg="enter scene" player=bot-41 entity=256 scene=1 node=n1
+time=2026-11-04T09:05:38.958+08:00 level=INFO msg="login ok" conn=143 player=bot-42 remote=127.0.0.1:59368
+time=2026-11-04T09:05:38.958+08:00 level=INFO msg="enter scene" player=bot-42 entity=220 scene=1 node=n1
+time=2026-11-04T09:05:38.963+08:00 level=INFO msg="login ok" conn=144 player=bot-43 remote=127.0.0.1:59369
+time=2026-11-04T09:05:38.963+08:00 level=INFO msg="enter scene" player=bot-43 entity=240 scene=1 node=n1
+time=2026-11-04T09:05:38.968+08:00 level=INFO msg="login ok" conn=145 player=bot-44 remote=127.0.0.1:59370
+time=2026-11-04T09:05:38.968+08:00 level=INFO msg="enter scene" player=bot-44 entity=244 scene=1 node=n1
+time=2026-11-04T09:05:38.972+08:00 level=INFO msg="login ok" conn=146 player=bot-45 remote=127.0.0.1:59371
+time=2026-11-04T09:05:38.972+08:00 level=INFO msg="enter scene" player=bot-45 entity=224 scene=1 node=n1
+time=2026-11-04T09:05:38.978+08:00 level=INFO msg="login ok" conn=147 player=bot-46 remote=127.0.0.1:59372
+time=2026-11-04T09:05:38.978+08:00 level=INFO msg="enter scene" player=bot-46 entity=468 scene=1 node=n1
+time=2026-11-04T09:05:38.983+08:00 level=INFO msg="login ok" conn=148 player=bot-47 remote=127.0.0.1:59373
+time=2026-11-04T09:05:38.983+08:00 level=INFO msg="enter scene" player=bot-47 entity=320 scene=1 node=n1
+time=2026-11-04T09:05:38.989+08:00 level=INFO msg="login ok" conn=149 player=bot-48 remote=127.0.0.1:59374
+time=2026-11-04T09:05:38.989+08:00 level=INFO msg="enter scene" player=bot-48 entity=312 scene=1 node=n1
+time=2026-11-04T09:05:38.993+08:00 level=INFO msg="login ok" conn=150 player=bot-49 remote=127.0.0.1:59375
+time=2026-11-04T09:05:38.993+08:00 level=INFO msg="enter scene" player=bot-49 entity=332 scene=1 node=n1
+time=2026-11-04T09:05:52.279+08:00 level=INFO msg="peer link closed" remote=127.0.0.1:59161
+time=2026-11-04T09:05:52.373+08:00 level=INFO msg="peer link closed" remote=127.0.0.1:59165
+time=2026-11-04T09:05:53.087+08:00 level=INFO msg="tcp dial ok" addr=127.0.0.1:7103 remote=127.0.0.1:7103
+time=2026-11-04T09:05:53.090+08:00 level=INFO msg="tcp dial ok" addr=127.0.0.1:7203 remote=127.0.0.1:7203
+time=2026-11-04T09:05:53.767+08:00 level=INFO msg="session closed" player=bot-25 conn=126 duration=15s bytesIn=4423 bytesOut=3622 framesOut=141
+time=2026-11-04T09:05:53.767+08:00 level=INFO msg="session closed" player=bot-7 conn=108 duration=15s bytesIn=4013 bytesOut=124 framesOut=5
+time=2026-11-04T09:05:53.767+08:00 level=INFO msg="session closed" player=bot-17 conn=118 duration=15s bytesIn=4423 bytesOut=6584 framesOut=254
+time=2026-11-04T09:05:53.767+08:00 level=INFO msg="session closed" player=bot-21 conn=122 duration=15s bytesIn=3988 bytesOut=125 framesOut=5
+time=2026-11-04T09:05:53.768+08:00 level=INFO msg="session closed" player=bot-9 conn=110 duration=15s bytesIn=4448 bytesOut=4206 framesOut=162
+time=2026-11-04T09:05:53.768+08:00 level=INFO msg="session closed" player=bot-28 conn=129 duration=15s bytesIn=4423 bytesOut=4157 framesOut=161
+time=2026-11-04T09:05:53.768+08:00 level=INFO msg="session closed" player=bot-27 conn=128 duration=15s bytesIn=3988 bytesOut=125 framesOut=5
+time=2026-11-04T09:05:53.768+08:00 level=INFO msg="session closed" player=bot-13 conn=114 duration=15s bytesIn=4014 bytesOut=125 framesOut=5
+time=2026-11-04T09:05:53.768+08:00 level=INFO msg="session closed" player=bot-18 conn=119 duration=15s bytesIn=4423 bytesOut=8545 framesOut=330
+time=2026-11-04T09:05:53.768+08:00 level=INFO msg="session closed" player=bot-36 conn=137 duration=15s bytesIn=4423 bytesOut=9377 framesOut=362
+time=2026-11-04T09:05:53.768+08:00 level=INFO msg="session closed" player=bot-14 conn=115 duration=15s bytesIn=4449 bytesOut=8797 framesOut=342
+time=2026-11-04T09:05:53.768+08:00 level=INFO msg="session closed" player=bot-11 conn=112 duration=15s bytesIn=4014 bytesOut=125 framesOut=5
+time=2026-11-04T09:05:53.768+08:00 level=INFO msg="session closed" player=bot-33 conn=134 duration=15s bytesIn=4423 bytesOut=4800 framesOut=187
+time=2026-11-04T09:05:53.769+08:00 level=INFO msg="session closed" player=bot-44 conn=145 duration=15s bytesIn=3962 bytesOut=125 framesOut=5
+time=2026-11-04T09:05:53.769+08:00 level=INFO msg="session closed" player=bot-34 conn=135 duration=15s bytesIn=4423 bytesOut=7248 framesOut=280
+time=2026-11-04T09:05:53.769+08:00 level=INFO msg="session closed" player=bot-48 conn=149 duration=15s bytesIn=4397 bytesOut=1635 framesOut=64
+time=2026-11-04T09:05:53.769+08:00 level=INFO msg="session closed" player=bot-22 conn=123 duration=15s bytesIn=4423 bytesOut=8551 framesOut=330
+time=2026-11-04T09:05:53.769+08:00 level=INFO msg="session closed" player=bot-37 conn=138 duration=15s bytesIn=4397 bytesOut=4672 framesOut=183
+time=2026-11-04T09:05:53.769+08:00 level=INFO msg="session closed" player=bot-46 conn=147 duration=15s bytesIn=3962 bytesOut=125 framesOut=5
+time=2026-11-04T09:05:53.769+08:00 level=INFO msg="session closed" player=bot-30 conn=131 duration=15s bytesIn=4393 bytesOut=3767 framesOut=146
+time=2026-11-04T09:05:53.769+08:00 level=INFO msg="session closed" player=bot-39 conn=140 duration=15s bytesIn=4397 bytesOut=12427 framesOut=486
+time=2026-11-04T09:05:53.769+08:00 level=INFO msg="session closed" player=bot-12 conn=113 duration=15s bytesIn=4014 bytesOut=125 framesOut=5
+time=2026-11-04T09:05:53.770+08:00 level=INFO msg="session closed" player=bot-40 conn=141 duration=15s bytesIn=3962 bytesOut=125 framesOut=5
+time=2026-11-04T09:05:53.770+08:00 level=INFO msg="session closed" player=bot-32 conn=133 duration=15s bytesIn=4423 bytesOut=4048 framesOut=156
+time=2026-11-04T09:05:53.770+08:00 level=INFO msg="session closed" player=bot-43 conn=144 duration=15s bytesIn=3962 bytesOut=125 framesOut=5
+time=2026-11-04T09:05:53.770+08:00 level=INFO msg="session closed" player=bot-15 conn=116 duration=15s bytesIn=4449 bytesOut=9269 framesOut=359
+time=2026-11-04T09:05:53.770+08:00 level=INFO msg="session closed" player=bot-23 conn=124 duration=15s bytesIn=4108 bytesOut=853 framesOut=33
+time=2026-11-04T09:05:53.770+08:00 level=INFO msg="session closed" player=bot-16 conn=117 duration=15s bytesIn=4449 bytesOut=9287 framesOut=359
+time=2026-11-04T09:05:53.770+08:00 level=INFO msg="session closed" player=bot-24 conn=125 duration=15s bytesIn=4393 bytesOut=249 framesOut=10
+time=2026-11-04T09:05:53.770+08:00 level=INFO msg="session closed" player=bot-2 conn=103 duration=15s bytesIn=4448 bytesOut=8776 framesOut=341
+time=2026-11-04T09:05:53.770+08:00 level=INFO msg="session closed" player=bot-49 conn=150 duration=15s bytesIn=4382 bytesOut=777 framesOut=31
+time=2026-11-04T09:05:53.770+08:00 level=INFO msg="session closed" player=bot-6 conn=107 duration=15s bytesIn=4448 bytesOut=7221 framesOut=279
+time=2026-11-04T09:05:53.771+08:00 level=INFO msg="session closed" player=bot-1 conn=102 duration=15s bytesIn=4448 bytesOut=8093 framesOut=319
+time=2026-11-04T09:05:53.771+08:00 level=INFO msg="session closed" player=bot-3 conn=104 duration=15s bytesIn=4448 bytesOut=6583 framesOut=254
+time=2026-11-04T09:05:53.771+08:00 level=INFO msg="session closed" player=bot-42 conn=143 duration=15s bytesIn=4337 bytesOut=661 framesOut=27
+time=2026-11-04T09:05:53.771+08:00 level=INFO msg="session closed" player=bot-26 conn=127 duration=15s bytesIn=4423 bytesOut=8701 framesOut=339
+time=2026-11-04T09:05:53.771+08:00 level=INFO msg="session closed" player=bot-4 conn=105 duration=15s bytesIn=4448 bytesOut=3995 framesOut=154
+time=2026-11-04T09:05:53.771+08:00 level=INFO msg="session closed" player=bot-38 conn=139 duration=15s bytesIn=4397 bytesOut=8771 framesOut=341
+time=2026-11-04T09:05:53.771+08:00 level=INFO msg="session closed" player=bot-41 conn=142 duration=15s bytesIn=3962 bytesOut=125 framesOut=5
+time=2026-11-04T09:05:53.771+08:00 level=INFO msg="session closed" player=bot-5 conn=106 duration=15s bytesIn=4448 bytesOut=12400 framesOut=479
+time=2026-11-04T09:05:53.771+08:00 level=INFO msg="session closed" player=bot-45 conn=146 duration=15s bytesIn=4397 bytesOut=2935 framesOut=114
+time=2026-11-04T09:05:53.771+08:00 level=INFO msg="session closed" player=bot-31 conn=132 duration=15s bytesIn=4378 bytesOut=217 framesOut=9
+time=2026-11-04T09:05:53.772+08:00 level=INFO msg="session closed" player=bot-35 conn=136 duration=15s bytesIn=4393 bytesOut=3479 framesOut=134
+time=2026-11-04T09:05:53.772+08:00 level=INFO msg="session closed" player=bot-10 conn=111 duration=15s bytesIn=4014 bytesOut=125 framesOut=5
+time=2026-11-04T09:05:53.772+08:00 level=INFO msg="session closed" player=bot-29 conn=130 duration=15s bytesIn=4423 bytesOut=5423 framesOut=212
+time=2026-11-04T09:05:53.772+08:00 level=INFO msg="session closed" player=bot-8 conn=109 duration=15s bytesIn=4448 bytesOut=4632 framesOut=180
+time=2026-11-04T09:05:53.772+08:00 level=INFO msg="session closed" player=bot-47 conn=148 duration=15s bytesIn=3962 bytesOut=125 framesOut=5
+time=2026-11-04T09:05:53.772+08:00 level=INFO msg="session closed" player=bot-20 conn=121 duration=15s bytesIn=3988 bytesOut=125 framesOut=5
+time=2026-11-04T09:05:53.772+08:00 level=INFO msg="session closed" player=bot-0 conn=101 duration=15s bytesIn=4448 bytesOut=9350 framesOut=361
+time=2026-11-04T09:05:53.772+08:00 level=INFO msg="session closed" player=bot-19 conn=120 duration=15s bytesIn=4423 bytesOut=3648 framesOut=142
+time=2026-11-04T09:06:07.510+08:00 level=WARN msg="shutdown requested via admin api" reason="admin request"
+time=2026-11-04T09:06:07.610+08:00 level=WARN msg="shutdown requested" reason="admin request"
+time=2026-11-04T09:06:07.610+08:00 level=INFO msg="shutdown signal received" name=openworld-server reason="admin request"
+time=2026-11-04T09:06:07.610+08:00 level=INFO msg="component stopped" component=admin cost=0s
+time=2026-11-04T09:06:07.725+08:00 level=INFO msg="component stopped" component=gate cost=114.3043ms
+time=2026-11-04T09:06:07.725+08:00 level=INFO msg="component stopped" component=topo-reconcile cost=0s
+time=2026-11-04T09:06:07.725+08:00 level=INFO msg="component stopped" component=dyn-scenes cost=0s
+time=2026-11-04T09:06:07.725+08:00 level=INFO msg="scene stopped" scene=1 entities=43
+time=2026-11-04T09:06:07.725+08:00 level=INFO msg="component stopped" component=scene-1 cost=0s
+time=2026-11-04T09:06:07.752+08:00 level=INFO msg="component stopped" component=discovery cost=27.0717ms
+time=2026-11-04T09:06:07.752+08:00 level=INFO msg="peer link closed" remote=127.0.0.1:59383
+time=2026-11-04T09:06:07.752+08:00 level=INFO msg="peer link closed" remote=127.0.0.1:59385
+time=2026-11-04T09:06:07.752+08:00 level=INFO msg="component stopped" component=mesh cost=0s
+time=2026-11-04T09:06:07.752+08:00 level=INFO msg="app stopped" name=openworld-server uptime=1m45.4976103s

@@ -1,0 +1,40 @@
+<div class="card dotcard">
+  <div class="card-head">
+    <h2>报道点阵</h2>
+    <div class="dot-toolbar">
+      <span class="hint">着色</span>
+      {% for d in DOT_DIMS %}
+      <a class="chip {{ 'sel' if color == d else '' }}" href="{{ filter_url(request, color=d) }}">{{ DIM_LABELS[d] }}</a>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="legend">
+    {% for l in dot.legend %}
+    <span><i style="background:{{ l.color }}"></i>{{ l.label }}</span>
+    {% endfor %}
+    <span><i style="background:{{ dot.none_color }}"></i>未标注</span>
+  </div>
+
+  <div class="dotwrap">
+    <svg class="dotsvg" viewBox="0 0 {{ dot.w }} {{ dot.h }}" role="img" aria-label="文章点阵">
+      {% for c in dot.clusters %}
+      <circle class="cluster" cx="{{ c.x }}" cy="{{ c.y }}" r="{{ c.r }}"/>
+      {% if c.count >= 4 %}
+      <text class="clusterlabel" x="{{ c.x }}" y="{{ c.y + c.r + 12 }}" text-anchor="middle">{{ c.count }} 篇</text>
+      {% endif %}
+      {% endfor %}
+      {% for p in dot.points %}
+      <a href="/event/{{ p.eid }}">
+        <circle class="dot" cx="{{ p.x }}" cy="{{ p.y }}" r="3.2" fill="{{ p.color }}"
+                data-event="{{ p.event|e }}" data-count="{{ p.count }}"
+                data-article="{{ p.article|e }}" data-value="{{ p.value_label|e }}"
+                data-source="{{ p.source|e }}">
+          <title>{{ p.event }}（{{ p.count }} 篇）| {{ p.article }}</title>
+        </circle>
+      </a>
+      {% endfor %}
+    </svg>
+  </div>
+  <p class="hint">每个点是一篇近 24h 文章，按事件成团（簇心轻微抖动避重叠）；共 {{ dot.total }} 篇 / {{ dot.events }} 个事件，按报道量取前 80 个事件。悬停看标题，点击进事件详情。</p>
+</div>

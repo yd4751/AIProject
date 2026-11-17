@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>额度池 · 个人看板</title>
+<style>
+:root{
+  --bg:#F6F8FB; --surface:#FFFFFF; --line:#E3E8EF; --line-soft:#EEF1F5;
+  --text:#1B2430; --muted:#5B6878; --hint:#8B97A6;
+  --blue:#185FA5; --blue-50:#E6F1FB; --blue-200:#B5D4F4;
+  --amber:#BA7517; --amber-50:#FAEEDA;
+  --red:#C0392B; --red-50:#FCEBEB;
+  --green:#1D9E75; --green-50:#E1F5EE;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;font-size:13px;line-height:1.6}
+.wrap{max-width:1180px;margin:0 auto;padding:32px 24px 56px}
+header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:24px}
+h1{font-size:20px;font-weight:600;margin:0 0 4px}
+.sub{color:var(--muted);font-size:13px}
+.badge{display:inline-block;background:var(--amber-50);color:#854F0B;border:1px solid #FAC775;border-radius:6px;padding:3px 9px;font-size:12px;margin-left:8px;vertical-align:2px}
+.meta{color:var(--hint);font-size:12px;text-align:right}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:22px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px}
+.stat .label{color:var(--muted);font-size:12px}
+.stat .value{font-size:26px;font-weight:600;line-height:1.25;margin-top:6px;letter-spacing:-.5px}
+.stat .foot{color:var(--hint);font-size:12px;margin-top:2px}
+.bar{display:flex;gap:8px;align-items:center;margin-bottom:18px;flex-wrap:wrap}
+.tab{border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:8px;padding:6px 14px;cursor:pointer;font-size:13px;font-family:inherit}
+.tab.on{background:var(--blue-50);border-color:var(--blue-200);color:var(--blue);font-weight:500}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:14px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px}
+.card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:12px}
+.cname{font-size:14px;font-weight:600;line-height:1.35}
+.cprovider{color:var(--hint);font-size:12px;margin-top:2px}
+.chip{font-size:11px;border-radius:5px;padding:3px 7px;white-space:nowrap;border:1px solid transparent}
+.chip.rolling{background:var(--blue-50);color:var(--blue);border-color:var(--blue-200)}
+.chip.weekly{background:var(--amber-50);color:#854F0B;border-color:#FAC775}
+.chip.monthly{background:#EEEDFE;color:#534AB7;border-color:#CECBF6}
+.chip.never{background:var(--green-50);color:var(--green);border-color:#9FE1CB}
+.nums{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:7px}
+.nums .used{font-size:13px;color:var(--muted)}
+.nums .used b{color:var(--text);font-weight:600}
+.nums .left{font-size:15px;font-weight:600}
+.track{height:7px;background:#EDF0F4;border-radius:99px;overflow:hidden}
+.fill{height:100%;border-radius:99px}
+.fill.ok{background:var(--green)} .fill.warn{background:#EF9F27} .fill.hot{background:var(--red)}
+.spark{display:flex;align-items:flex-end;gap:3px;height:30px;margin:15px 0 12px}
+.spark i{display:block;flex:1;background:var(--blue-200);border-radius:2px 2px 0 0;min-height:2px}
+.spark i.today{background:var(--blue)}
+.reset{display:flex;justify-content:space-between;gap:8px;border-top:1px solid var(--line-soft);padding-top:11px;font-size:12px;color:var(--muted)}
+.reset strong{font-weight:600;color:var(--text);font-variant-numeric:tabular-nums}
+.reset.soon strong{color:var(--red)}
+.note{color:var(--hint);font-size:11px;margin-top:8px}
+.section{margin-top:32px}
+.section h2{font-size:15px;font-weight:600;margin:0 0 12px}
+.timeline{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:6px 18px}
+.trow{display:grid;grid-template-columns:130px 1fr auto;gap:14px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line-soft)}
+.trow:last-child{border-bottom:0}
+.ttime{color:var(--muted);font-size:12px;font-variant-numeric:tabular-nums}
+.tname{font-weight:500}
+.tdesc{color:var(--hint);font-size:12px}
+.tdelta{font-variant-numeric:tabular-nums;color:var(--text);font-size:12px}
+.tdelta.soon{color:var(--red);font-weight:600}
+.legend{color:var(--hint);font-size:12px;margin-top:14px}
+@media(max-width:700px){.stats{grid-template-columns:1fr}.trow{grid-template-columns:1fr auto}.ttime{grid-column:1/-1}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>额度池 · 个人看板<span class="badge">演示数据</span></h1>
+      <div class="sub">订阅窗口 + API 余额统一视图 · 数据源：OpenQuota / 官方 usage / new-api</div>
+    </div>
+    <div class="meta">本地时间 <span id="now"></span><br>倒计时每秒刷新</div>
+  </header>
+
+  <div class="stats">
+    <div class="stat"><div class="label">监控渠道</div><div class="value" id="s1">—</div><div class="foot">订阅窗口 + API 余额</div></div>
+    <div class="stat"><div class="label">24 小时内重置</div><div class="value" id="s2">—</div><div class="foot">优先消耗临期额度</div></div>
+    <div class="stat"><div class="label">平均已用</div><div class="value" id="s3">—</div><div class="foot">按渠道使用率均值</div></div>
+  </div>
+
+  <div class="bar">
+    <button class="tab on" data-f="all">全部</button>
+    <button class="tab" data-f="subscription">订阅窗口</button>
+    <button class="tab" data-f="api">API 余额</button>
+    <button class="tab" data-f="reset">有重置周期</button>
+  </div>
+
+  <div class="grid" id="grid"></div>
+
+  <div class="section">
+    <h2>重置日程</h2>
+    <div class="timeline" id="timeline"></div>
+    <div class="legend">滚动窗口从「首次使用」起算，固定窗口按账户设定的周/月时间重置。实际数值以各家官方用量页为准。</div>
+  </div>
+</div>
+
+<script>
+const H = 3600000, D = 86400000;
+const now = Date.now();
+const nextWeekly = (() => { const d = new Date(now); const delta = (8 - d.getDay()) % 7 || 7; d.setDate(d.getDate() + delta); d.setHours(0,0,0,0); return d.getTime(); })();
+const nextMonthly = (() => { const d = new Date(now); d.setMonth(d.getMonth()+1,1); d.setHours(0,0,0,0); return d.getTime(); })();
+
+const channels = [
+  {name:'Claude Code · 5 小时会话', provider:'Anthropic 订阅', group:'subscription', kind:'rolling', used:24, resetAt:now+2*H+18*60000, hist:[30,45,22,58,71,40,24], src:'statusline: five_hour'},
+  {name:'Claude Code · 每周（全模型）', provider:'Anthropic 订阅', group:'subscription', kind:'weekly', used:61, resetAt:nextWeekly, hist:[12,20,31,28,44,52,61], src:'statusline: seven_day'},
+  {name:'Claude Code · 每周（Opus）', provider:'Anthropic 订阅', group:'subscription', kind:'weekly', used:83, resetAt:nextWeekly, hist:[8,14,22,35,51,70,83], src:'官方 usage 页'},
+  {name:'Codex · 5 小时会话', provider:'OpenAI 订阅', group:'subscription', kind:'rolling', used:47, resetAt:now+47*60000, hist:[20,35,52,61,44,39,47], src:'官方 usage 页'},
+  {name:'Codex · 每周', provider:'OpenAI 订阅', group:'subscription', kind:'weekly', used:38, resetAt:nextWeekly, hist:[9,16,22,25,31,35,38], src:'官方 usage 页'},
+  {name:'Cursor · 用量池', provider:'Cursor 订阅', group:'subscription', kind:'weekly', used:72, resetAt:now+3*D+6*H, hist:[18,29,41,55,63,68,72], src:'设置页剩余用量'},
+  {name:'Copilot · 月度请求', provider:'GitHub 订阅', group:'subscription', kind:'monthly', used:29, resetAt:nextMonthly, hist:[4,8,13,17,21,26,29], src:'官方 billing'},
+  {name:'Anthropic API', provider:'按量余额 USD 240', group:'api', kind:'never', used:18, resetAt:null, hist:[5,7,11,9,14,16,18], src:'billing API · 不过期，留作兜底'},
+  {name:'OpenAI API', provider:'按量余额 USD 86', group:'api', kind:'never', used:44, resetAt:null, hist:[16,22,27,31,36,40,44], src:'billing API · 不过期，留作兜底'}
+];
+
+const kindLabel = {rolling:'滚动窗口', weekly:'每周重置', monthly:'每月重置', never:'不过期'};
+const state = u => u >= 100 ? 'hot' : u >= 80 ? 'hot' : u >= 50 ? 'warn' : 'ok';
+const stateText = u => u >= 80 ? '临期 · 优先消耗' : u >= 50 ? '注意节奏' : '充足';
+const pad = n => String(n).padStart(2,'0');
+const fmtDate = ts => { const d = new Date(ts); return (d.getMonth()+1)+'月'+d.getDate()+'日 '+pad(d.getHours())+':'+pad(d.getMinutes()); };
+function fmtLeft(ts){
+  let m = Math.max(0, Math.floor((ts - Date.now())/60000));
+  const d = Math.floor(m/1440); m -= d*1440;
+  const h = Math.floor(m/60); m -= h*60;
+  return d ? d+'天 '+pad(h)+':'+pad(m) : pad(h)+':'+pad(m);
+}
+function spark(hist){
+  const max = Math.max(...hist, 1);
+  return '<div class="spark">'+hist.map((v,i)=>'<i class="'+(i===6?'today':'')+'" style="height:'+Math.max(4,Math.round(v/max*100))+'%"></i>').join('')+'</div>';
+}
+function card(c){
+  const st = state(c.used);
+  const resetHTML = c.resetAt
+    ? '<div class="reset'+(c.resetAt-Date.now()<24*H?' soon':'')+'"><span>下次重置 · '+fmtDate(c.resetAt)+'</span><strong data-reset="'+c.resetAt+'">'+fmtLeft(c.resetAt)+'</strong></div>'
+    : '<div class="reset"><span>额度不过期</span><strong>兜底资源</strong></div>';
+  return '<div class="card" data-group="'+c.group+'" data-resettable="'+(c.resetAt?1:0)+'">'
+    + '<div class="card-top"><div><div class="cname">'+c.name+'</div><div class="cprovider">'+c.provider+'</div></div><span class="chip '+c.kind+'">'+kindLabel[c.kind]+'</span></div>'
+    + '<div class="nums"><span class="used">已用 <b>'+c.used+'%</b> · '+stateText(c.used)+'</span><span class="left">剩余 '+(100-c.used)+'%</span></div>'
+    + '<div class="track"><div class="fill '+st+'" style="width:'+c.used+'%"></div></div>'
+    + spark(c.hist)
+    + resetHTML
+    + '<div class="note">近 7 日使用趋势 · 数据源：'+c.src+'</div></div>';
+}
+function render(filter){
+  const list = channels.filter(c => filter==='all' || (filter==='reset'?c.resetAt:c.group===filter));
+  document.getElementById('grid').innerHTML = list.map(card).join('');
+}
+function renderStats(){
+  document.getElementById('s1').textContent = channels.length;
+  document.getElementById('s2').textContent = channels.filter(c=>c.resetAt && c.resetAt-Date.now()<24*H).length;
+  document.getElementById('s3').textContent = Math.round(channels.reduce((s,c)=>s+c.used,0)/channels.length)+'%';
+}
+function renderTimeline(){
+  const rows = channels.filter(c=>c.resetAt).sort((a,b)=>a.resetAt-b.resetAt).slice(0,6);
+  document.getElementById('timeline').innerHTML = rows.map(c=>{
+    const soon = c.resetAt-Date.now()<24*H;
+    return '<div class="trow"><div class="ttime">'+fmtDate(c.resetAt)+'</div><div><div class="tname">'+c.name+'</div><div class="tdesc">'+kindLabel[c.kind]+' · 当前已用 '+c.used+'%</div></div><div class="tdelta'+(soon?' soon':'')+'" data-reset="'+c.resetAt+'">'+fmtLeft(c.resetAt)+'</div></div>';
+  }).join('');
+}
+function tick(){
+  const d = new Date();
+  document.getElementById('now').textContent = d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+' '+pad(d.getHours())+':'+pad(d.getMinutes())+':'+pad(d.getSeconds());
+  document.querySelectorAll('[data-reset]').forEach(el=>{
+    const left = fmtLeft(Number(el.dataset.reset));
+    if(el.textContent !== left) el.textContent = left;
+  });
+}
+document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on'); render(b.dataset.f);
+}));
+render('all'); renderStats(); renderTimeline(); tick(); setInterval(tick,1000);
+</script>
+</body>
+</html>

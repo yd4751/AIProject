@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% set active = 'industries' %}
+{% block title %}行业 · NewsStation{% endblock %}
+
+{% block content %}
+<section class="pagehead">
+  <div>
+    <h1>行业热点</h1>
+    <p class="hint">12 类行业 · 事件数与近 24h 报道量 · 点进任一行看该行业时间线与事件榜</p>
+  </div>
+  <a class="vtab" href="/">返回热点 →</a>
+</section>
+
+<div class="ind-grid">
+  {% for r in overview.rows %}
+  <a class="card ind-card" href="/industry/{{ r.value }}">
+    <div class="ind-head"><i class="dotind big" style="background:{{ r.color }}"></i><h2>{{ r.label }}</h2></div>
+    <div class="ind-nums">
+      <span><b>{{ r.events }}</b> 事件</span>
+      <span><b>{{ r.articles }}</b> 篇/24h</span>
+      <span>热度 {{ r.heat }}</span>
+    </div>
+    <div class="bar"><span style="width:{{ (r.articles / overview.max_articles * 100)|round|int }}%;background:{{ r.color }}"></span></div>
+  </a>
+  {% endfor %}
+</div>
+
+<section class="card">
+  <div class="card-head"><h2>全行业热力矩阵</h2><span class="hint">不带筛选</span></div>
+  {% include "_matrix.html" %}
+</section>
+{% endblock %}

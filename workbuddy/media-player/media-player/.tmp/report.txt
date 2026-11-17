@@ -1,0 +1,34 @@
+== A1. 初始 & 空列表点播放 ==
+  播放列表: {"n":0}
+  toast: 列表是空的：点左上角「打开」添加本地文件，或在右侧搜索后点选站点结果在线播放
+
+== A2. 搜索「晴天」（默认全站点）==
+  分组: ["豆瓣影视 · 16","豆瓣音乐 · 15","爱听音乐网 (6uq) · 30"]
+
+== A3. 点击 6uq 组第一条 ==
+  点击: 晴天音乐周杰伦
+  播放状态: {"title":"周杰伦 - 晴天.mp3","src":"player\\media-player\\downloads\\周杰伦 - 晴天 (3).mp3","paused":false,"duration":270,"t":"7.21","audioMode":true,"playing":true}
+
+== A4. 下载进度轮询 ==
+   {"boxHidden":false,"items":[{"nm":"周杰伦 - 晴天 (3).mp3","st":"已完成","bar":"100%","cls":"dl-item done"}]}
+  下载后 src: dia-player\media-player\downloads\周杰伦 - 晴天 (3).mp3 | paused=false
+  歌词: {"hidden":false,"src":"爱听音乐网 (6uq) · 歌词（63 行）","lines":63,"cur":"编曲：周杰伦"}
+
+== B1. 本地歌词（短音频 wav + 同名 .lrc）==
+  目录: ["..","prof","profile","晴天.wav0.5 MB","天空之城.wav0.3 MB"]
+  t=1.2s → {"hidden":false,"src":"本地歌词 · 晴天.lrc（4 行）","lines":4,"cur":"故事的小黄花","idx":0}
+  t=3.8s → {"hidden":false,"src":"本地歌词 · 晴天.lrc（4 行）","lines":4,"cur":"从出生那年就飘着","idx":1}
+
+== B2. 长音频（270s）多行歌词随时间推进 ==
+  目标文件: E:\Project\workbuddy\media-player\media-player\downloads\周杰伦 - 七里香.mp3
+  已写本地歌词: 周杰伦 - 七里香.lrc
+  载入: 周杰伦 - 七里香.mp34.6 MB
+  来源(初始): {"hidden":false,"src":"本地歌词 · 周杰伦 - 七里香.lrc（5 行）","lines":5,"cur":"(无高亮)","idx":-1}
+  跳到 6s (实际 6.0s) → {"hidden":false,"src":"本地歌词 · 周杰伦 - 七里香.lrc（5 行）","lines":5,"cur":"第一行-五秒","idx":0}
+  跳到 36s (实际 36.0s) → {"hidden":false,"src":"本地歌词 · 周杰伦 - 七里香.lrc（5 行）","lines":5,"cur":"第二行-三十五秒","idx":1}
+  跳到 71s (实际 71.0s) → {"hidden":false,"src":"本地歌词 · 周杰伦 - 七里香.lrc（5 行）","lines":5,"cur":"第三行-一分十秒","idx":2}
+  跳到 111s (实际 111.0s) → {"hidden":false,"src":"本地歌词 · 周杰伦 - 七里香.lrc（5 行）","lines":5,"cur":"第四行-一分五十秒","idx":3}
+  跳到 151s (实际 151.0s) → {"hidden":false,"src":"本地歌词 · 周杰伦 - 七里香.lrc（5 行）","lines":5,"cur":"第五行-二分三十秒","idx":4}
+
+== B2. 控制台 ==
+error: Failed to load resource: the server responded with a status of 504 (Gateway Timeout)

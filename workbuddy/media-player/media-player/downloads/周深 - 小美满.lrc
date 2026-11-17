@@ -1,0 +1,845 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta http-equiv="Cache-Control" content="no-transform"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <meta name="referrer" content="same-origin">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="小美满-周深.mp3, 小美满-周深 在线播放, 小美满-周深 MP3下载, 小美满-周深 歌词下载, 免费下载">
+    <meta name="description"
+          content="《小美满》是 周深 演唱的歌曲，歌曲宝提供《小美满-周深.mp3》歌曲在线免费下载与播放，小美满 歌词下载，免费下载MP3音乐就上歌曲宝，曲库完整，更新迅速，试听流畅，支持高品质、无损音质~">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="音乐MP3免费下载网站">
+    <meta name="application-name" content="音乐MP3免费下载网站">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+
+    <title>小美满-周深-MP3在线免费播放与下载 - 歌曲宝MP3音乐下载</title>
+    
+    <link rel="stylesheet" href="//code.bdstatic.com/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="//code.bdstatic.com/npm/font-awesome@4.7.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="//code.bdstatic.com/npm/jquery-confirm@3.3.4/dist/jquery-confirm.min.css"/>
+
+    
+    <script src="//code.bdstatic.com/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+
+    
+    <script defer src="//code.bdstatic.com/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script defer src="//code.bdstatic.com/npm/bootstrap@4.6.1/dist/js/bootstrap.min.js"></script>
+    <script defer src="//code.bdstatic.com/npm/jquery-confirm@3.3.4/dist/jquery-confirm.min.js"></script>
+    <script type="text/javascript">
+                    window.user = JSON.parse('{\u0022isLogin\u0022:false,\u0022isVip\u0022:false,\u0022config\u0022:[]}');
+        window.siteAnnouncementVersion = 1;
+    </script>
+        
+    <link rel="preload" as="style" href="https://www.gequbao.com/build/assets/app-EQNfY_-D.css" /><link rel="modulepreload" as="script" href="https://www.gequbao.com/build/assets/app-BJh5PVGk.js" /><link rel="modulepreload" as="script" href="https://www.gequbao.com/build/assets/helper-CqVRtftD.js" /><link rel="modulepreload" as="script" href="https://www.gequbao.com/build/assets/user-account-G_Vl5vTL.js" /><link rel="modulepreload" as="script" href="https://www.gequbao.com/build/assets/ad-modal-DGgUiRll.js" /><link rel="stylesheet" href="https://www.gequbao.com/build/assets/app-EQNfY_-D.css" /><script type="module" src="https://www.gequbao.com/build/assets/app-BJh5PVGk.js"></script>                <script defer src="//code.bdstatic.com/npm/jquery.qrcode@1.0.3/jquery.qrcode.min.js"></script>
+        <link rel="modulepreload" as="script" href="https://www.gequbao.com/build/assets/music-BDv2LU3o.js" /><link rel="modulepreload" as="script" href="https://www.gequbao.com/build/assets/helper-CqVRtftD.js" /><link rel="modulepreload" as="script" href="https://www.gequbao.com/build/assets/download-helper-vWZEGO4m.js" /><link rel="modulepreload" as="script" href="https://www.gequbao.com/build/assets/ad-modal-DGgUiRll.js" /><script type="module" src="https://www.gequbao.com/build/assets/music-BDv2LU3o.js"></script></head>
+<body>
+
+
+<div class="container" style="max-width: 900px">
+    <aside class="site-announcement alert alert-dismissible border-0 py-3 pl-3 mt-2 mb-2 small"
+       data-site-announcement data-site-announcement-url="/api/site-announcement" hidden></aside>
+    <nav class="site-header navbar navbar-expand-md navbar-light px-0 mb-2 font-weight-normal" aria-label="主导航">
+
+    <a class="site-header-brand navbar-brand d-flex align-items-center" href="/">
+        <img src="/static/img/logo.png" width="50" height="50" class="site-header-logo mr-2 flex-shrink-0" alt="logo">
+
+        <div class="d-flex flex-column justify-content-center" style="min-width: 0;">
+        <span class="font-weight-bolder text-truncate d-block" style="font-size: 1.15rem; color: #50514F; line-height: 1.3;">
+            歌曲宝
+        </span>
+            <span class="domain-text-enhanced text-truncate mt-1">
+                Gequbao.com
+            </span>
+        </div>
+    </a>
+
+    <div class="site-header-navigation order-3 order-md-2">
+        <ul class="site-header-links navbar-nav mr-auto">
+            <li class="nav-item ">
+                <a class="nav-link" href="/hot-news" >资讯</a>
+            </li>
+            <li class="nav-item dropdown ">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">
+                    排行榜
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="border-top: 0.15rem solid #1e9fff;">
+                    <a class="dropdown-item" href="/top/week-search"><i class="fa fa-trophy" style="color: #ff6347"></i> 周搜索榜</a>
+                    <a class="dropdown-item" href="/top/week-download"><i class="fa fa-trophy" style="color: #ff6347"></i> 周下载榜</a>
+                </div>
+            </li>
+            <li class="nav-item ">
+                <a class="nav-link" href="/hot-music" >推荐</a>
+            </li>
+                            <li class="nav-item ">
+                    <a class="nav-link" href="/batch-download" >
+                        <span class="site-header-batch-label">批量下载<span class="site-header-batch-spark" aria-hidden="true"></span></span>
+                    </a>
+                </li>
+                    </ul>
+    </div>
+
+    <div class="site-header-account d-flex align-items-center ml-auto flex-shrink-0 order-2 order-md-3">
+
+        <ul class="navbar-nav flex-row align-items-center">
+                            <li class="nav-item">
+                    <a class="btn btn-outline-secondary btn-sm custom-login-btn" href="/member/auth/login">
+                        <i class="fa fa-user-circle"></i>
+                        <span class="ml-1">登录 / 注册</span>
+                    </a>
+                </li>
+                    </ul>
+
+    </div>
+</nav>
+        
+    
+    
+    <div class="card shadow-sm mb-1 custom-player-wrapper border-0">
+        <div class="card-body py-3 px-3 px-md-4">
+
+            
+            <div class="custom-player-layout mb-2 pb-3">
+
+                
+                <div class="player-cover-box" id="player-toggle-btn">
+                    <img src="http://img1.kuwo.cn/star/albumcover/500/s3s40/13/2405080697.jpg" alt="小美满－周深封面" class="player-cover-img">
+                    <div class="player-play-overlay">
+                        <i class="fa fa-play" id="player-icon" style="margin-left: 4px;"></i>
+                    </div>
+                </div>
+
+                
+                <div class="player-text-info text-left">
+                    <h1 class="song-title-styled mb-1 d-flex align-items-center justify-content-start">
+                        <span class="text-truncate" title="小美满-周深">小美满</span>
+                                            </h1>
+                    <div class="song-author-styled mb-1 text-truncate">
+                        周深
+                    </div>
+                    <div class="current-lyric-styled mb-1 text-truncate" id="current-lyric-line"
+                         style="min-height: 22px;">
+                        暂无歌词信息
+                    </div>
+                </div>
+
+                
+                <div class="player-controls-area">
+                    
+                    <div class="d-flex align-items-center mb-2 w-100" id="progress-container">
+                        <span id="time-current" class="text-muted small mr-3 font-weight-bold"
+                              style="font-family: monospace;">00:00</span>
+
+                        <div class="player-progress-bar flex-grow-1 position-relative" id="progress-bar-bg">
+                            <div class="player-progress-buffered" id="progress-bar-buffered" style="width: 0;"></div>
+                            <div class="player-progress-fill" id="progress-bar-fill" style="width: 0;"></div>
+                            <div class="player-progress-handle" id="progress-bar-handle"></div>
+                        </div>
+
+                        <span id="time-total" class="text-muted small ml-3 font-weight-bold"
+                              style="font-family: monospace;">03:34</span>
+
+                        
+                        <div
+                            class="volume-control-wrapper position-relative d-flex align-items-center ml-2 ml-md-3 flex-shrink-0">
+
+                            
+                            <span
+                                class="text-secondary p-0 border-0 shadow-none d-flex align-items-center cursor-pointer">
+                                 <i class="fa fa-volume-up" id="volume-icon"></i>
+                            </span>
+
+                            
+                            <div class="volume-slider-container">
+                                <div class="player-volume-bar" id="volume-bar-bg">
+                                    <div class="player-volume-fill" id="volume-bar-fill" style="height: 100%;"></div>
+                                    <div class="player-volume-handle" id="volume-bar-handle"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button id="btn-loop-mode"
+                                class="btn btn-link text-secondary p-0 border-0 shadow-none ml-1 d-flex align-items-center active-loop"
+                                title="关闭单曲循环">
+                            <i class="fa fa-retweet"></i>
+                        </button>
+
+                        <button id="btn-playback-rate"
+                                class="btn btn-link font-smaller text-secondary p-0 border-0 shadow-none ml-1 font-weight-bold"
+                                style="text-decoration: none;" title="切换倍速">
+                            1.0x
+                        </button>
+                    </div>
+
+                    
+                    <div class="d-flex justify-content-start align-items-center flex-nowrap action-btn-group">
+                        <button
+                            class="btn btn-primary-blue rounded-pill px-4 py-1 mr-2 mr-md-3 mb-1 d-flex align-items-center shadow-sm flex-shrink-1"
+                            id="btn-main-play">
+                            <i class="fa fa-play-circle mr-1" style="font-size: 1.1rem;"></i>
+                            <span id="main-play-text" class="font-weight-bold text-nowrap">播放</span>
+                        </button>
+                        <button id="music-favorite-btn"
+                                class="btn btn-ui-white rounded-pill px-4 py-1 mr-2 mr-md-3 mb-1 font-weight-bold shadow-sm flex-shrink-1 text-nowrap"
+                                data-status="0">
+                            <i class="fa fa-heart mr-1"></i> 收藏
+                        </button>
+                        <button id="music-add-playlist-btn"
+                                class="btn btn-ui-white rounded-pill px-4 py-1 mr-2 mr-md-3 mb-1 font-weight-bold shadow-sm flex-shrink-1 text-nowrap">
+                            <i class="fa fa-plus-square mr-1"></i> 歌单
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            
+            <audio id="custom-audio-player"
+                   preload="metadata"></audio>
+
+                            <div class="quote-warning mb-2" style="font-size: 0.85rem">
+                    <i class="fa fa-info-circle"></i>
+                    如无法下载或有错误，请刷新重试或点此 <a id="music-feedback-btn" style="text-decoration: underline;"
+                                                           href="javascript:void(0)">反馈</a> 给我们
+                </div>
+            
+            <div class="input-group mb-1 overflow-hidden">
+                <div class="input-group-prepend">
+                    <i class="fa fa-music input-group-text"></i>
+                </div>
+                <span class="form-control bg-light nowrap-hidden">
+                   小美满-周深.mp3
+                </span>
+                <div class="input-group-append">
+                    <a id="btn-download-mp3"  href="/dp/aHR0cHM6Ly9wYW4ucXVhcmsuY24vcy9hYjAzY2Q5YmU1NTA="  class="btn btn-primary" target="_blank">
+                        <i class="fa fa-download"></i>
+                        下载歌曲</a>
+                </div>
+            </div>
+            <div class="input-group overflow-hidden">
+                <div class="input-group-prepend">
+                    <i class="fa fa-file-text-o input-group-text"></i>
+                </div>
+                <span class="form-control bg-light nowrap-hidden">
+                    [00:00.00]小美满 (《热辣滚烫》电影热辣陪伴曲) - 周...
+                </span>
+                <div class="input-group-append">
+                    <a id="btn-download-lrc" class="btn btn-primary"><i class="fa fa-download"></i> 下载歌词</a>
+                </div>
+            </div>
+            <div class="mt-1">
+                <div class="content-lrc mt-1" id="content-lrc">[00:00.00]小美满 (《热辣滚烫》电影热辣陪伴曲) - 周深<br />
+[00:03.83]词：李聪<br />
+[00:04.68]曲：彭飞<br />
+[00:04.79]编曲：彭飞<br />
+[00:04.92]制作人：彭飞<br />
+[00:05.08]合音：周深<br />
+[00:05.92]弦乐：彭飞<br />
+[00:06.07]吉他：毕赫宸<br />
+[00:06.21]录音室：@SBMS Beijing<br />
+[00:07.12]录音师：徐威@52Hz studio Shanghai/汝文博@SBMS Beijing<br />
+[00:07.56]混音室：@SBMS Beijing<br />
+[00:07.71]混音师：赵靖@SBMS Beijing<br />
+[00:08.03]母带工程师：赵靖 @SBMS Beijing<br />
+[00:08.97]OP：索尼音乐版权代理（北京）有限公司/上海乐宥创意策划中心<br />
+[00:11.50]SP：索尼音乐版权代理（北京）有限公司<br />
+[00:11.99]特别鸣谢：周深工作室<br />
+[00:13.05]音乐发行：听见时代<br />
+[00:17.57]没什么 大愿望<br />
+[00:20.62]没有什么事 要赶<br />
+[00:23.83]看见路口红灯 一直闪<br />
+[00:26.92]它像 眨眼的小太阳<br />
+[00:30.01]乌云还 挺大胆<br />
+[00:33.17]顶在头上 吹不散<br />
+[00:36.07]我抓在手里 捏成棉花糖<br />
+[00:39.38]什么烦恼 不能忘<br />
+[00:43.32]既然 是路一定有转弯<br />
+[00:47.07]哪个风景 都漂亮<br />
+[00:50.31]揉揉疲惫的眼睛 停下来 看一看<br />
+[00:55.56]美好简单<br />
+[01:00.60]你看<br />
+[01:01.34]小狗在叫 树叶会笑<br />
+[01:04.43]风声在呢喃<br />
+[01:07.43]不如好好 欣赏一秒<br />
+[01:10.65]迷迷糊糊的 浪漫<br />
+[01:13.03]只要 一觉醒来 床单洒满<br />
+[01:16.87]阳光的 温暖<br />
+[01:19.23]不去想 不必想<br />
+[01:22.39]不用急急忙忙 说一个 答案<br />
+[01:38.59]笑一笑 就灿烂<br />
+[01:41.56]唱一句歌 就舒展<br />
+[01:44.81]收集一点一滴 小美满<br />
+[01:47.95]都是 幸福的花样<br />
+[01:50.99]没道理 的开朗<br />
+[01:54.18]打扮 平凡的日常<br />
+[01:57.03]找到自己 最合身的衣裳<br />
+[02:00.34]只要自己 够喜欢<br />
+[02:04.31]至少 还有温柔的眼光<br />
+[02:08.15]还在夜里 看月亮<br />
+[02:11.24]心情铺得再满 也要留一扇天窗<br />
+[02:16.49]岁月很长<br />
+[02:21.50]你看<br />
+[02:22.33]小狗在叫 树叶会笑<br />
+[02:25.40]风声在呢喃<br />
+[02:28.45]不如好好 欣赏一秒<br />
+[02:31.63]迷迷糊糊的浪漫<br />
+[02:34.03]只要 一觉醒来 床单洒满<br />
+[02:37.84]阳光的温暖<br />
+[02:40.22]不去想 不必想<br />
+[02:43.34]不用急急忙忙 说一个 答案<br />
+[02:49.55]你愿相信什么<br />
+[02:51.93]就把世界 看成什么样<br />
+[02:56.54]偶尔难题 加点重量<br />
+[02:59.65]越要 轻轻地旋转<br />
+[03:02.03]所以 无论如何<br />
+[03:04.40]记得保管 小小的光环<br />
+[03:08.22]笑就好 哭也好<br />
+[03:11.43]今天 就是明天最好的 陪伴<br />
+[03:17.50]笑就好 哭也好<br />
+[03:22.30]自己 就是自己最好的 陪伴</div>
+                <div class="expand" data-status="up">展开</div>
+            </div>
+        </div>
+        <div class="card-footer bg-white" id="download-log">
+    <div style="overflow:hidden;height:1rem;line-height: 1rem;">
+        <ul class="list-group">
+                            <li class="text-truncate">
+                    <a href="/music/4589866" title="看着你的眼睛微笑 - 孟庭苇" style="font-size: small"
+                       target="_blank">
+                                <span class="text-muted">
+                                    网友刚刚下载了
+                                </span>
+                        看着你的眼睛微笑 - 孟庭苇
+                    </a>
+                </li>
+                            <li class="text-truncate">
+                    <a href="/music/66688646" title="秋风慢慢吹 - 乌兰Ulan" style="font-size: small"
+                       target="_blank">
+                                <span class="text-muted">
+                                    网友刚刚下载了
+                                </span>
+                        秋风慢慢吹 - 乌兰Ulan
+                    </a>
+                </li>
+                            <li class="text-truncate">
+                    <a href="/music/193679" title="위아래 - EXID" style="font-size: small"
+                       target="_blank">
+                                <span class="text-muted">
+                                    网友刚刚下载了
+                                </span>
+                        위아래 - EXID
+                    </a>
+                </li>
+                            <li class="text-truncate">
+                    <a href="/music/6407039" title="OH GAL - 温兆伦" style="font-size: small"
+                       target="_blank">
+                                <span class="text-muted">
+                                    网友刚刚下载了
+                                </span>
+                        OH GAL - 温兆伦
+                    </a>
+                </li>
+                            <li class="text-truncate">
+                    <a href="/music/67080" title="梦醒时分 - 陈淑桦" style="font-size: small"
+                       target="_blank">
+                                <span class="text-muted">
+                                    网友刚刚下载了
+                                </span>
+                        梦醒时分 - 陈淑桦
+                    </a>
+                </li>
+                            <li class="text-truncate">
+                    <a href="/music/213284" title="无愧于心 - 孙楠" style="font-size: small"
+                       target="_blank">
+                                <span class="text-muted">
+                                    网友刚刚下载了
+                                </span>
+                        无愧于心 - 孙楠
+                    </a>
+                </li>
+                            <li class="text-truncate">
+                    <a href="/music/152494" title="HANN - i-dle (아이들)" style="font-size: small"
+                       target="_blank">
+                                <span class="text-muted">
+                                    网友刚刚下载了
+                                </span>
+                        HANN - i-dle (아이들)
+                    </a>
+                </li>
+                            <li class="text-truncate">
+                    <a href="/music/4378" title="情罪 - 陈瑞" style="font-size: small"
+                       target="_blank">
+                                <span class="text-muted">
+                                    网友刚刚下载了
+                                </span>
+                        情罪 - 陈瑞
+                    </a>
+                </li>
+                            <li class="text-truncate">
+                    <a href="/music/253391" title="中国娃 - 解小东" style="font-size: small"
+                       target="_blank">
+                                <span class="text-muted">
+                                    网友刚刚下载了
+                                </span>
+                        中国娃 - 解小东
+                    </a>
+                </li>
+                            <li class="text-truncate">
+                    <a href="/music/4202" title="爱在西元前 - 周杰伦" style="font-size: small"
+                       target="_blank">
+                                <span class="text-muted">
+                                    网友刚刚下载了
+                                </span>
+                        爱在西元前 - 周杰伦
+                    </a>
+                </li>
+                            <li class="text-truncate">
+                    <a href="/music/37514" title="生生 - 林俊杰" style="font-size: small"
+                       target="_blank">
+                                <span class="text-muted">
+                                    网友刚刚下载了
+                                </span>
+                        生生 - 林俊杰
+                    </a>
+                </li>
+                            <li class="text-truncate">
+                    <a href="/music/22229" title="老街 - 李荣浩" style="font-size: small"
+                       target="_blank">
+                                <span class="text-muted">
+                                    网友刚刚下载了
+                                </span>
+                        老街 - 李荣浩
+                    </a>
+                </li>
+                            <li class="text-truncate">
+                    <a href="/music/33471" title="想把我唱给你听 - 老狼&amp;王婧" style="font-size: small"
+                       target="_blank">
+                                <span class="text-muted">
+                                    网友刚刚下载了
+                                </span>
+                        想把我唱给你听 - 老狼&amp;王婧
+                    </a>
+                </li>
+                            <li class="text-truncate">
+                    <a href="/music/64120695" title="天涯 - 白兰的" style="font-size: small"
+                       target="_blank">
+                                <span class="text-muted">
+                                    网友刚刚下载了
+                                </span>
+                        天涯 - 白兰的
+                    </a>
+                </li>
+                            <li class="text-truncate">
+                    <a href="/music/63653436" title="青梅子 - Youzee Music" style="font-size: small"
+                       target="_blank">
+                                <span class="text-muted">
+                                    网友刚刚下载了
+                                </span>
+                        青梅子 - Youzee Music
+                    </a>
+                </li>
+                            <li class="text-truncate">
+                    <a href="/music/40298" title="绿旋风 - 凤凰传奇" style="font-size: small"
+                       target="_blank">
+                                <span class="text-muted">
+                                    网友刚刚下载了
+                                </span>
+                        绿旋风 - 凤凰传奇
+                    </a>
+                </li>
+                            <li class="text-truncate">
+                    <a href="/music/1275" title="是你 - TFBOYS" style="font-size: small"
+                       target="_blank">
+                                <span class="text-muted">
+                                    网友刚刚下载了
+                                </span>
+                        是你 - TFBOYS
+                    </a>
+                </li>
+                            <li class="text-truncate">
+                    <a href="/music/1426829" title="万千花蕊慈母悲哀-珂拉琪 - kelaqi" style="font-size: small"
+                       target="_blank">
+                                <span class="text-muted">
+                                    网友刚刚下载了
+                                </span>
+                        万千花蕊慈母悲哀-珂拉琪 - kelaqi
+                    </a>
+                </li>
+                    </ul>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        autoScroll('#download-log');
+    });
+</script>
+    </div>
+
+    
+    
+    <div class="modal fade" id="addToPlaylistModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+        <div class="modal-content modal-content-custom">
+            <div class="modal-header border-bottom-0 pt-3 px-3">
+                <h6 class="modal-title font-weight-bold">加入歌单</h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="关闭">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body px-3 py-2">
+                <form id="form-add-to-playlist">
+                    <input type="hidden" name="music_id" id="target-add-music-id">
+                    <div class="form-group mb-0">
+                        <select class="form-control form-control-radius" name="playlist_id"
+                                id="select-playlist-list"
+                                required>
+                            <option value="">正在加载歌单...</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer border-top-0 pb-3 px-3 d-flex justify-content-between">
+                <button type="button" class="btn btn-sm btn-outline-primary rounded-pill flex-grow-1 mr-2"
+                        data-toggle="modal"
+                        data-target="#createPlaylistModal" data-dismiss="modal">
+                    新建歌单
+                </button>
+                <button type="button" class="btn btn-sm btn-primary rounded-pill flex-grow-1 ml-2"
+                        id="btn-confirm-add-to-playlist">
+                    确认加入
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+    <div class="modal fade" id="createPlaylistModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+        <div class="modal-content modal-content-custom">
+            <div class="modal-header border-bottom-0 pt-3 px-3">
+                <h6 class="modal-title font-weight-bold">新建歌单</h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="关闭">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body px-3 py-2">
+                <form id="form-create-playlist">
+                    <div class="form-group">
+                        <label class="text-muted small font-weight-bold">歌单名称</label>
+                        <input type="text" class="form-control form-control-radius" id="new-playlist-title"
+                               name="title" required
+                               placeholder="例如：学习专用白噪音、华语经典..." maxlength="30">
+                    </div>
+                    <div class="form-group mb-0">
+                        <label class="text-muted small font-weight-bold">简介 (可选)</label>
+                        <textarea class="form-control form-control-radius" id="new-playlist-desc"
+                                  name="description" rows="2"
+                                  placeholder="简单描述一下这个歌单..." maxlength="100"
+                                  style="resize: none;"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer border-bottom-0 pb-3 px-3 d-flex justify-content-between">
+                                    <button type="button" class="btn btn-light rounded-pill px-4" data-dismiss="modal"
+                            data-toggle="modal"
+                            data-target="#addToPlaylistModal">返回
+                    </button>
+                                <button type="button" class="btn btn-primary rounded-pill px-4" id="btn-confirm-create-playlist">
+                    确认新建
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <div class="card mb-1">
+        <div class="card-body py-3">
+            <h6 class="card-title">
+                <i class="fa fa-folder" style="color:#FF6B6B; margin-right:5px;"></i> 相关专题
+            </h6>
+            <div class="card-text">
+                <a href="/topic/zhoushen-yeft3v"
+                   title="周深歌曲合集"
+                   target="_blank"
+                   class="media align-items-start hover-top">
+                    <div class="position-relative flex-shrink-0">
+                        <img class="artist-avatar mr-3" src="https://img2.kuwo.cn/star/starheads/300/72/6/4010076391.jpg"
+                             alt="周深歌曲合集">
+                        <span class="absolute-top-left text">专题</span>
+                    </div>
+                    <div class="media-body" style="min-width: 0;">
+                        <h5 class="artist-name text-dark">周深歌曲合集</h5>
+                        <p class="artist-desc text-ellipsis-2">
+                            周深（Charlie），1992年9月29日出生于湖南省邵阳市，成长于贵州省贵阳市，中国内地男歌手，毕业于乌克兰利沃夫国立立谢科音乐科学院美声专业。 2014年，参加浙江卫视歌唱选秀节目《中国好声音第三季》，从而正式出...
+                        </p>
+                    </div>
+                    <i class="fa fa-angle-right align-self-center flex-shrink-0 ml-3"
+                       style="color: #b94a1b; font-size: 24px;" aria-hidden="true"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    
+    <div class="card shadow-sm mb-2">
+    <div class="card-body">
+        <h6 class="card-title">
+            <a href="/hot-music" class="text-red font-weight-bolder">
+                <i class="fa fa-star text-orange mr-1"></i> 热门推荐
+            </a>
+            <small>
+                <a class="float-right text-muted" href="/hot-music">更多 <i class="fa fa-angle-right"></i></a>
+            </small>
+        </h6>
+        <div class="list-group list-group-flush">
+                            <a href="/music/4199" title="烟花易冷-周杰伦"
+                   class="list-group-item list-group-item-action px-0 text-primary text-truncate d-flex justify-content-between align-items-center">
+                <span class="ml-1 text-truncate">
+                   <span style="color: #CC0066" class="font-weight-bolder">烟花易冷</span>
+                        -
+                    <small class="text-muted">周杰伦</small>
+                </span>
+                    <i class="fa fa-play-circle" style="font-size: larger"></i>
+                </a>
+                            <a href="/music/66835074" title="Hong Kong (feat. 王菲季候风)-The Weeknd"
+                   class="list-group-item list-group-item-action px-0 text-primary text-truncate d-flex justify-content-between align-items-center">
+                <span class="ml-1 text-truncate">
+                   <span style="color: #CCCC00" class="font-weight-bolder">Hong Kong (feat. 王菲季候风)</span>
+                        -
+                    <small class="text-muted">The Weeknd</small>
+                </span>
+                    <i class="fa fa-play-circle" style="font-size: larger"></i>
+                </a>
+                            <a href="/music/28174177" title="富士山下-陈奕迅"
+                   class="list-group-item list-group-item-action px-0 text-primary text-truncate d-flex justify-content-between align-items-center">
+                <span class="ml-1 text-truncate">
+                   <span style="color: #FF6666" class="font-weight-bolder">富士山下</span>
+                        -
+                    <small class="text-muted">陈奕迅</small>
+                </span>
+                    <i class="fa fa-play-circle" style="font-size: larger"></i>
+                </a>
+                            <a href="/music/9653" title="光年之外-G.E.M. 邓紫棋"
+                   class="list-group-item list-group-item-action px-0 text-primary text-truncate d-flex justify-content-between align-items-center">
+                <span class="ml-1 text-truncate">
+                   <span style="color: #FF6600" class="font-weight-bolder">光年之外</span>
+                        -
+                    <small class="text-muted">G.E.M. 邓紫棋</small>
+                </span>
+                    <i class="fa fa-play-circle" style="font-size: larger"></i>
+                </a>
+                            <a href="/music/17781" title="开始懂了-孙燕姿"
+                   class="list-group-item list-group-item-action px-0 text-primary text-truncate d-flex justify-content-between align-items-center">
+                <span class="ml-1 text-truncate">
+                   <span style="color: #FF33CC" class="font-weight-bolder">开始懂了</span>
+                        -
+                    <small class="text-muted">孙燕姿</small>
+                </span>
+                    <i class="fa fa-play-circle" style="font-size: larger"></i>
+                </a>
+                            <a href="/music/8454" title="多远都要在一起-G.E.M. 邓紫棋"
+                   class="list-group-item list-group-item-action px-0 text-primary text-truncate d-flex justify-content-between align-items-center">
+                <span class="ml-1 text-truncate">
+                   <span style="color: #009999" class="font-weight-bolder">多远都要在一起</span>
+                        -
+                    <small class="text-muted">G.E.M. 邓紫棋</small>
+                </span>
+                    <i class="fa fa-play-circle" style="font-size: larger"></i>
+                </a>
+                            <a href="/music/4198" title="一路向北-周杰伦"
+                   class="list-group-item list-group-item-action px-0 text-primary text-truncate d-flex justify-content-between align-items-center">
+                <span class="ml-1 text-truncate">
+                   <span style="color: #339999" class="font-weight-bolder">一路向北</span>
+                        -
+                    <small class="text-muted">周杰伦</small>
+                </span>
+                    <i class="fa fa-play-circle" style="font-size: larger"></i>
+                </a>
+                            <a href="/music/58648" title="黄昏-周传雄"
+                   class="list-group-item list-group-item-action px-0 text-primary text-truncate d-flex justify-content-between align-items-center">
+                <span class="ml-1 text-truncate">
+                   <span style="color: #0099CC" class="font-weight-bolder">黄昏</span>
+                        -
+                    <small class="text-muted">周传雄</small>
+                </span>
+                    <i class="fa fa-play-circle" style="font-size: larger"></i>
+                </a>
+                            <a href="/music/28763" title="特别的人-方大同"
+                   class="list-group-item list-group-item-action px-0 text-primary text-truncate d-flex justify-content-between align-items-center">
+                <span class="ml-1 text-truncate">
+                   <span style="color: #CC3399" class="font-weight-bolder">特别的人</span>
+                        -
+                    <small class="text-muted">方大同</small>
+                </span>
+                    <i class="fa fa-play-circle" style="font-size: larger"></i>
+                </a>
+                            <a href="/music/4191" title="红尘客栈-周杰伦"
+                   class="list-group-item list-group-item-action px-0 text-primary text-truncate d-flex justify-content-between align-items-center">
+                <span class="ml-1 text-truncate">
+                   <span style="color: #336699" class="font-weight-bolder">红尘客栈</span>
+                        -
+                    <small class="text-muted">周杰伦</small>
+                </span>
+                    <i class="fa fa-play-circle" style="font-size: larger"></i>
+                </a>
+                    </div>
+    </div>
+</div>
+
+    
+    
+</div>
+
+
+<footer class="footer-modern text-center">
+    <div class="container">
+        <nav class="footer-links mb-3" aria-label="页脚导航">
+                            <a href="https://site-pages-1tu.pages.dev/?site=gqb" class="footer-link" target="_blank" rel="noopener noreferrer" title="收藏官方地址发布页，防止失联">
+                    <i class="fa fa-bookmark-o mr-1"></i>防失联
+                </a>
+                <span class="footer-link-separator text-muted opacity-50" aria-hidden="true">|</span>
+            
+            <a href="javascript:void(0)" class="footer-link" data-toggle="modal" data-target="#feedbackModal" id="feedbackBtn"
+               rel="nofollow">
+                <i class="fa fa-commenting-o mr-1"></i>反馈建议
+            </a>
+
+            <span class="footer-link-separator text-muted opacity-50" aria-hidden="true">|</span>
+            <a href="javascript:void(0)" class="footer-link get-setting-btn" rel="nofollow" data-key="mzsm_mark">
+                <i class="fa fa-shield mr-1"></i>免责声明
+            </a>
+
+            
+            <span class="footer-link-separator text-muted opacity-50" aria-hidden="true">|</span>
+            <a href="/friendly-links" class="footer-link">
+                <i class="fa fa-link mr-1"></i>友情链接
+            </a>
+
+        </nav>
+
+        
+        <div class="text-muted small">
+            <a href="/" class="text-decoration-none">
+                歌曲宝 - gequbao.com &copy; 2026
+            </a>
+
+            <span class="mx-1 opacity-50">|</span>
+
+            <a href="javascript:void(0)" class="text-decoration-none js-add-bookmark" title="加入书签">
+                <i class="fa fa-star text-warning"></i> 收藏本站
+            </a>
+        </div>
+    </div>
+
+    
+    <span style="display: none">
+        
+        <script> var _mtj = _mtj || []; (function () { var mtj = document.createElement("script"); mtj.src = "https://node31.aizhantj.com:21233/tjjs/?k=t8h1bavogbi"; var s = document.getElementsByTagName("script")[0]; s.parentNode.insertBefore(mtj, s); })(); </script>
+    </span>
+</footer>
+
+<div class="modal fade" id="feedbackModal" tabindex="-1" role="dialog" aria-labelledby="feedbackModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title font-weight-bold text-primary" id="feedbackModalLabel">
+                    <i class="fa fa-commenting-o mr-2"></i>意见反馈
+                </h5>
+                <button type="button" id="feedbackModalClose" class="close text-muted" data-dismiss="modal"
+                        aria-label="关闭">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body p-4">
+                <p class="text-muted font-smaller mb-4">您的建议是我们进步的动力<b class="text-muted">（如需提交截图信息请登录后进行提交）</b>。</p>
+
+                <div class="form-group mb-3">
+                    <label for="feedbackType" class="font-weight-bold small text-secondary">反馈类型</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text bg-light border-right-0"><i
+                                        class="fa fa-list-ul text-secondary"></i></span>
+                        </div>
+                        <select class="form-control border-left-0 focus-shadow" id="feedbackType" required>
+                            <option value="" selected disabled>请选择反馈类型</option>
+                            <option value="function">功能建议（网站功能改进建议）</option>
+                            <option value="music">歌曲收录（请提供歌手和歌名）</option>
+                            <option value="other">其他</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group mb-3" id="link-group" style="display: none">
+                    <label for="link" class="font-weight-bold small text-secondary">错误链接</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text bg-light border-right-0"><i
+                                        class="fa fa-link text-secondary"></i></span>
+                        </div>
+                        <input type="text" class="form-control border-left-0 focus-shadow" placeholder="请输入出错的网址链接"
+                               id="link">
+                    </div>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="feedbackContent" class="font-weight-bold small text-secondary">反馈内容</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text bg-light border-right-0"
+                                  style="align-items: flex-start; padding-top: 0.7rem;"><i
+                                        class="fa fa-pencil text-secondary"></i></span>
+                        </div>
+                        <textarea class="form-control border-left-0 focus-shadow" id="feedbackContent" rows="4" required
+                                  placeholder="请详细描述您遇到的问题或建议..."
+                                  style="resize: none;"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-group mb-4">
+                    <label for="feedbackContact" class="font-weight-bold small text-secondary">联系邮箱</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text bg-light border-right-0"><i
+                                        class="fa fa-envelope-o text-secondary"></i></span>
+                        </div>
+                        <input type="email" class="form-control border-left-0 focus-shadow" id="feedbackContact"
+                               placeholder="example@email.com" required>
+                    </div>
+                    <small class="form-text text-muted">我们将通过邮件向您同步处理结果。</small>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center mt-2">
+                    <button type="button" id="feedbackResetFormBtn" class="btn btn-link text-muted pl-0"
+                            style="text-decoration: none;">
+                        <i class="fa fa-refresh mr-1"></i>清空
+                    </button>
+                    <button type="button" id="feedbackSubmitFormBtn" class="btn btn-primary px-4 shadow-sm"
+                            style="border-radius: 2rem;">
+                        <i class="fa fa-paper-plane mr-1"></i> 提交反馈
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+    <script type="text/javascript">
+        window.appData = JSON.parse('{\u0022mp3_id\u0022:859,\u0022play_id\u0022:\u0022eyJpdiI6InRudndidEdXcnlCZ3UrRWQ1ams4Y2c9PSIsInZhbHVlIjoiWWxxNEVoam95aG4rZ0JSNHJmMzJjVWZSSzJEM1VGTk54VHpqNGtNR0h5azlkU1lqWk9RVGI5RXhDQ1krNHN0NSIsIm1hYyI6ImNhZjFjMTRjMTNmY2U3NDA3YjdmMzA4N2M5MmNhNGRmZDhiMmRhNzViOGI4NTFhNDhjYjk5ZDVmYjEyYWM3ZDgiLCJ0YWciOiIifQ==\u0022,\u0022mp3_title\u0022:\u0022\\u5c0f\\u7f8e\\u6ee1\u0022,\u0022mp3_author\u0022:\u0022\\u5468\\u6df1\u0022,\u0022mp3_type\u0022:0,\u0022mp3_cover\u0022:\u0022http:\\\/\\\/img1.kuwo.cn\\\/star\\\/albumcover\\\/500\\\/s3s40\\\/13\\\/2405080697.jpg\u0022,\u0022mp3_duration\u0022:\u002203:34\u0022,\u0022mp3_extra_urls\u0022:[{\u0022id\u0022:1914852,\u0022share_link\u0022:\u0022aHR0cHM6Ly9wYW4ucXVhcmsuY24vcy9hYjAzY2Q5YmU1NTA=\u0022,\u0022pwd\u0022:null,\u0022type\u0022:\u0022\\u5938\\u514bAPP\u0022,\u0022color\u0022:\u0022#118AB2\u0022,\u0022compel_wap\u0022:false,\u0022icon\u0022:\u0022\\\/static\\\/img\\\/quark-icon.png\u0022}],\u0022ap_preload\u0022:\u0022metadata\u0022,\u0022is_robot\u0022:false,\u0022extra_url_compel\u0022:false,\u0022lrc_is_empty\u0022:false,\u0022ad_type\u0022:1,\u0022extra_recommend_wap_url\u0022:\u0022aHR0cHM6Ly9wYW4ucXVhcmsuY24vcy9hYjAzY2Q5YmU1NTA=\u0022,\u0022vip_down_url\u0022:true}');
+    </script>
+
+
+
+<button id="backToTop" class="back-to-top" title="回到顶部" aria-label="回到顶部">
+    <i class="fa fa-arrow-up"></i>
+</button>
+
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"ffd6b182709045a1a5ec9dc5ef4b2f2f","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>

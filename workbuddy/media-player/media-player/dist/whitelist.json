@@ -1,0 +1,18 @@
+{
+  "_note": "白名单：users 填微信 openid；devices 填设备机器码；未授权自动记入 pending / devicePending。",
+  "users": [],
+  "pending": [],
+  "devices": [
+    {
+      "code": "MC-9065-CB4A-6241-73E9",
+      "name": "已授权设备",
+      "enabled": true,
+      "firstSeen": "2026-11-11T09:50:31.630Z",
+      "lastSeen": "2026-11-11T09:50:36.841Z",
+      "ip": "127.0.0.1",
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36",
+      "label": "Win32 / Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/10"
+    }
+  ],
+  "devicePending": []
+}

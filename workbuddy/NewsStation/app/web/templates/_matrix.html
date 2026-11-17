@@ -1,0 +1,23 @@
+<div class="matrix-wrap">
+  <table class="matrix">
+    <thead>
+      <tr>
+        <th>行业 / 时段</th>
+        {% for c in matrix.cols %}<th>{{ c.label }}</th>{% endfor %}
+        <th class="r">合计</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in matrix.rows %}
+      <tr>
+        <th><i class="dotind" style="background:{{ r.color }}"></i>{{ r.label }}</th>
+        {% for n in r.cells %}
+        <td class="cell" {% if n %}style="background:rgba(208,57,59,{{ (0.06 + 0.82 * n / matrix.max)|round(2) }})"{% endif %} title="{{ r.label }} · {{ matrix.cols[loop.index0].label }} · {{ n }} 篇">{{ n if n else '' }}</td>
+        {% endfor %}
+        <td class="r total">{{ r.total }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <p class="hint">行 = 12 类行业，列 = 近 12 个 2 小时时段；色深 = 文章数（一篇多标签会分别计入）。符合条件的事件 {{ matrix.events }} 个，计入 {{ matrix.total }} 篇次。</p>
+</div>

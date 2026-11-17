@@ -1,0 +1,9 @@
+<view class="wrap">
+  <view class="card">
+    <view class="title">{{verified ? '验证通过' : '尚未验证'}}</view>
+    <view class="tip">{{verified ? '微信身份已校验。请在浏览器打开网关地址使用播放器；电脑端扫码登录后网页会自动进入。' : '请先返回首页完成微信身份校验。'}}</view>
+    <view wx:if="{{verified}}" class="base">{{base}}/</view>
+    <button wx:if="{{verified}}" class="btn" bindtap="copyBase">复制网关地址</button>
+    <button class="btn ghost" bindtap="back">返回</button>
+  </view>
+</view>

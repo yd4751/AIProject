@@ -1,0 +1,86 @@
+{
+  "_readme": [
+    "可配置的资源抓取站点列表。改完保存后无需重启服务，下次请求自动生效。",
+    "字段说明：",
+    "  id      唯一标识；kind  movie=影视 / music=音乐；parser  6uq | gequbao | generic（douban 为内置，勿改）",
+    "  enabled 是否启用；lyric 该站点是否提供歌词；base 需要 cookie 的站点填首页地址",
+    "  searchUrl / detailUrl / lyricUrl 支持占位符 {q}（查询词，自动 URL 编码）与 {id}（条目 ID）",
+    "  audioUrl（音乐站可选）音频下载地址，支持 {id}；默认 GET 取 302 跳转，返回直链；",
+    "           配 audioMethod=post 时改为以表单 POST {id,purpose} 换取 JSON 里的 data.url（歌曲宝走这条）",
+    "  linkPattern（generic 用）从搜索页 HTML 里挑出条目链接的正则，第一个捕获组为条目 ID"
+  ],
+  "sites": [
+    {
+      "id": "douban-movie",
+      "name": "豆瓣影视",
+      "kind": "movie",
+      "enabled": true,
+      "lyric": false,
+      "builtin": true,
+      "parser": "douban",
+      "searchUrl": "",
+      "detailUrl": "",
+      "lyricUrl": "",
+      "linkPattern": "",
+      "base": ""
+    },
+    {
+      "id": "douban-music",
+      "name": "豆瓣音乐",
+      "kind": "music",
+      "enabled": true,
+      "lyric": false,
+      "builtin": true,
+      "parser": "douban",
+      "searchUrl": "",
+      "detailUrl": "",
+      "lyricUrl": "",
+      "linkPattern": "",
+      "base": ""
+    },
+    {
+      "id": "6uq",
+      "name": "爱听音乐网 (6uq)",
+      "kind": "music",
+      "enabled": false,
+      "lyric": true,
+      "builtin": true,
+      "parser": "6uq",
+      "searchUrl": "https://m.6uq.cn/so/{q}.html",
+      "detailUrl": "https://m.6uq.cn/play/{id}.html",
+      "lyricUrl": "https://m.6uq.cn/plug/down.php?ac=music&lk=lrc&id={id}",
+      "linkPattern": "",
+      "base": "https://m.6uq.cn/"
+    },
+    {
+      "id": "gequbao",
+      "name": "歌曲宝 (gequbao)",
+      "kind": "music",
+      "enabled": true,
+      "lyric": true,
+      "builtin": true,
+      "parser": "gequbao",
+      "searchUrl": "https://www.gequbao.com/s/{q}",
+      "detailUrl": "https://www.gequbao.com/music/{id}",
+      "lyricUrl": "",
+      "linkPattern": "",
+      "base": "https://www.gequbao.com/",
+      "audioUrl": "https://www.gequbao.com/member/common-play-url",
+      "audioMethod": "post"
+    },
+    {
+      "id": "custom-demo",
+      "name": "自定义站点示例（默认关闭）",
+      "kind": "music",
+      "enabled": false,
+      "lyric": true,
+      "builtin": false,
+      "parser": "generic",
+      "searchUrl": "https://example.com/search?keyword={q}",
+      "detailUrl": "https://example.com/song/{id}",
+      "lyricUrl": "https://example.com/lrc/{id}.lrc",
+      "linkPattern": "/song/([A-Za-z0-9_-]+)",
+      "base": ""
+    }
+  ]
+}

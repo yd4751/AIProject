@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% set active = 'sources' %}
+{% block title %}媒体源 · NewsStation{% endblock %}
+
+{% block content %}
+<section class="card">
+  <div class="card-head">
+    <h2>媒体源</h2>
+    <div class="actions">
+      <span class="hint">{{ ok_count }} 正常 · {{ fail_count }} 异常</span>
+      <form method="post" action="/fetch">
+        <button type="submit">立即抓取</button>
+      </form>
+    </div>
+  </div>
+
+  <table class="tbl">
+    <thead>
+      <tr><th>源</th><th>语言</th><th>代理</th><th>状态</th><th class="r">上次条数</th><th>上次运行</th></tr>
+    </thead>
+    <tbody>
+      {% for s in sources %}
+      <tr>
+        <td>
+          <span class="name">{{ s.name }}</span>
+          <span class="id">{{ s.id }}</span>
+        </td>
+        <td>{{ s.lang }}</td>
+        <td>{% if s.proxy_required %}<span class="tag">需代理</span>{% else %}<span class="muted">直连</span>{% endif %}</td>
+        <td>
+          {% if s.status.startswith('ok') %}
+            <span class="badge ok">正常</span>
+          {% elif s.status.startswith('error') %}
+            <span class="badge bad">失败 {{ s.fail_streak }}</span>
+          {% elif s.status.startswith('skipped') %}
+            <span class="badge skip">已跳过</span>
+          {% else %}
+            <span class="badge idle">未运行</span>
+          {% endif %}
+          {% if s.status.startswith('error') %}<div class="err">{{ s.status[7:90] }}</div>{% endif %}
+        </td>
+        <td class="r">{{ s.count }}</td>
+        <td>{{ s.last_run | localtime }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+
+{% if social_sources %}
+<section class="card" style="margin-top:16px">
+  <div class="card-head">
+    <h2>社交媒体热榜源</h2>
+    <div class="actions">
+      <span class="hint">{{ social_sources|length }} 个平台 · 榜单见 <a href="/social">社媒热榜</a></span>
+    </div>
+  </div>
+  <table class="tbl">
+    <thead>
+      <tr><th>平台</th><th>语言</th><th>代理</th><th>状态</th><th class="r">上轮条数</th><th>上次运行</th></tr>
+    </thead>
+    <tbody>
+      {% for s in social_sources %}
+      <tr>
+        <td><span class="name">{{ s.name }}</span><span class="id">{{ s.id }}</span></td>
+        <td>{{ s.lang }}</td>
+        <td>{% if s.proxy_required %}<span class="tag">需代理</span>{% else %}<span class="muted">直连</span>{% endif %}</td>
+        <td>
+          {% if s.status.startswith('ok') %}<span class="badge ok">正常</span>
+          {% elif s.status.startswith('error') %}<span class="badge bad">失败 {{ s.fail_streak }}</span>
+          {% else %}<span class="badge idle">未运行</span>{% endif %}
+          {% if s.status.startswith('error') %}<div class="err">{{ s.status[7:90] }}</div>{% endif %}
+        </td>
+        <td class="r">{{ s.count }}</td>
+        <td>{{ s.last_run | localtime }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endif %}
+{% endblock %}

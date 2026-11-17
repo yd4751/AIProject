@@ -1,0 +1,24 @@
+{
+  "name": "media-player",
+  "version": "1.0.0",
+  "private": true,
+  "description": "本地影音播放器：多格式播放 / 倍速 / 进度拖拽 / 截图 / 全屏 / 换肤 / 豆瓣信息抓取",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "gateway": "node auth-gateway/gateway.js",
+    "start:all": "node start-all.js",
+    "build:exe": "node build-exe.js",
+    "build:gateway": "node auth-gateway/build-exe.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.2",
+    "postject": "^1.0.0-alpha.6"
+  },
+  "dependencies": {
+    "qrcode": "^1.5.4"
+  }
+}

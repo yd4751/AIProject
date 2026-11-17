@@ -1,0 +1,130 @@
+# ── 运行参数（M9）────────────────────────────────────────────
+# 源码模式 `python -m app.server` 与打包后的 NewsStation.exe 都读这一节。
+# 改完保存、重启程序即生效；也可用命令行 --host / --port 临时覆盖。
+# host: 127.0.0.1 只本机可访问；0.0.0.0 允许局域网/容器外访问。
+# auto_open_browser: 启动后自动打开浏览器（exe 双击运行时比较方便）。
+# 注意：单文件 exe 不支持多进程与热重载，workers / reload 在打包态会被忽略。
+server:
+  host: 127.0.0.1
+  port: 8000
+  workers: 1
+  reload: false
+  log_level: info
+  access_log: true
+  auto_open_browser: false
+  proxy_headers: true
+  forwarded_allow_ips: 127.0.0.1
+
+# 数据库相对「运行目录」解析：源码模式是项目根，exe 模式是 exe 所在目录。
+# 也可写绝对路径，例如 D:\NewsStation\data\news.db
+db_path: data/news.db
+
+fetch:
+  interval_minutes: 30
+  concurrency: 6
+  timeout_seconds: 15
+  per_source_delay_ms: 800
+  user_agent: "NewsStation/0.1 (+personal news aggregator)"
+
+# 实测：无代理时境外源全部超时；有代理则 B 组源可用
+proxy:
+  url: "http://127.0.0.1:7890"
+  for_foreign: true
+
+# 留空 pass 时不发邮件，只做站内订阅
+smtp:
+  host: smtp.qq.com
+  port: 465
+  user: ""
+  pass: ""
+  to: ""
+
+# 一键翻译：把页面上的外文标题/摘要翻成 target。
+# backend 六选一：
+#   auto         自动回退链 mymemory → google_free，任一成功即用（默认，免密钥）
+#   mymemory     MyMemory 公共 API，免密钥、国内直连可用（不走代理）
+#   google_free  Google 公开端点，境外走代理（当前代理出口 IP 被 429 限流，作后备）
+#   openai       OpenAI 兼容接口，一次请求翻一批，质量最好；需填 openai.base_url/api_key
+#   libre        自托管 LibreTranslate；需填 libre.url
+#   none         关闭（按钮隐藏，只显示已缓存译文）
+# 说明：实测共享代理 IP 上各家免费端点额度均被耗尽，MyMemory 直连正常，故默认 auto。
+translate:
+  backend: auto
+  target: zh-CN
+  use_proxy: true
+  batch_size: 20
+  timeout_seconds: 15
+  mymemory_email: ""
+  openai:
+    base_url: ""
+    api_key: ""
+    model: gpt-4o-mini
+  libre:
+    url: ""
+    api_key: ""
+
+# 社交媒体热榜（M6）：国内 5 + 境外 3 共 8 源，见 social_sources.yaml。
+# inject_articles=true 时，每平台前 inject_top 条会注入主事件流，
+# 从而自动获得四维标签、事件聚类、订阅命中与一键翻译；关掉则只保留榜单快照。
+# 境外源（HN / Lobsters / GitHub）标 proxy_required:true，经上面 proxy.url 抓取；
+# Reddit 经代理仍 403、X/YouTube 需 API key，暂未接入——加解析器 + 一行配置即可。
+social:
+  enabled: true
+  inject_articles: true
+  inject_top: 12
+  limit: 30
+  retention_days: 7
+
+# 站内阅读（M7）：点击「原文」不再跳外站，由服务端代取网页 → 清洗正文 → 站内渲染。
+# proxy: auto（直连优先，失败回退上面的代理） / direct / force
+# 安全：只允许 http(s) 的 80/443，逐跳校验并拒绝内网/回环 IP，正文走标签白名单。
+reader:
+  enabled: true
+  # auto = 直连优先、失败回退代理；并按域名记住上次成功的通道，下次直接复用
+  proxy: auto
+  remember_route: true        # 关掉则每轮都从直连重新试起
+  timeout_seconds: 12
+  connect_timeout_seconds: 4  # 建连限时：连不上立刻换通道，避免境外站白等 12 秒
+  max_bytes: 2000000
+  max_redirects: 4
+  cache_hours: 6
+  min_text_chars: 120
+  allowed_domains: []        # 例：["bbc.com", "theguardian.com"]，留空不限制
+  allow_external: true       # 抓取失败时提供「手动在浏览器打开」兜底
+  proxy_images: true
+
+# 关键字搜索：站内检索 articles/events/social_trends + 可选搜索引擎，结果按引擎独立展示。
+# engines 决定页面上能勾选哪些引擎；default_engine 是首次打开只跑的那个（保持 M7 的体验）。
+#   default = 原有整套：站内三组 + providers 里的搜狗资讯 / Bing RSS / 百度资讯
+#   google  = Google 资讯 RSS 的「本地版 + 全球版」两路（地区参数不同，结果互补）
+#             + 网页结果（DuckDuckGo，唯一能被服务端代取的网页搜索）
+# Google 网页搜索结果页对数据中心 IP 一律 429 并强制 JS，服务端取不到；
+# 因此页面在谷歌引擎区块提供「在 Google 中直接打开」按钮，网页级结果交给浏览器。
+# 谷歌为境外站点：prefer_proxy=true 时优先走上面的 proxy.url；代理没开会在该引擎区块单独提示，
+# 不影响默认引擎。想彻底关掉谷歌：把 google.enabled 改 false 或从 engines 里删掉 google。
+search:
+  enabled: true
+  external_enabled: true
+  engines: [default, google]
+  default_engine: default
+  google:
+    enabled: true
+    providers: [google_news, google_global]
+    hl: zh-CN                 # 本地版
+    gl: CN
+    ceid: "CN:zh-Hans"
+    global_hl: en-US          # 全球版（与本地版返回不同结果）
+    global_gl: US
+    global_ceid: "US:en"
+    num: 10                   # Google 网页搜索直达链接里的条数
+    results_per_provider: 20  # 每路 RSS 最多取多少条（两路合计约 40 条）
+    web_providers: [ddg_web]  # 网页结果子分区；留空 [] 即不要网页结果
+    web_results: 10           # 网页结果最多几条
+    web_kl: cn-zh             # DuckDuckGo 地区：cn-zh 偏中文，wt-wt 不限
+    timeout_seconds: 8
+    prefer_proxy: true
+  providers: [sogou_news, bing_rss, baidu_news]
+  max_results: 12
+  local_limit: 40
+  cache_minutes: 30
+  timeout_seconds: 12

@@ -1,0 +1,187 @@
+.page {
+    box-sizing: border-box;
+    min-height: 100vh;
+    padding: 32rpx 32rpx 80rpx;
+}
+
+.section {
+    margin-bottom: 32rpx;
+}
+
+.section-title {
+    display: block;
+    margin: 0 8rpx 16rpx;
+    color: #8f959e;
+    font-size: 24rpx;
+    font-weight: 600;
+}
+
+.cell {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-sizing: border-box;
+    padding: 28rpx 30rpx;
+    border: 2rpx solid #e5e8eb;
+    border-radius: 24rpx;
+    background: #ffffff;
+    margin-bottom: 4rpx;
+}
+
+.cell-static {
+    margin-bottom: 16rpx;
+}
+
+.cell-main {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.cell-label {
+    font-size: 29rpx;
+    font-weight: 600;
+    color: #1f2329;
+}
+
+.cell-label-danger {
+    color: #d4380d;
+}
+
+.cell-desc {
+    margin-top: 8rpx;
+    font-size: 22rpx;
+    color: #8f959e;
+}
+
+.cell-action {
+    flex-shrink: 0;
+    margin-left: 20rpx;
+    padding: 10rpx 26rpx;
+    border-radius: 999rpx;
+    background: #f2f3f5;
+    color: #1f2329;
+    font-size: 24rpx;
+}
+
+.cell-action-danger {
+    background: #fff0ef;
+    color: #d4380d;
+}
+
+.picker-value {
+    display: flex;
+    align-items: center;
+    color: #1769e0;
+    font-size: 28rpx;
+    font-weight: 600;
+}
+
+.picker-arrow {
+    margin-left: 8rpx;
+    color: #b0b6bf;
+    font-size: 32rpx;
+}
+
+.note-card {
+    box-sizing: border-box;
+    padding: 24rpx 28rpx;
+    border-radius: 20rpx;
+    background: #eef2f7;
+}
+
+.note-text {
+    color: #646a73;
+    font-size: 23rpx;
+    line-height: 1.7;
+}
+
+/* 抓取代理 */
+.proxy-card {
+    box-sizing: border-box;
+    padding: 28rpx 30rpx;
+    border: 2rpx solid #e5e8eb;
+    border-radius: 24rpx;
+    background: #ffffff;
+    margin-bottom: 16rpx;
+}
+
+.proxy-error {
+    display: block;
+    margin-bottom: 18rpx;
+    padding: 12rpx 16rpx;
+    border-radius: 12rpx;
+    background: #fff0ef;
+    color: #d4380d;
+    font-size: 23rpx;
+}
+
+.proxy-card .field-label {
+    margin-bottom: 10rpx;
+}
+
+.proxy-second-label {
+    margin-top: 24rpx;
+}
+
+.proxy-card .field-input {
+    border: 2rpx solid #d6d8dc;
+    border-radius: 14rpx;
+    padding: 16rpx 18rpx;
+    font-size: 25rpx;
+}
+
+.proxy-card .field-hint {
+    display: block;
+    margin-top: 10rpx;
+    color: #8f959e;
+    font-size: 21rpx;
+    line-height: 1.6;
+}
+
+.proxy-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 24rpx;
+}
+
+.proxy-actions .ghost-button {
+    margin-right: 16rpx;
+    background: #f2f3f5;
+    color: #1f2329;
+    font-size: 25rpx;
+}
+
+.proxy-actions .primary-button {
+    background: #1769e0;
+    color: #ffffff;
+    font-size: 25rpx;
+}
+
+/* 备案调试期站点 */
+.debug-tag {
+    display: inline-block;
+    margin-bottom: 14rpx;
+    padding: 6rpx 16rpx;
+    border-radius: 999rpx;
+    background: #fff7e6;
+    color: #d48806;
+    font-size: 21rpx;
+}
+
+.debug-url {
+    display: block;
+    margin-bottom: 10rpx;
+    color: #1769e0;
+    font-size: 27rpx;
+    font-weight: 600;
+    word-break: break-all;
+}
+
+.debug-list {
+    display: block;
+    margin-top: 6rpx;
+    color: #646a73;
+    font-size: 22rpx;
+    line-height: 1.7;
+}

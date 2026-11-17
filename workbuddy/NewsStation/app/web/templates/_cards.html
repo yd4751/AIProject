@@ -1,0 +1,41 @@
+{% set mx = (feed[0].heat if feed else 1) %}
+<div class="cards">
+  {% for e in feed %}
+  <article class="card evcard">
+    <div class="evhead">
+      <a class="evtitle" {{ tr_attr(e.title) }} href="/event/{{ e.id }}">{{ e.title }}</a>
+      <span class="evheat">{{ '%.2f'|format(e.heat) }}</span>
+    </div>
+    <div class="bar" title="热度 {{ '%.2f'|format(e.heat) }}"><span style="width:{{ ((e.heat / mx * 100) if mx > 0 else 0)|round|int }}%"></span></div>
+    <div class="evmeta">
+      <span class="m-num">{{ e.source_count }} 家媒体</span>
+      <span>{{ e.article_count }} 篇</span>
+      <span class="trend {{ e.trend }}">{% if e.trend == 'up' %}↑{% elif e.trend == 'down' %}↓{% else %}→{% endif %} {{ '%.2f'|format(e.momentum) }}</span>
+      <span>{{ e.last_seen | localtime }}</span>
+    </div>
+    <div class="evtags">
+      {% for d in ('region', 'industry', 'type', 'entity') %}
+        {% for t in e.tags[d] %}
+          {% if d == 'entity' %}
+          <span class="tchip d-{{ d }}" title="实体">{{ t.label }}</span>
+          {% else %}
+          <a class="tchip d-{{ d }}" href="/?{{ d }}={{ t.value }}" title="按{{ DIM_LABELS[d] }}筛选">{{ t.label }}</a>
+          {% endif %}
+          {% if t.locked %}<span class="lockmark" title="人工锁定">锁</span>{% endif %}
+        {% endfor %}
+      {% endfor %}
+    </div>
+    {% if e.headlines %}
+    <ul class="headlines">
+      {% for h in e.headlines %}
+      <li>
+        <a {{ tr_attr(h.title) }} href="{{ read_url(h.url) }}" data-read title="在站内阅读全文">{{ h.title }}</a>
+        <span class="src">{{ h.source }}</span>
+        <span class="time">{{ h.ts | localtime }}</span>
+      </li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+  </article>
+  {% endfor %}
+</div>

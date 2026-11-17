@@ -1,0 +1,121 @@
+# 人工标注基准（M2 验收用）。expected 为空表示「不该有该维标签」。
+# 判定口径：expected 中任一项出现在预测结果里即算对（多标不罚，漏标与错标才算错）。
+- title: 冰雪产业板块走高
+  region: [cn]
+  industry: [finance]
+  type: []
+
+- title: Malaysian police arrest woman
+  region: [my]
+  industry: [society]
+  type: []
+
+- title: 换帅之后
+  region: [cn]
+  industry: [consumer]
+  type: [personnel]
+
+- title: In Israel, Arab lawmakers
+  region: [il]
+  industry: [politics]
+  type: [policy]
+
+- title: 2026最后两个月车企促销
+  region: [cn]
+  industry: [auto]
+  type: []
+
+- title: 你的 AI 助手正在
+  region: [cn]
+  industry: [tech]
+  type: [research]
+
+- title: 长亮科技中标
+  region: [cn]
+  industry: [finance]
+  type: []
+
+- title: 实习生的历史使命
+  region: [cn]
+  industry: [society]
+  type: []
+
+- title: 法国青年扎根上海
+  region: [cn]
+  industry: [society]
+  type: []
+
+- title: 十五五”时期我国将新建约15个民用运输机场
+  region: [cn]
+  industry: [realestate, politics]
+  type: [policy]
+
+- title: 重卡正在复刻客车
+  region: [cn]
+  industry: [auto]
+  type: []
+
+- title: 美国举行2026年中期选举
+  region: [us]
+  industry: [politics]
+  type: [policy]
+
+- title: 苏丹一加油站遭无人机袭击
+  region: [sd]
+  industry: [defense]
+  type: [conflict]
+
+- title: Spanish transport minister resigns
+  region: [es]
+  industry: [politics]
+  type: [personnel]
+
+- title: 短剧靠愤怒换流量
+  region: [cn]
+  industry: [culture]
+  type: []
+
+- title: Role in Slave Trade
+  region: [gb]
+  industry: [politics]
+  type: []
+
+- title: AMD财报大超预期
+  region: [us]
+  industry: [finance]
+  type: [earnings]
+
+- title: 机器人生意，造不如租
+  region: [cn]
+  industry: [tech]
+  type: []
+
+- title: 小盘，火线拉升
+  region: [cn]
+  industry: [finance]
+  type: []
+
+- title: Alleged attack on One Nation supporter
+  region: [au]
+  industry: [society]
+  type: [conflict]
+
+- title: 李佳琦，能帮陈宇森
+  region: [cn]
+  industry: [culture, consumer]
+  type: []
+
+- title: 欧洲央行管委纳格尔
+  region: [eu, de]
+  industry: [finance]
+  type: [policy]
+
+- title: 巴基斯坦成功试射首枚国产空对空导弹
+  region: [pk]
+  industry: [defense]
+  type: [conflict]
+
+- title: 庞天宇离职
+  region: [cn]
+  industry: [tech]
+  type: [personnel]

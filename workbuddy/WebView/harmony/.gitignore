@@ -1,0 +1,12 @@
+# 构建产物 / 本地缓存 / 签名材料不入库
+oh_modules/
+.hvigor/
+build/
+.cxx/
+.idea/
+local.properties
+*.p12
+*.cer
+*.p7b
+sign/
+oh-package-lock.json5

@@ -1,0 +1,26 @@
+<svg class="quadsvg" viewBox="0 0 {{ quad.w }} {{ quad.h }}" role="img" aria-label="热度与增速象限">
+  <rect x="{{ quad.pad_l }}" y="{{ quad.pad_t }}" width="{{ quad.inner_w }}" height="{{ quad.inner_h }}" fill="#fcfcfb" stroke="#e8e8e6" stroke-width="0.5"/>
+  <line x1="{{ quad.mid_x }}" y1="{{ quad.pad_t }}" x2="{{ quad.mid_x }}" y2="{{ quad.pad_t + quad.inner_h }}" stroke="#d8d8d5" stroke-width="0.5" stroke-dasharray="3 3"/>
+  <line x1="{{ quad.pad_l }}" y1="{{ quad.zero_y }}" x2="{{ quad.pad_l + quad.inner_w }}" y2="{{ quad.zero_y }}" stroke="#d8d8d5" stroke-width="0.5" stroke-dasharray="3 3"/>
+
+  <text x="{{ quad.pad_l + 5 }}" y="{{ quad.pad_t + 12 }}" class="qlabel">新苗</text>
+  <text x="{{ quad.pad_l + quad.inner_w - 5 }}" y="{{ quad.pad_t + 12 }}" text-anchor="end" class="qlabel">爆发</text>
+  <text x="{{ quad.pad_l + 5 }}" y="{{ quad.pad_t + quad.inner_h - 5 }}" class="qlabel">长尾</text>
+  <text x="{{ quad.pad_l + quad.inner_w - 5 }}" y="{{ quad.pad_t + quad.inner_h - 5 }}" text-anchor="end" class="qlabel">退潮</text>
+
+  <text x="{{ quad.pad_l }}" y="{{ quad.h - 6 }}" class="qaxis">热度 →</text>
+  <text x="{{ quad.pad_l + quad.inner_w - 2 }}" y="{{ quad.h - 6 }}" text-anchor="end" class="qaxis">{{ quad.max_heat }}</text>
+  <text x="4" y="{{ quad.pad_t + 10 }}" class="qaxis">增速 ↑</text>
+
+  {% for p in quad.points %}
+  {% set col = '#d0393b' if p.momentum > 0.15 else ('#1d7a4f' if p.momentum < -0.15 else '#8a8a86') %}
+  <a href="/event/{{ p.id }}">
+    <circle cx="{{ p.x }}" cy="{{ p.y }}" r="{{ p.r }}" fill="{{ col }}" fill-opacity="0.78" stroke="#fff" stroke-width="0.8">
+      <title>{{ p.title }} | 热度 {{ p.heat }} · 增速 {{ p.momentum }}</title>
+    </circle>
+  </a>
+  {% endfor %}
+  {% for p in quad.points if p.label %}
+  <text x="{{ p.x + 7 }}" y="{{ p.y - 6 }}" class="qdotlabel" style="font-size:{{ quad.fs }}px">{{ p.label }}</text>
+  {% endfor %}
+</svg>

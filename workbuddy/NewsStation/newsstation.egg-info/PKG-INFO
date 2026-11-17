@@ -1,0 +1,17 @@
+Metadata-Version: 2.4
+Name: newsstation
+Version: 0.1.0
+Summary: 全球新闻自动捕获与热点分析
+Requires-Python: >=3.12
+Requires-Dist: fastapi>=0.115
+Requires-Dist: uvicorn[standard]>=0.32
+Requires-Dist: jinja2>=3.1
+Requires-Dist: httpx>=0.27
+Requires-Dist: feedparser>=6.0
+Requires-Dist: apscheduler>=3.10
+Requires-Dist: pyahocorasick>=2.1
+Requires-Dist: jieba>=0.42
+Requires-Dist: pydantic-settings>=2.5
+Requires-Dist: pyyaml>=6.0
+Provides-Extra: dev
+Requires-Dist: pytest>=8.0; extra == "dev"

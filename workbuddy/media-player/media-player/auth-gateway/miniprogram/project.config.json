@@ -1,0 +1,29 @@
+{
+  "appid": "wxbe134b379fe76ead",
+  "projectname": "media-auth-gateway",
+  "description": "影音播放器鉴权网关：小程序码扫码校验微信白名单",
+  "miniprogramRoot": "./",
+  "compileType": "miniprogram",
+  "libVersion": "2.32.3",
+  "setting": {
+    "urlCheck": false,
+    "es6": true,
+    "enhance": true,
+    "postcss": true,
+    "minified": true,
+    "newFeature": true,
+    "coverView": true,
+    "autoAudits": false,
+    "showShadowRootInWxmlPanel": true,
+    "scopeDataCheck": false,
+    "checkInvalidKey": true,
+    "checkSiteMap": true,
+    "uploadWithSourceMap": true,
+    "compileHotReLoad": false,
+    "useMultiFrameRuntime": true,
+    "useApiHook": true,
+    "useApiHostProcess": true,
+    "ignoreUploadUnusedFiles": true
+  },
+  "condition": {}
+}

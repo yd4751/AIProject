@@ -1,0 +1,104 @@
+.page {
+    box-sizing: border-box;
+    min-height: 100vh;
+    padding: 32rpx 32rpx 80rpx;
+}
+
+.form-card {
+    box-sizing: border-box;
+    padding: 36rpx 32rpx;
+    border: 2rpx solid #e5e8eb;
+    border-radius: 24rpx;
+    background: #ffffff;
+}
+
+.form-error {
+    display: block;
+    margin-bottom: 20rpx;
+    padding: 14rpx 18rpx;
+    border-radius: 14rpx;
+    background: #fff0ef;
+    color: #d4380d;
+    font-size: 24rpx;
+}
+
+.field-group {
+    margin-top: 24rpx;
+}
+
+.field-group:first-of-type {
+    margin-top: 0;
+}
+
+.field-label {
+    display: block;
+    margin-bottom: 12rpx;
+    font-size: 26rpx;
+    color: #1f2329;
+    font-weight: 600;
+}
+
+.required {
+    color: #d4380d;
+}
+
+.field-hint {
+    display: block;
+    margin-top: 10rpx;
+    font-size: 22rpx;
+    color: #8f959e;
+}
+
+.field-input,
+.field-textarea {
+    box-sizing: border-box;
+    width: 100%;
+    border: 2rpx solid #d6d8dc;
+    border-radius: 16rpx;
+    padding: 18rpx 20rpx;
+    background: #ffffff;
+    color: #1f2329;
+    font-size: 28rpx;
+}
+
+.field-textarea {
+    min-height: 140rpx;
+}
+
+.switch-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.switch-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.switch-label {
+    margin-bottom: 6rpx;
+}
+
+.actions {
+    display: flex;
+    margin-top: 36rpx;
+}
+
+.danger-button {
+    flex: 1;
+    margin-top: 0;
+    margin-right: 16rpx;
+    background: #fff0ef;
+    color: #d4380d;
+    font-size: 28rpx;
+}
+
+.save-button {
+    flex: 2;
+    margin-top: 0;
+    background: #1769e0;
+    color: #ffffff;
+    font-size: 28rpx;
+    font-weight: 600;
+}

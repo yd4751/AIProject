@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% set active = 'industries' %}
+{% set base = '/industry/' ~ industry %}
+{% set lock_industry = true %}
+{% block title %}{{ industry_label }} · NewsStation{% endblock %}
+
+{% block content %}
+<section class="pagehead">
+  <div>
+    <h1><i class="dotind big" style="background:{{ industry_color }}"></i>{{ industry_label }}</h1>
+    <p class="hint">该行业近 24h 报道节奏与热点事件 · <a href="/industries">全部行业</a></p>
+  </div>
+  <a class="vtab" href="/?industry={{ industry }}">在全站查看 →</a>
+</section>
+
+<section class="card">
+  <div class="card-head"><h2>报道节奏</h2><span class="hint">近 24h 共 {{ timeline.total }} 篇次 · 每柱 2 小时</span></div>
+  <div class="timeline">
+    {% for c in timeline.cols %}
+    <div class="tl-col">
+      <span class="tl-n">{{ c.n }}</span>
+      <div class="tl-bar" style="height:{{ (c.n / timeline.max * 100)|round|int }}%;background:{{ timeline.color }}"></div>
+      <span class="tl-label">{{ c.label }}</span>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+{% include "_filters.html" %}
+
+<div class="summary-line">
+  <span><b>{{ visible|length }}</b> 个事件</span>
+  {% if filtered_out %}<span>已剔除 {{ filtered_out }} 个单源行情模板事件</span>{% endif %}
+  <span>地区 / 类型可继续交叉筛选</span>
+</div>
+
+{% if not visible %}
+<section class="card empty"><p>该筛选下暂无事件。<a href="{{ base }}">清除筛选</a></p></section>
+{% else %}
+{% include "_cards.html" %}
+{% endif %}
+{% endblock %}

@@ -1,0 +1,103 @@
+<view class="page">
+    <view class="hero">
+        <text class="eyebrow">SITEDOCK</text>
+        <text class="title">站点坞</text>
+        <text class="subtitle">你的自建站点，一坞管理</text>
+    </view>
+
+    <view class="stats-card" wx:if="{{viewState === 'ready'}}">
+        <view class="stats-row">
+            <view class="stats-item">
+                <text class="stats-value">{{stats.total}}</text>
+                <text class="stats-label">站点</text>
+            </view>
+            <view class="stats-divider"></view>
+            <view class="stats-item">
+                <text class="stats-value stats-ok">{{stats.online}}</text>
+                <text class="stats-label">在线</text>
+            </view>
+            <view class="stats-divider"></view>
+            <view class="stats-item">
+                <text class="stats-value">{{stats.onlineRateText}}</text>
+                <text class="stats-label">在线率</text>
+            </view>
+            <view class="stats-divider"></view>
+            <view class="stats-item">
+                <text class="stats-value">{{stats.avgLatencyText}}</text>
+                <text class="stats-label">平均延迟</text>
+            </view>
+        </view>
+        <button class="check-button {{checking ? 'check-button-busy' : ''}}" size="mini" bindtap="handleCheckTap" loading="{{checking}}">
+            {{checking ? checkProgressText : '一键体检'}}
+        </button>
+    </view>
+
+    <scroll-view class="group-bar" scroll-x wx:if="{{viewState === 'ready' && groups.length > 1}}">
+        <view
+            class="group-chip {{activeGroup === item.key ? 'group-chip-active' : ''}}"
+            wx:for="{{groups}}"
+            wx:key="key"
+            data-key="{{item.key}}"
+            bindtap="handleGroupTap"
+        >
+            <text>{{item.text}}</text>
+        </view>
+    </scroll-view>
+
+    <view class="state-card" wx:if="{{viewState === 'loading'}}">
+        <view class="spinner"></view>
+        <text class="state-title">正在加载</text>
+        <text class="state-description">请稍候，站点马上准备好。</text>
+    </view>
+
+    <view class="state-card" wx:elif="{{viewState === 'empty'}}">
+        <text class="state-icon">◎</text>
+        <text class="state-title">还没有站点</text>
+        <text class="state-description">点击右下角 + 添加你的第一个自建站点。</text>
+    </view>
+
+    <view class="state-card state-card-error" wx:elif="{{viewState === 'error'}}">
+        <text class="state-icon">!</text>
+        <text class="state-title">加载失败</text>
+        <text class="state-description">{{errorMessage}}</text>
+        <button class="primary-button" bindtap="handleRetry">重新加载</button>
+    </view>
+
+    <view class="site-list" wx:else>
+        <view
+            class="site-card"
+            wx:for="{{items}}"
+            wx:key="id"
+            hover-class="pressed"
+            data-id="{{item.id}}"
+            bindtap="openBrowse"
+            bindlongpress="handleCardLongPress"
+        >
+            <view class="site-head">
+                <view class="site-avatar">{{item.avatar}}</view>
+                <view class="site-title-wrap">
+                    <view class="site-title-row">
+                        <text class="site-name">{{item.name}}</text>
+                        <text class="pin-badge" wx:if="{{item.pinned}}">置顶</text>
+                        <text class="restricted-badge" wx:if="{{item.restricted}}">访问受限</text>
+                        <text class="debug-badge" wx:if="{{item.debug}}">备案中</text>
+                    </view>
+                    <text class="site-host">{{item.host}}</text>
+                </view>
+                <view class="site-status">
+                    <view class="status-dot {{item.statusClass}}"></view>
+                    <text class="status-text {{item.statusClass === 'bad' ? 'status-text-bad' : ''}}">{{item.statusText}}</text>
+                    <text class="status-latency">{{item.latencyText}}</text>
+                </view>
+            </view>
+            <view class="site-foot">
+                <text class="site-group" wx:if="{{item.group !== ''}}">{{item.groupText}}</text>
+                <text class="site-note" wx:if="{{item.note !== ''}}">{{item.note}}</text>
+                <text class="site-checked">{{item.checkedText}}</text>
+            </view>
+        </view>
+        <text class="list-hint">点击卡片原生浏览 · 长按管理</text>
+    </view>
+
+    <button class="floating-add" bindtap="openCreate">+</button>
+</view>

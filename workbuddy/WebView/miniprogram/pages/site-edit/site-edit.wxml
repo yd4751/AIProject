@@ -1,0 +1,63 @@
+<view class="page">
+    <view class="form-card">
+        <text class="form-error" wx:if="{{formError !== ''}}">{{formError}}</text>
+
+        <view class="field-group">
+            <text class="field-label">站点地址 <text class="required">*</text></text>
+            <input
+                class="field-input"
+                placeholder="例如 blog.example.com"
+                value="{{formUrl}}"
+                bindinput="handleUrlInput"
+                maxlength="200"
+            />
+            <text class="field-hint">支持 http / https，不带协议时默认 https</text>
+        </view>
+
+        <view class="field-group">
+            <text class="field-label">名称</text>
+            <input
+                class="field-input"
+                placeholder="留空时自动使用域名"
+                value="{{formName}}"
+                bindinput="handleNameInput"
+                maxlength="30"
+            />
+        </view>
+
+        <view class="field-group">
+            <text class="field-label">分组</text>
+            <input
+                class="field-input"
+                placeholder="例如 博客、后台、内网"
+                value="{{formGroup}}"
+                bindinput="handleGroupInput"
+                maxlength="12"
+            />
+        </view>
+
+        <view class="field-group">
+            <text class="field-label">备注</text>
+            <textarea
+                class="field-textarea"
+                placeholder="可选，记录这台站点的用途"
+                value="{{formNote}}"
+                bindinput="handleNoteInput"
+                maxlength="100"
+            />
+        </view>
+
+        <view class="field-group switch-row">
+            <view class="switch-text">
+                <text class="field-label switch-label">在列表置顶</text>
+                <text class="field-hint">置顶的站点始终排在最前</text>
+            </view>
+            <switch checked="{{formPinned}}" bindchange="handlePinnedChange" color="#1769e0" />
+        </view>
+    </view>
+
+    <view class="actions">
+        <button class="danger-button" wx:if="{{mode === 'edit'}}" bindtap="handleDelete" disabled="{{submitting}}">删除站点</button>
+        <button class="save-button" bindtap="handleSave" loading="{{submitting}}" disabled="{{submitting}}">保存</button>
+    </view>
+</view>

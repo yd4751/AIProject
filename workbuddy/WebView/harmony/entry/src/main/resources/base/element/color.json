@@ -1,0 +1,14 @@
+{
+  "color": [
+    { "name": "start_window_background", "value": "#FFFFFF" },
+    { "name": "brand", "value": "#2F6BFF" },
+    { "name": "page_bg", "value": "#F4F6FA" },
+    { "name": "card_bg", "value": "#FFFFFF" },
+    { "name": "text_main", "value": "#1B2330" },
+    { "name": "text_muted", "value": "#7A8699" },
+    { "name": "online", "value": "#2FA36B" },
+    { "name": "offline", "value": "#E34D4D" },
+    { "name": "checking", "value": "#E5A23C" },
+    { "name": "unknown", "value": "#A9B2C3" }
+  ]
+}

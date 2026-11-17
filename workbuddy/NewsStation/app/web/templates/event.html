@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+{% set active = 'home' %}
+{% block title %}{{ ev.title }} · NewsStation{% endblock %}
+
+{% block content %}
+<section class="pagehead">
+  <div>
+    <p class="crumb"><a href="/">热点</a> / 事件 #{{ ev.id }}</p>
+    <h1 {{ tr_attr(ev.title) }}>{{ ev.title }}</h1>
+    <p class="hint">首次 {{ ev.first_seen | localtime }} · 最近 {{ ev.last_seen | localtime }} · 聚类阈值 0.45</p>
+  </div>
+  <a class="vtab" href="/">← 返回热点</a>
+</section>
+
+{% if saved %}<div class="notice">标签已保存。锁定（锁）与屏蔽（×）在下次分析管道刷新后依然生效。</div>{% endif %}
+
+<section class="stats eventstats">
+  <div class="card stat"><span class="label">热度</span><span class="num">{{ '%.2f'|format(ev.heat) }}</span></div>
+  <div class="card stat"><span class="label">增速</span><span class="num {{ 'warn' if ev.momentum < 0 else '' }}">{{ '%.2f'|format(ev.momentum or 0) }}</span></div>
+  <div class="card stat"><span class="label">参与媒体</span><span class="num">{{ ev.source_count }}</span></div>
+  <div class="card stat"><span class="label">报道篇数</span><span class="num">{{ ev.article_count }}</span></div>
+</section>
+
+<div class="detail-grid">
+  <section class="card">
+    <div class="card-head"><h2>24 小时报道曲线</h2><span class="hint">每小时新增篇数</span></div>
+    {% set bw = 28 %}{% set base_y = 140 %}{% set max_h = 108 %}
+    <svg class="hoursvg" viewBox="0 0 {{ 24 * bw + 40 }} 170" role="img" aria-label="24 小时报道曲线">
+      <line x1="20" y1="{{ base_y }}" x2="{{ 24 * bw + 20 }}" y2="{{ base_y }}" stroke="#d8d8d5" stroke-width="0.5"/>
+      {% for n in ev.hourly %}
+      {% set bh = (n / ev.hourly_max * max_h)|round|int %}
+      <rect x="{{ 20 + loop.index0 * bw + 3 }}" y="{{ base_y - bh }}" width="{{ bw - 6 }}" height="{{ bh }}" rx="2" fill="#d0393b" fill-opacity="{{ 0.35 + 0.55 * n / ev.hourly_max }}">
+        <title>{{ n }} 篇</title>
+      </rect>
+      {% endfor %}
+      <text x="20" y="162" class="haxis">−24h</text>
+      <text x="{{ 20 + 12 * bw }}" y="162" text-anchor="middle" class="haxis">−12h</text>
+      <text x="{{ 20 + 24 * bw }}" y="162" text-anchor="end" class="haxis">现在</text>
+    </svg>
+    {% if ev.keywords %}<div class="kw">关键词：{% for k in ev.keywords %}<span class="chip">{{ k }}</span>{% endfor %}</div>{% endif %}
+  </section>
+
+  <section class="card">
+    <div class="card-head"><h2>事件 — 媒体关系</h2><span class="hint">节点大小 = 贡献篇数</span></div>
+    <svg class="netsvg" viewBox="0 0 {{ ev.network.w }} {{ ev.network.h }}" role="img" aria-label="事件媒体关系网络">
+      {% for n in ev.network.nodes %}
+      <line x1="{{ ev.network.cx }}" y1="{{ ev.network.cy }}" x2="{{ n.x }}" y2="{{ n.y }}" stroke="#d8d8d5" stroke-width="0.8"/>
+      {% endfor %}
+      <circle cx="{{ ev.network.cx }}" cy="{{ ev.network.cy }}" r="34" fill="#d0393b"/>
+      <text x="{{ ev.network.cx }}" y="{{ ev.network.cy + 4 }}" text-anchor="middle" class="netcenter">事件</text>
+      {% for n in ev.network.nodes %}
+      <circle cx="{{ n.x }}" cy="{{ n.y }}" r="{{ n.r }}" fill="#f4f4f2" stroke="#b9b9b4" stroke-width="0.8"/>
+      <text x="{{ n.x }}" y="{{ n.y + 4 }}" text-anchor="middle" class="netnum">{{ n.count }}</text>
+      <text x="{{ n.x }}" y="{{ n.y + n.r + 13 }}" text-anchor="middle" class="netlabel">{{ source_names.get(n.id, n.id) }}</text>
+      {% endfor %}
+    </svg>
+  </section>
+</div>
+
+<section class="card">
+  <div class="card-head"><h2>四维标签</h2><span class="hint">人工改动会锁定，不被自动聚合覆盖</span></div>
+  {% for d in ('region', 'industry', 'type', 'entity') %}
+  <div class="tagrow">
+    <span class="tagkey"><i class="dotind d-{{ d }}"></i>{{ DIM_LABELS[d] }}</span>
+    <div class="tagvals">
+      {% for t in ev.tags[d] %}
+      <span class="tchip d-{{ d }}">{{ t.label }}{% if t.locked %}<span class="lockmark" title="人工锁定">锁</span>{% endif %}</span>
+      {% if not t.locked %}
+      <form class="inline-form" method="post" action="/event/{{ ev.id }}/tags?action=lock&v={{ d }}:{{ t.value }}"><button class="mini" title="锁定，防止被自动刷新覆盖">锁</button></form>
+      {% endif %}
+      <form class="inline-form" method="post" action="/event/{{ ev.id }}/tags?action=remove&v={{ d }}:{{ t.value }}"><button class="mini danger" title="屏蔽此标签">×</button></form>
+      {% else %}
+      <span class="hint">未标注</span>
+      {% endfor %}
+    </div>
+  </div>
+  {% endfor %}
+
+  {% if ev.hidden %}
+  <div class="tagrow">
+    <span class="tagkey">已屏蔽</span>
+    <div class="tagvals">
+      {% for h in ev.hidden %}
+      <span class="tchip blocked">{{ DIM_LABELS[h.dim] }} · {{ h.label }}</span>
+      <form class="inline-form" method="post" action="/event/{{ ev.id }}/tags?action=restore&v={{ h.dim }}:{{ h.value }}"><button class="mini" title="取消屏蔽">恢复</button></form>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  <form class="addtag" method="post" action="/event/{{ ev.id }}/tags" data-tagform data-action="/event/{{ ev.id }}/tags" data-op="add">
+    <label for="tagpick">添加标签</label>
+    <select id="tagpick" name="v">
+      {% for d in ('region', 'industry', 'type', 'entity') %}
+      <optgroup label="{{ DIM_LABELS[d] }}">
+        {% for o in options[d] %}<option value="{{ d }}:{{ o.value }}">{{ o.label }}</option>{% endfor %}
+      </optgroup>
+      {% endfor %}
+    </select>
+    <button type="submit">添加并锁定</button>
+    <span class="hint">从词典里选，添加后 locked=1</span>
+  </form>
+</section>
+
+{% if ev.related %}
+<section class="card">
+  <div class="card-head"><h2>相关事件</h2><span class="hint">按关键词、实体与标题相似度计算</span></div>
+  <ul class="related">
+    {% for r in ev.related %}
+    <li>
+      <a {{ tr_attr(r.title) }} href="/event/{{ r.id }}">{{ r.title }}</a>
+      <span class="hint">{{ r.source_count }} 家 · 热度 {{ '%.2f'|format(r.heat) }}</span>
+      <span class="rel-why" title="关联度 {{ r.score }}">{{ r.reason }}</span>
+    </li>
+    {% endfor %}
+  </ul>
+</section>
+{% else %}
+<section class="card">
+  <div class="card-head"><h2>相关事件</h2></div>
+  <p class="hint">暂无达到关联阈值的事件（不再用「同行业热门」凑数）。</p>
+</section>
+{% endif %}
+
+<section class="card">
+  <div class="card-head"><h2>全部报道</h2><span class="hint">共 {{ ev.articles|length }} 篇 · 按发布时间倒序</span></div>
+  <ul class="feed">
+    {% for a in ev.articles %}
+    <li>
+      <div class="meta">
+        <span class="chip">{{ source_names.get(a.source_id, a.source_id) }}</span>
+        <span class="lang">{{ a.lang }}</span>
+        <span class="time">{{ a.ts | localtime }}</span>
+      </div>
+      <a class="title" {{ tr_attr(a.title) }} href="{{ read_url(a.url) }}" data-read title="在站内阅读全文">{{ a.title }}</a>
+      {% if a.summary %}{% set s = a.summary[:160] %}{% if a.summary|length > 160 %}{% set s = s ~ '…' %}{% endif %}<p class="summary" {{ tr_attr(s, 'para') }}>{{ s }}</p>{% endif %}
+    </li>
+    {% endfor %}
+  </ul>
+</section>
+{% endblock %}

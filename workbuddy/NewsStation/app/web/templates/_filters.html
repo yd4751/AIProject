@@ -1,0 +1,53 @@
+{% set base = base|default('/') %}
+{% set lock_industry = lock_industry|default(false) %}
+<div class="card filters">
+  <div class="frow">
+    <span class="fkey">地区</span>
+    <div class="fvals">
+      <a class="chip {{ 'sel' if not filters.region else '' }}" href="{{ filter_url(request, base=base, region='') }}">全球 <small>不限</small></a>
+      {% for o in options.region[:12] %}
+      <a class="chip {{ 'sel' if filters.region == o.value else '' }}" href="{{ filter_url(request, base=base, region=o.value) }}">{{ '全球性' if o.value == 'global' else o.label }}<small>{{ o.count }}</small></a>
+      {% endfor %}
+      <details class="more">
+        <summary>更多地区 ▾</summary>
+        <div class="more-body">
+          {% for o in options.region[12:] %}
+          <a class="chip {{ 'sel' if filters.region == o.value else '' }}" href="{{ filter_url(request, base=base, region=o.value) }}">{{ o.label }}<small>{{ o.count }}</small></a>
+          {% endfor %}
+        </div>
+      </details>
+    </div>
+  </div>
+
+  <div class="frow">
+    <span class="fkey">行业</span>
+    <div class="fvals">
+      {% if lock_industry %}
+      <a class="chip sel" href="{{ filter_url(request, base=base, industry='') }}">{{ industry_label }}</a>
+      <a class="chip" href="/industries">切换行业 →</a>
+      {% else %}
+      <a class="chip {{ 'sel' if not filters.industry else '' }}" href="{{ filter_url(request, base=base, industry='') }}">全部</a>
+      {% for o in options.industry %}
+      <a class="chip {{ 'sel' if filters.industry == o.value else '' }}" href="{{ filter_url(request, base=base, industry=o.value) }}"><i class="dotind" style="background:{{ INDUSTRY_COLORS.get(o.value, '#c8c8c3') }}"></i>{{ o.label }}<small>{{ o.count }}</small></a>
+      {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="frow">
+    <span class="fkey">类型</span>
+    <div class="fvals">
+      <a class="chip {{ 'sel' if not filters.type else '' }}" href="{{ filter_url(request, base=base, type='') }}">全部</a>
+      {% for o in options.type %}
+      <a class="chip {{ 'sel' if filters.type == o.value else '' }}" href="{{ filter_url(request, base=base, type=o.value) }}">{{ o.label }}<small>{{ o.count }}</small></a>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="fbar">
+    <span class="hint">条件写进 URL，可直接分享 · 选「中国」自动含港澳台</span>
+    {% if filters.region or filters.industry or filters.type %}
+    <a class="clear" href="{{ filter_url(request, base=base, region='', industry='', type='') }}">清除筛选</a>
+    {% endif %}
+  </div>
+</div>

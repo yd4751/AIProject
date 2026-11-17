@@ -1,0 +1,302 @@
+<view class="page {{fontClass}}">
+    <!-- 顶部站点条 -->
+    <view class="site-bar" wx:if="{{viewState === 'ready'}}">
+        <view class="site-bar-main">
+            <text class="site-bar-host">{{host}}</text>
+            <text class="site-bar-title">{{pageTitle}}</text>
+        </view>
+        <text class="site-bar-badge">{{hasApp ? '应用' : '网页'}}</text>
+    </view>
+
+    <!-- 骨架屏 -->
+    <view wx:if="{{viewState === 'loading'}}" class="skeleton">
+        <view class="skeleton-title"></view>
+        <view class="skeleton-line w90"></view>
+        <view class="skeleton-line w70"></view>
+        <view class="skeleton-gap"></view>
+        <view class="skeleton-cards">
+            <view class="skeleton-card"></view>
+            <view class="skeleton-card"></view>
+        </view>
+        <view class="skeleton-loading">正在读取站点…</view>
+    </view>
+
+    <!-- 错误态 -->
+    <view wx:elif="{{viewState === 'error'}}" class="state-card state-card-error">
+        <text class="state-icon">!</text>
+        <text class="state-title">无法浏览</text>
+        <text class="state-description">{{errorMessage}}</text>
+        <view class="diagnosis" wx:if="{{reasons.length > 0}}">
+            <view class="diagnosis-head">
+                <text class="diagnosis-title">访问诊断</text>
+                <text class="diagnosis-mode">{{proxyOn ? '当前：抓取代理' : '当前：直连站点'}}</text>
+            </view>
+            <view class="diagnosis-item" wx:for="{{reasons}}" wx:key="*this">
+                <text class="diagnosis-dot">·</text>
+                <text class="diagnosis-text">{{item}}</text>
+            </view>
+            <text class="diagnosis-url">目标：{{url}}</text>
+        </view>
+        <view class="error-actions">
+            <button class="ghost-button" size="mini" bindtap="handleCopyDiagnosis" wx:if="{{reasons.length > 0}}">复制诊断</button>
+            <button class="ghost-button" size="mini" bindtap="handleGoSettings">设置</button>
+            <button class="primary-button" size="mini" bindtap="handleRetry">重试</button>
+        </view>
+    </view>
+
+    <block wx:else>
+        <!-- 离线快照提示 -->
+        <view class="snapshot-banner" wx:if="{{snapshot}}">
+            <view class="snapshot-row">
+                <text class="snapshot-tag">离线快照</text>
+                <text class="snapshot-note">{{snapshotNote}}</text>
+                <text class="snapshot-toggle" bindtap="handleToggleReasons">{{showSnapshotReasons ? '收起' : '原因'}}</text>
+            </view>
+            <view class="snapshot-detail" wx:if="{{showSnapshotReasons}}">
+                <text class="snapshot-error">{{snapshotError}}</text>
+                <text class="snapshot-reason" wx:for="{{snapshotReasons}}" wx:key="*this">{{index + 1}}. {{item}}</text>
+                <view class="snapshot-actions">
+                    <button class="ghost-button" size="mini" bindtap="handleCopySnapshotReasons">复制诊断</button>
+                    <button class="ghost-button" size="mini" bindtap="handleGoSettings">设置</button>
+                </view>
+            </view>
+        </view>
+
+        <!-- 一级切换：应用 / 网页 -->
+        <view class="mode-switch" wx:if="{{hasApp}}">
+            <view class="mode-item {{mainTab === 'app' ? 'active' : ''}}" data-key="app" bindtap="handleMainTab">应用</view>
+            <view class="mode-item {{mainTab === 'site' ? 'active' : ''}}" data-key="site" bindtap="handleMainTab">网页</view>
+        </view>
+
+        <!-- ============ 应用加速模式 ============ -->
+        <view class="app-view" wx:if="{{mainTab === 'app' && hasApp}}">
+            <view class="app-head">
+                <view class="app-logo">鹅</view>
+                <view class="app-head-text">
+                    <text class="app-name">{{appTitle}}</text>
+                    <text class="app-status">{{appStatus}}</text>
+                </view>
+                <view class="app-refresh" hover-class="pressed" bindtap="handleRefreshTap">⟳</view>
+            </view>
+
+            <view class="app-tabs">
+                <view class="app-tab {{appTab === item.key ? 'active' : ''}}" wx:for="{{appTabs}}" wx:key="key" data-key="{{item.key}}" bindtap="handleAppTab">{{item.label}}</view>
+            </view>
+
+            <!-- 曲库 -->
+            <view wx:if="{{appTab === 'library'}}" class="app-panel">
+                <view class="app-section-title">本地曲库 <text class="app-section-count">{{libraryCountText}}</text></view>
+                <view class="track-row" wx:for="{{library}}" wx:key="id" hover-class="pressed" data-index="{{index}}" bindtap="handleLibraryTap">
+                    <view class="track-cover"><image wx:if="{{item.cover}}" src="{{item.cover}}" mode="aspectFill" /><text wx:else class="track-cover-text">{{item.ext}}</text></view>
+                    <view class="track-info">
+                        <text class="track-title">{{item.title}}</text>
+                        <text class="track-sub">{{item.artist}} · {{item.sizeText}}</text>
+                    </view>
+                    <text class="track-action">{{item.video ? '▶ 视频' : '▶'}}</text>
+                </view>
+                <view class="app-empty" wx:if="{{library.length === 0}}">
+                    <text class="app-empty-title">曲库还是空的</text>
+                    <text class="app-empty-desc">到「搜索」找一首歌，下载后会出现在这里</text>
+                </view>
+            </view>
+
+            <!-- 搜索 -->
+            <view wx:elif="{{appTab === 'search'}}" class="app-panel">
+                <view class="search-bar">
+                    <input class="search-input" value="{{query}}" placeholder="搜索影视 / 音乐" confirm-type="search" bindinput="handleQueryInput" bindconfirm="handleSearch" />
+                    <text class="search-clear" wx:if="{{query !== ''}}" bindtap="handleClearQuery">×</text>
+                    <view class="search-go" hover-class="pressed" bindtap="handleSearch">搜索</view>
+                </view>
+                <view class="filter-row">
+                    <view class="kind-chip {{searchKind === item.key ? 'active' : ''}}" wx:for="{{kinds}}" wx:key="key" data-key="{{item.key}}" bindtap="handleKindTap">{{item.label}}</view>
+                    <view class="site-filter" wx:if="{{siteFilter !== ''}}" bindtap="handleClearSiteFilter">已限定站点 ×</view>
+                </view>
+                <view class="search-hint" wx:if="{{searchHint !== ''}}">{{searchHint}}</view>
+                <view class="search-loading" wx:if="{{searching}}">正在并行检索站点…</view>
+                <block wx:for="{{searchGroups}}" wx:for-item="group" wx:for-index="gi" wx:key="key">
+                    <view class="app-section-title">{{group.site.name}} <text class="app-section-count">{{group.items.length}} 条</text></view>
+                    <view class="group-error" wx:if="{{group.error !== ''}}">{{group.error}}</view>
+                    <view class="track-row" wx:for="{{group.items}}" wx:for-item="item" wx:for-index="ii" wx:key="id" hover-class="pressed" data-gi="{{gi}}" data-ii="{{ii}}" bindtap="handleResultTap">
+                        <view class="track-cover"><image wx:if="{{item.hasCover}}" src="{{item.cover}}" mode="aspectFill" /><text wx:else class="track-cover-text">♫</text></view>
+                        <view class="track-info">
+                            <text class="track-title">{{item.title}}</text>
+                            <text class="track-sub">{{item.artist}} · {{item.kindText}}</text>
+                        </view>
+                        <text class="track-download" catchtap="handleResultDownload" data-gi="{{gi}}" data-ii="{{ii}}">下载</text>
+                        <text class="track-action">▶</text>
+                    </view>
+                </block>
+                <view class="app-empty" wx:if="{{!searching && searchGroups.length === 0}}">
+                    <text class="app-empty-title">输入关键词开始</text>
+                    <text class="app-empty-desc">会同时检索所有已启用的资源站点</text>
+                </view>
+            </view>
+
+            <!-- 站点 -->
+            <view wx:elif="{{appTab === 'sites'}}" class="app-panel">
+                <view class="app-section-title">资源站点 <text class="app-section-count">{{sites.length}} 个</text></view>
+                <view class="site-row" wx:for="{{sites}}" wx:key="id" hover-class="pressed" data-index="{{index}}" bindtap="handleSiteTap">
+                    <view class="site-kind {{item.kind}}">{{item.kindText}}</view>
+                    <view class="site-info">
+                        <text class="site-name">{{item.name}}</text>
+                        <text class="site-sub">{{item.enabled ? '已启用' : '未启用'}}{{item.lyric ? ' · 支持歌词' : ''}}</text>
+                    </view>
+                    <text class="site-arrow">›</text>
+                </view>
+                <view class="app-note">点站点可限定搜索范围。站点清单来自站点自身的接口，不需要额外部署服务。</view>
+            </view>
+
+            <!-- 任务 -->
+            <view wx:else class="app-panel">
+                <view class="app-section-title">下载任务 <text class="app-section-count">{{tasks.length}} 个</text></view>
+                <view class="task-row" wx:for="{{tasks}}" wx:key="id">
+                    <view class="task-head">
+                        <text class="task-title">{{item.title}}</text>
+                        <text class="task-status">{{item.statusText}}</text>
+                    </view>
+                    <text class="task-sub">{{item.artist}} · {{item.siteName}} · {{item.sizeText}}</text>
+                    <view class="task-bar"><view class="task-bar-inner" style="width:{{item.percent}}%"></view></view>
+                </view>
+                <view class="app-empty" wx:if="{{tasks.length === 0}}">
+                    <text class="app-empty-title">暂无下载任务</text>
+                    <text class="app-empty-desc">在搜索结果点「下载」即可加入</text>
+                </view>
+                <view class="app-refresh-btn" bindtap="handleTaskRefresh">刷新任务状态</view>
+            </view>
+            <view class="app-error" wx:if="{{appError !== ''}}">{{appError}} · 可切到「网页」继续浏览</view>
+        </view>
+
+        <!-- ============ 通用网页浏览 ============ -->
+        <view class="web-view" wx:else>
+            <view class="view-switch">
+                <view class="view-item {{viewMode === 'cards' ? 'active' : ''}}" data-key="cards" bindtap="handleViewMode">卡片</view>
+                <view class="view-item {{viewMode === 'page' ? 'active' : ''}}" data-key="page" bindtap="handleViewMode">网页原貌</view>
+                <view class="view-item {{viewMode === 'reader' ? 'active' : ''}}" data-key="reader" bindtap="handleViewMode">阅读</view>
+            </view>
+
+            <view class="content-tip" wx:if="{{contentTip !== ''}}">
+                <text class="content-tip-text">{{contentTip}}</text>
+                <text class="content-tip-action" bindtap="handleOpenOrigin">复制原链接</text>
+            </view>
+
+            <!-- 卡片视图 -->
+            <block wx:if="{{viewMode === 'cards'}}">
+                <view class="hero-wrap" wx:if="{{hero !== '' && !heroBroken}}">
+                    <image class="hero-image" src="{{hero}}" mode="aspectFill" binderror="handleHeroError" />
+                </view>
+                <view class="web-head">
+                    <text class="web-host">{{host}}</text>
+                    <text class="web-title">{{pageTitle}}</text>
+                    <text class="web-desc" wx:if="{{description !== ''}}">{{description}}</text>
+                </view>
+
+                <scroll-view class="nav-scroll" scroll-x wx:if="{{tabs.length > 0}}">
+                    <view class="nav-chip" wx:for="{{tabs}}" wx:key="href" hover-class="pressed" data-href="{{item.href}}" bindtap="handleLinkTap">{{item.text}}</view>
+                </scroll-view>
+
+                <view class="section-title" wx:if="{{cards.length > 0}}">推荐内容 <text class="section-count">{{cards.length}}</text></view>
+                <view class="card-grid" wx:if="{{cards.length > 0}}">
+                    <view class="content-card" wx:for="{{cards}}" wx:key="href" hover-class="pressed" data-href="{{item.href}}" bindtap="handleLinkTap">
+                        <image class="content-card-image" src="{{item.image}}" mode="aspectFill" lazy-load />
+                        <view class="content-card-body">
+                            <text class="content-card-title">{{item.title}}</text>
+                            <text class="content-card-desc" wx:if="{{item.desc !== ''}}">{{item.desc}}</text>
+                        </view>
+                    </view>
+                </view>
+
+                <view class="section-title" wx:if="{{items.length > 0}}">页面导航</view>
+                <view class="item-list" wx:if="{{items.length > 0}}">
+                    <view class="list-row" wx:for="{{items}}" wx:key="href" hover-class="pressed" data-href="{{item.href}}" bindtap="handleLinkTap">
+                        <view class="list-dot"></view>
+                        <text class="list-text">{{item.title}}</text>
+                        <text class="list-arrow">›</text>
+                    </view>
+                </view>
+
+                <view class="section-title" wx:if="{{links.length > 0}}">{{linkCountText}}</view>
+                <view class="item-list" wx:if="{{links.length > 0}}">
+                    <view class="list-row" wx:for="{{links}}" wx:key="href" hover-class="pressed" data-href="{{item.href}}" bindtap="handleLinkTap">
+                        <view class="list-dot"></view>
+                        <text class="list-text">{{item.text}}</text>
+                        <text class="list-arrow">›</text>
+                    </view>
+                </view>
+
+                <view class="web-empty" wx:if="{{cards.length === 0 && items.length === 0 && links.length === 0}}">
+                    <text class="web-empty-icon">◌</text>
+                    <text class="web-empty-title">没有可提取的卡片</text>
+                    <text class="web-empty-desc">这个页面可能是脚本渲染的，试试「网页原貌」或「阅读」。</text>
+                </view>
+            </block>
+
+            <!-- 网页原貌 -->
+            <view wx:elif="{{viewMode === 'page'}}" class="page-render">
+                <rich-text class="rich-content" nodes="{{richHtml}}" wx:if="{{richAvailable}}"></rich-text>
+                <view class="web-empty" wx:else>
+                    <text class="web-empty-icon">◌</text>
+                    <text class="web-empty-title">没有可渲染的网页内容</text>
+                    <text class="web-empty-desc">脚本生成的页面需要在浏览器里才能完整显示。</text>
+                </view>
+                <view class="render-note">网页原貌由小程序富文本组件重绘，保留排版与图片，不执行脚本；点链接请回到「卡片」视图。</view>
+            </view>
+
+            <!-- 阅读模式 -->
+            <view wx:else class="reader-body">
+                <block wx:for="{{blocks}}" wx:key="key">
+                    <text wx:if="{{item.type === 'heading'}}" class="block-heading {{item.level >= 3 ? 'block-heading-small' : ''}}">{{item.text}}</text>
+                    <text wx:elif="{{item.type === 'text'}}" class="block-text">{{item.text}}</text>
+                    <view wx:elif="{{item.type === 'image' && !item.broken}}" class="block-image-wrap">
+                        <image class="block-image" src="{{item.src}}" mode="widthFix" lazy-load binderror="handleImageError" data-index="{{index}}" />
+                    </view>
+                </block>
+                <view class="web-empty" wx:if="{{blocks.length === 0}}">
+                    <text class="web-empty-title">没有可提取的正文</text>
+                </view>
+            </view>
+        </view>
+    </block>
+
+    <!-- mini player -->
+    <view class="mini-player" wx:if="{{mini.hasTrack}}" bindtap="handleOpenPlayer">
+        <image class="mini-cover" wx:if="{{mini.cover !== ''}}" src="{{mini.cover}}" mode="aspectFill" />
+        <view class="mini-cover mini-cover-empty" wx:else>♫</view>
+        <view class="mini-info">
+            <text class="mini-title">{{mini.title}}</text>
+            <text class="mini-sub">{{mini.artist}} · {{mini.progressText}}</text>
+        </view>
+        <view class="mini-progress"><view class="mini-progress-inner" style="width:{{mini.percent}}%"></view></view>
+        <text class="mini-toggle" catchtap="handlePlayerToggle">{{mini.playing ? '❚❚' : '▶'}}</text>
+        <text class="mini-next" catchtap="handlePlayerNext">▶▶</text>
+    </view>
+
+    <!-- 底部工具条 -->
+    <view class="toolbar" wx:if="{{url !== ''}}">
+        <view class="tool-item" hover-class="pressed" bindtap="handleRefreshTap"><text class="tool-icon">⟳</text><text class="tool-text">刷新</text></view>
+        <view class="tool-item" hover-class="pressed" bindtap="handleFontTap"><text class="tool-icon">Aa</text><text class="tool-text">字号</text></view>
+        <view class="tool-item" hover-class="pressed" bindtap="handleCopyLink"><text class="tool-icon">⧉</text><text class="tool-text">复制</text></view>
+    </view>
+
+    <!-- 播放弹层 -->
+    <view class="sheet-mask" wx:if="{{showPlayerSheet}}" bindtap="handleClosePlayer">
+        <view class="sheet" catchtap="noop">
+            <view class="sheet-handle"></view>
+            <text class="sheet-title">{{mini.title}}</text>
+            <text class="sheet-artist">{{mini.artist}}</text>
+            <video wx:if="{{sheetVideo}}" class="sheet-video" src="{{sheetSrc}}" autoplay controls bindtimeupdate="handleVideoTimeUpdate" bindplay="handleVideoPlay" bindpause="handleVideoPause" bindended="handlePlayerNext" />
+            <image wx:elif="{{mini.cover !== ''}}" class="sheet-cover" src="{{mini.cover}}" mode="aspectFill" />
+            <view wx:else class="sheet-cover sheet-cover-empty">♫</view>
+            <text class="sheet-lyric">{{lyricText}}</text>
+            <text class="sheet-error" wx:if="{{mini.error !== ''}}">{{mini.error}}</text>
+            <slider class="sheet-slider" min="0" max="100" value="{{mini.percent}}" activeColor="#1769e0" block-size="14" bindchange="handleSeek" />
+            <text class="sheet-time">{{mini.progressText}}</text>
+            <view class="sheet-controls" wx:if="{{!sheetVideo}}">
+                <text class="sheet-btn small" bindtap="handleLoopTap">{{loopText}}</text>
+                <text class="sheet-btn" bindtap="handlePlayerPrev">◀◀</text>
+                <text class="sheet-btn main" bindtap="handlePlayerToggle">{{mini.playing ? '❚❚' : '▶'}}</text>
+                <text class="sheet-btn" bindtap="handlePlayerNext">▶▶</text>
+                <text class="sheet-btn small" bindtap="handleRateTap">{{rateText}}</text>
+            </view>
+        </view>
+    </view>
+</view>

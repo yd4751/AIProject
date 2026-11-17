@@ -1,0 +1,21 @@
+2026/11/03 18:46:25 starting 150 bots against 127.0.0.1:7001 (move=50ms, rampup=5ms)
+2026/11/03 18:46:26 [    1s] online=150 logined=150 failed=0 fps=3526/s avgRTT=0s attr/s=242 switches=0
+2026/11/03 18:46:27 [    2s] online=150 logined=150 failed=0 fps=2510/s avgRTT=0s attr/s=0 switches=1
+2026/11/03 18:46:28 [    3s] online=150 logined=150 failed=0 fps=2713/s avgRTT=0s attr/s=1 switches=1
+2026/11/03 18:46:29 [    4s] online=150 logined=150 failed=0 fps=2638/s avgRTT=0s attr/s=0 switches=1
+2026/11/03 18:46:30 [    5s] online=150 logined=150 failed=0 fps=2837/s avgRTT=2.561ms attr/s=0 switches=1
+2026/11/03 18:46:31 [    6s] online=150 logined=150 failed=0 fps=2590/s avgRTT=2.596ms attr/s=0 switches=1
+2026/11/03 18:46:32 [    7s] online=150 logined=150 failed=0 fps=2870/s avgRTT=2.596ms attr/s=2 switches=3
+2026/11/03 18:46:33 [    8s] online=150 logined=150 failed=0 fps=2976/s avgRTT=2.596ms attr/s=0 switches=4
+2026/11/03 18:46:34 [    9s] online=150 logined=150 failed=0 fps=2996/s avgRTT=2.596ms attr/s=2 switches=4
+2026/11/03 18:46:35 [   10s] online=150 logined=150 failed=0 fps=3244/s avgRTT=2.456ms attr/s=2 switches=5
+2026/11/03 18:46:36 [   11s] online=150 logined=150 failed=0 fps=3204/s avgRTT=2.443ms attr/s=0 switches=5
+2026/11/03 18:46:37 [   12s] online=150 logined=150 failed=0 fps=3207/s avgRTT=2.443ms attr/s=1 switches=7
+2026/11/03 18:46:38 [   13s] online=150 logined=150 failed=0 fps=3215/s avgRTT=2.443ms attr/s=4 switches=8
+2026/11/03 18:46:39 [   14s] online=150 logined=150 failed=0 fps=3417/s avgRTT=2.443ms attr/s=0 switches=9
+2026/11/03 18:46:40 [   15s] online=150 logined=150 failed=0 fps=3446/s avgRTT=4.262ms attr/s=1 switches=9
+2026/11/03 18:46:41 [   16s] online=150 logined=150 failed=0 fps=3579/s avgRTT=4.229ms attr/s=0 switches=9
+2026/11/03 18:46:42 [   17s] online=150 logined=150 failed=0 fps=3515/s avgRTT=4.229ms attr/s=0 switches=9
+2026/11/03 18:46:43 [   18s] online=150 logined=150 failed=0 fps=3672/s avgRTT=4.229ms attr/s=0 switches=9
+2026/11/03 18:46:45 [   19s] online=150 logined=150 failed=0 fps=3302/s avgRTT=4.229ms attr/s=1 switches=10
+2026/11/03 18:46:45 done. logined=150 failed=0 online=0 totalFrames=59820 totalAttrs=256 sceneSwitches=11

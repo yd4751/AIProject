@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% set active = 'home' %}
+{% block title %}热点 · NewsStation{% endblock %}
+
+{% block content %}
+<section class="pagehead">
+  <div>
+    <h1>当前主要热点</h1>
+    <p class="hint">事件按热度排序 · 热度 = 24h 体量 × 媒体数 × 增速 × 6h 半衰期</p>
+  </div>
+  <nav class="views">
+    {% for v in VIEWS %}
+    <a class="vtab {{ 'on' if view == v else '' }}" href="{{ filter_url(request, view=v) }}">{{ VIEW_LABELS[v] }}</a>
+    {% endfor %}
+  </nav>
+</section>
+
+{% include "_filters.html" %}
+
+<div class="summary-line">
+  <span><b>{{ visible|length }}</b> 个事件符合条件</span>
+  {% if filtered_out %}<span>已剔除 {{ filtered_out }} 个单源行情模板事件</span>{% endif %}
+  <span>全库 {{ total }} 篇 · 近 24h 入库 {{ today }} 篇 · {{ total_events }} 个事件</span>
+</div>
+
+{% if not visible %}
+<section class="card empty">
+  <p>没有符合条件的事件。试试<a href="/">清除筛选</a>，或到 <a href="/sources">媒体源</a> 抓一轮。</p>
+</section>
+
+{% elif view == 'list' %}
+<div class="list-layout">
+  <aside class="card rank">
+    <div class="card-head"><h2>热度榜</h2><span class="hint">Top {{ top|length }}</span></div>
+    <ol class="ranklist">
+      {% for e in top %}
+      <li>
+        <span class="rk">{{ loop.index }}</span>
+        <a {{ tr_attr(e.title) }} href="/event/{{ e.id }}">{{ e.title }}</a>
+        <div class="bar"><span style="width:{{ ((e.heat / (top[0].heat or 1)) * 100)|round|int }}%"></span></div>
+        <div class="rankmeta"><span>{{ e.source_count }} 家媒体</span><span>{{ '%.2f'|format(e.heat) }}</span></div>
+      </li>
+      {% endfor %}
+    </ol>
+    <p class="hint">红条 = 热度；单源行情快讯不进榜。</p>
+  </aside>
+
+  <section class="cardcol">
+    {% include "_cards.html" %}
+  </section>
+
+  <aside class="card sidequad">
+    <div class="card-head"><h2>热度 × 增速</h2><span class="hint">象限</span></div>
+    {% with quad = quad_small %}{% include "_quad.html" %}{% endwith %}
+    <p class="hint">右上爆发、左上新苗、右下退潮、左下长尾；点大小 = 报道篇数。</p>
+  </aside>
+</div>
+
+{% elif view == 'quad' %}
+<div class="quad-layout">
+  <section class="card quadmain">
+    <div class="card-head"><h2>热度 × 增速象限</h2><span class="hint">共 {{ quad.points|length }} 个事件 · 纵轴增速 [-1, 1]</span></div>
+    {% include "_quad.html" %}
+    <p class="hint">横轴热度（0 → {{ quad.max_heat }}），纵轴增速；虚线为热度中位数与增速 0。红=加速、绿=回落、灰=持平。</p>
+  </section>
+  <section class="card quadgroups">
+    <div class="card-head"><h2>四象限 Top 3</h2></div>
+    {% for name, items in quad.groups.items() %}
+    <div class="qgroup">
+      <h3>{{ name }} <small>{{ items|length }}</small></h3>
+      {% for it in items[:3] %}
+      <a {{ tr_attr(it.title) }} href="/event/{{ it.id }}">{{ it.title }}</a>
+      <span class="hint">{{ it.heat }}</span>
+      {% else %}
+      <p class="hint">暂无</p>
+      {% endfor %}
+    </div>
+    {% endfor %}
+  </section>
+</div>
+
+{% elif view == 'dot' %}
+{% include "_view_dot.html" %}
+
+{% elif view == 'matrix' %}
+<section class="card">
+  <div class="card-head"><h2>行业热力矩阵</h2><span class="hint">近 24 小时 · 每格 2 小时</span></div>
+  {% include "_matrix.html" %}
+</section>
+{% endif %}
+{% endblock %}

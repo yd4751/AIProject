@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>frptun 管理控制台</title>
+<style>:root{
+  --bg:#f4f6fb; --card:#fff; --line:#e8ebf2; --text:#1b2340; --muted:#8a93a9;
+  --accent:#4f46e5; --accent-soft:#eef0ff; --up:#0f9d76; --down:#7c5cf5;
+  --danger:#e0443e; --danger-soft:#fdecec; --amber:#e0912c; --teal:#0f9d9d;
+  --sidebar:#141a35; --sidebar-2:#1d2547; --shadow:0 1px 3px rgba(20,26,53,.05),0 8px 24px rgba(20,26,53,.04);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.55;-webkit-font-smoothing:antialiased}
+svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+/* 布局 */
+.layout{display:flex;min-height:100vh}
+.sidebar{width:244px;flex:0 0 244px;background:linear-gradient(180deg,var(--sidebar),var(--sidebar-2));color:#c8cfe8;display:flex;flex-direction:column;position:sticky;top:0;height:100vh}
+.side-brand{display:flex;align-items:center;gap:12px;padding:24px 22px;border-bottom:1px solid rgba(255,255,255,.07)}
+.brand-mark{width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,#6d67f6,#4338ca);color:#fff;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;box-shadow:0 4px 14px rgba(79,70,229,.5)}
+.brand-name{font-size:18px;font-weight:700;color:#fff;letter-spacing:.3px;line-height:1.2}
+.brand-name span{display:block;font-size:11px;font-weight:400;color:#8f99c4;letter-spacing:2px;margin-top:2px}
+.side-nav{flex:1;padding:18px 12px;overflow-y:auto}
+.nav-label{font-size:11px;color:#6f7aa8;letter-spacing:1.5px;padding:14px 12px 8px;text-transform:uppercase}
+.nav-item{display:flex;align-items:center;gap:12px;padding:11px 13px;border-radius:9px;cursor:pointer;color:#aeb7d8;font-size:14px;margin-bottom:3px;transition:.15s;user-select:none}
+.nav-item svg{width:19px;height:19px}
+.nav-item:hover{background:rgba(255,255,255,.06);color:#fff}
+.nav-item.active{background:var(--accent);color:#fff;box-shadow:0 4px 14px rgba(79,70,229,.4)}
+.nav-badge{margin-left:auto;background:rgba(255,255,255,.14);font-size:11px;padding:1px 8px;border-radius:20px;min-width:22px;text-align:center}
+.nav-item.active .nav-badge{background:rgba(255,255,255,.22)}
+.side-foot{padding:18px 22px;border-top:1px solid rgba(255,255,255,.07);display:flex;align-items:center;justify-content:space-between}
+.live-pill{display:flex;align-items:center;gap:8px;font-size:12px;color:#9aa4ca}
+.dot{width:8px;height:8px;border-radius:50%;background:#e0443e;box-shadow:0 0 0 3px rgba(224,68,62,.15)}
+.dot.on{background:#25c98f;box-shadow:0 0 0 3px rgba(37,201,143,.15)}
+.side-version{font-size:11px;color:#5d678f}
+
+.main{flex:1;min-width:0;display:flex;flex-direction:column}
+.topbar{height:88px;background:var(--card);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 34px;position:sticky;top:0;z-index:10}
+.page-head h1{font-size:21px;font-weight:700;letter-spacing:-.3px}
+.page-head p{color:var(--muted);font-size:13px;margin-top:2px}
+.topbar-right{display:flex;align-items:center;gap:22px}
+.clock{font-variant-numeric:tabular-nums;color:var(--muted);font-size:13px}
+.user-chip{display:flex;align-items:center;gap:9px;font-size:13px;font-weight:500;padding:6px 12px 6px 6px;background:var(--bg);border-radius:24px}
+.avatar{width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700}
+.content{padding:28px 34px 48px;flex:1}
+
+/* 面板切换 */
+.panel{display:none;animation:fade .25s ease}
+.panel.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* 统计卡片 */
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-bottom:22px}
+.stat-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;display:flex;gap:16px;box-shadow:var(--shadow);transition:.18s}
+.stat-card:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(20,26,53,.09)}
+.stat-icon{width:48px;height:48px;flex:0 0 48px;border-radius:12px;display:flex;align-items:center;justify-content:center}
+.stat-icon svg{width:23px;height:23px}
+.stat-icon.indigo{background:var(--accent-soft);color:var(--accent)}
+.stat-icon.teal{background:#e3f7f4;color:var(--teal)}
+.stat-icon.amber{background:#fdf3e4;color:var(--amber)}
+.stat-icon.violet{background:#f0ebff;color:var(--down)}
+.stat-label{color:var(--muted);font-size:12px;font-weight:500}
+.stat-value{font-size:28px;font-weight:700;letter-spacing:-1px;line-height:1.25;margin:2px 0}
+.stat-foot{font-size:11px;color:#a6adbd}
+
+/* 卡片 */
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);margin-bottom:20px;overflow:hidden}
+.card-head{padding:20px 22px;display:flex;align-items:flex-start;justify-content:space-between;border-bottom:1px solid var(--line)}
+.card-head h2{font-size:15px;font-weight:650}
+.card-head p{color:var(--muted);font-size:12px;margin-top:3px}
+.grid-2{display:grid;grid-template-columns:1.35fr 1fr;gap:20px}
+.chart-card .chart{padding:18px 20px 10px;height:270px}
+.legend{display:flex;gap:16px;font-size:12px;color:var(--muted)}
+.legend span{display:flex;align-items:center;gap:6px}
+.legend i{width:9px;height:9px;border-radius:3px;display:inline-block}
+.lg-up{background:var(--up)}.lg-down{background:var(--down)}
+.live-tag{font-size:10px;font-weight:700;letter-spacing:1px;color:var(--up);background:#e3f7f4;padding:4px 9px;border-radius:6px}
+
+/* 迷你实时列表 */
+.mini-live{padding:8px 22px 16px;max-height:270px;overflow-y:auto}
+.mini-row{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--line)}
+.mini-row:last-child{border-bottom:none}
+.mini-svc{width:9px;height:9px;border-radius:50%;background:var(--up);flex:0 0 auto}
+.mini-main{flex:1;min-width:0}
+.mini-main strong{font-size:13px;font-weight:600;display:block}
+.mini-main span{font-size:11px;color:var(--muted)}
+.mini-bytes{font-size:12px;font-variant-numeric:tabular-nums;color:var(--down);white-space:nowrap}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;padding:12px 22px;color:var(--muted);font-weight:500;font-size:11px;letter-spacing:.4px;text-transform:uppercase;background:#fafbfe;border-bottom:1px solid var(--line)}
+td{padding:13px 22px;border-bottom:1px solid var(--line);white-space:nowrap}
+tr:last-child td{border-bottom:none}
+tbody tr:hover{background:#fafbff}
+.empty-state{text-align:center;color:var(--muted);padding:40px 0!important}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px}
+.sub{color:var(--muted);font-size:11px}
+
+/* 标签 */
+.tag{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:6px;font-size:11px;font-weight:600}
+.tag::before{content:"";width:5px;height:5px;border-radius:50%;background:currentColor}
+.tag.ok{background:#e3f7f4;color:#0b7d61}
+.tag.off{background:#f1f3f8;color:#8a93a9}
+.tag.allow{background:#e3f7f4;color:#0b7d61}
+.tag.deny{background:var(--danger-soft);color:var(--danger)}
+.tag.ip{background:var(--accent-soft);color:var(--accent)}
+.tag.machine{background:#f0ebff;color:var(--down)}
+.tag.static{background:#f1f3f8;color:#5b6478}
+.tag.dynamic{background:#fdf3e4;color:var(--amber)}
+
+/* 表单 */
+.form-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px 18px;padding:22px}
+.field{display:flex;flex-direction:column;gap:7px}
+.field.wide{grid-column:span 2}
+.field label{font-size:12px;font-weight:600;color:#5b6478}
+.field input,.field select{padding:10px 12px;border:1px solid var(--line);border-radius:9px;font-size:13px;background:#fff;color:var(--text);outline:none;transition:.15s;width:100%}
+.field input:focus,.field select:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.field input::placeholder{color:#b6bccc}
+.form-actions{grid-column:1/-1;display:flex;align-items:center;gap:14px}
+.form-actions.left{margin-top:18px}
+.btn{display:inline-flex;align-items:center;gap:7px;padding:10px 18px;border:1px solid var(--line);border-radius:9px;background:#fff;cursor:pointer;font-size:13px;font-weight:600;color:var(--text);transition:.15s}
+.btn svg{width:16px;height:16px}
+.btn:hover{background:var(--bg)}
+.btn.primary{background:var(--accent);color:#fff;border-color:var(--accent);box-shadow:0 4px 12px rgba(79,70,229,.25)}
+.btn.primary:hover{background:#4338ca}
+.btn.sm{padding:6px 12px;font-size:12px;border-radius:7px}
+.btn.danger{color:var(--danger);border-color:#f4c7c5}
+.btn.danger:hover{background:var(--danger-soft)}
+.form-msg{font-size:12px;color:var(--up);font-weight:500}
+.form-msg.err{color:var(--danger)}
+
+/* 授权模式选择 */
+.mode-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding:22px 22px 0}
+.mode-opt{display:flex;align-items:flex-start;gap:11px;padding:15px;border:1px solid var(--line);border-radius:11px;cursor:pointer;transition:.15s}
+.mode-opt:hover{border-color:#c7ccdb}
+.mode-opt input{margin-top:3px;accent-color:var(--accent);width:16px;height:16px}
+.mode-opt strong{display:block;font-size:13px;font-weight:650}
+.mode-opt span{display:block;font-size:11px;color:var(--muted);margin-top:3px}
+.mode-opt:has(input:checked){border-color:var(--accent);background:var(--accent-soft)}
+
+/* 头部提示 */
+.hint{padding:0 22px 18px;color:var(--muted);font-size:12px}
+
+@media(max-width:1100px){.stat-grid{grid-template-columns:repeat(2,1fr)}.grid-2{grid-template-columns:1fr}.form-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:720px){.sidebar{width:64px;flex-basis:64px}.brand-name,.nav-item span,.nav-label,.side-version,.nav-badge{display:none}.side-brand{justify-content:center;padding:20px 0}.nav-item{justify-content:center}.content,.topbar{padding-left:16px;padding-right:16px}.stat-grid{grid-template-columns:1fr}.form-grid{grid-template-columns:1fr}.field.wide{grid-column:span 1}}
+</style>
+</head>
+<body>
+<div class="layout">
+  <!-- 侧边栏 -->
+  <aside class="sidebar">
+    <div class="side-brand">
+      <div class="brand-mark">f</div>
+      <div class="brand-name">frptun<span>控制台</span></div>
+    </div>
+    <nav class="side-nav">
+      <div class="nav-label">工作台</div>
+      <a class="nav-item active" data-tab="overview">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+        <span>总览</span>
+      </a>
+      <a class="nav-item" data-tab="ports">
+        <svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/><circle cx="8" cy="7" r="2"/><circle cx="16" cy="12" r="2"/><circle cx="10" cy="17" r="2"/></svg>
+        <span>端口管理</span>
+        <span class="nav-badge" id="nav-port-count">0</span>
+      </a>
+      <a class="nav-item" data-tab="connections">
+        <svg viewBox="0 0 24 24"><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M8.2 10.8 15.8 7.2M8.2 13.2l7.6 3.6"/></svg>
+        <span>实时连接</span>
+      </a>
+      <a class="nav-item" data-tab="clients">
+        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="11" rx="2"/><path d="M8 21h8M12 15v6"/></svg>
+        <span>客户端</span>
+      </a>
+      <div class="nav-label">系统</div>
+      <a class="nav-item" data-tab="auth">
+        <svg viewBox="0 0 24 24"><path d="M12 3 5 6v5c0 4.5 3 8 7 10 4-2 7-5.5 7-10V6z"/><path d="m9.5 12 1.8 1.8 3.4-3.6"/></svg>
+        <span>授权管理</span>
+      </a>
+      <a class="nav-item" data-tab="traffic">
+        <svg viewBox="0 0 24 24"><path d="M4 19V5M4 19h16"/><path d="m7 15 4-5 3 3 5-7"/></svg>
+        <span>流量记录</span>
+      </a>
+    </nav>
+    <div class="side-foot">
+      <div class="live-pill"><span class="dot" id="connDot"></span><span id="connText">连接中</span></div>
+      <div class="side-version">v1.0.0</div>
+    </div>
+  </aside>
+
+  <!-- 主区域 -->
+  <div class="main">
+    <header class="topbar">
+      <div class="page-head">
+        <h1 id="page-title">总览</h1>
+        <p id="page-sub">服务运行状态与实时数据</p>
+      </div>
+      <div class="topbar-right">
+        <div class="clock" id="clock">--:--:--</div>
+        <div class="user-chip"><div class="avatar">A</div><span id="admin-user">admin</span></div>
+      </div>
+    </header>
+
+    <main class="content">
+      <!-- 总览 -->
+      <section id="tab-overview" class="panel active">
+        <div class="stat-grid">
+          <div class="stat-card">
+            <div class="stat-icon indigo"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="11" rx="2"/><path d="M8 21h8M12 15v6"/></svg></div>
+            <div class="stat-body"><div class="stat-label">在线客户端</div><div class="stat-value" id="m-online">0</div><div class="stat-foot">当前已连接的内网客户端</div></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon teal"><svg viewBox="0 0 24 24"><path d="M8 3 4 7l4 4M16 21l4-4-4-4M20 7H9M4 17h11"/></svg></div>
+            <div class="stat-body"><div class="stat-label">活跃隧道</div><div class="stat-value" id="m-tunnels">0</div><div class="stat-foot">正在转发的连接数</div></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon amber"><svg viewBox="0 0 24 24"><path d="M4 6h16v12H4zM4 10h16M8 15h4"/></svg></div>
+            <div class="stat-body"><div class="stat-label">端口映射</div><div class="stat-value" id="m-ports">0</div><div class="stat-foot">已配置的转发端口</div></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon violet"><svg viewBox="0 0 24 24"><path d="M4 19V5M4 19h16M7 15l4-5 3 3 5-7"/></svg></div>
+            <div class="stat-body"><div class="stat-label">累计流量</div><div class="stat-value" id="m-traffic">0 B</div><div class="stat-foot" id="m-conns">0 次连接</div></div>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="card chart-card">
+            <div class="card-head"><div><h2>流量趋势</h2><p>最近 24 小时上行 / 下行</p></div>
+              <div class="legend"><span><i class="lg-up"></i>上行</span><span><i class="lg-down"></i>下行</span></div>
+            </div>
+            <div id="chart" class="chart"></div>
+          </div>
+          <div class="card">
+            <div class="card-head"><div><h2>实时连接</h2><p>当前活跃的转发隧道</p></div><span class="live-tag">LIVE</span></div>
+            <div id="mini-live" class="mini-live"><div class="empty-state">暂无活跃连接</div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 端口管理 -->
+      <section id="tab-ports" class="panel">
+        <div class="card">
+          <div class="card-head">
+            <div><h2>新增端口映射</h2><p>选择在线客户端，实时新增一条转发端口</p></div>
+          </div>
+          <form id="port-form" class="form-grid">
+            <div class="field"><label>目标客户端</label>
+              <select id="p-machine" required><option value="">加载中…</option></select>
+            </div>
+            <div class="field"><label>服务名</label><input id="p-name" placeholder="如 web-2"></div>
+            <div class="field"><label>本地 IP</label><input id="p-localip" value="127.0.0.1"></div>
+            <div class="field"><label>本地端口</label><input id="p-localport" type="number" min="1" max="65535" placeholder="8080" required></div>
+            <div class="field"><label>远端端口</label><input id="p-remoteport" type="number" min="1" max="65535" placeholder="9081" required></div>
+            <div class="field"><label>备注</label><input id="p-note" placeholder="可选"></div>
+            <div class="form-actions"><button type="submit" class="btn primary">
+              <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>新增映射</button>
+              <span id="port-msg" class="form-msg"></span>
+            </div>
+          </form>
+        </div>
+        <div class="card">
+          <div class="card-head"><div><h2>端口映射列表</h2><p>关闭操作立即生效，断开该端口上的所有连接</p></div></div>
+          <div class="table-wrap"><table>
+            <thead><tr><th>状态</th><th>远端端口</th><th>本地目标</th><th>服务名</th><th>客户端</th><th>来源</th><th>操作</th></tr></thead>
+            <tbody id="ports-body"><tr><td colspan="7" class="empty-state">暂无端口映射</td></tr></tbody>
+          </table></div>
+        </div>
+      </section>
+
+      <!-- 实时连接 -->
+      <section id="tab-connections" class="panel">
+        <div class="card">
+          <div class="card-head"><div><h2>实时连接</h2><p>每秒自动刷新的活跃隧道</p></div><span class="live-tag">LIVE</span></div>
+          <div class="table-wrap"><table>
+            <thead><tr><th>ID</th><th>服务</th><th>来源 IP</th><th>机器码</th><th>上行</th><th>下行</th><th>时长</th></tr></thead>
+            <tbody id="live-body"><tr><td colspan="7" class="empty-state">暂无活跃连接</td></tr></tbody>
+          </table></div>
+        </div>
+      </section>
+
+      <!-- 客户端 -->
+      <section id="tab-clients" class="panel">
+        <div class="card">
+          <div class="card-head"><div><h2>客户端列表</h2><p>所有曾连接过的内网客户端</p></div></div>
+          <div class="table-wrap"><table>
+            <thead><tr><th>状态</th><th>机器码</th><th>主机名</th><th>IP</th><th>累计上行</th><th>累计下行</th><th>最后上线</th></tr></thead>
+            <tbody id="clients-body"><tr><td colspan="7" class="empty-state">暂无数据</td></tr></tbody>
+          </table></div>
+        </div>
+      </section>
+
+      <!-- 授权管理 -->
+      <section id="tab-auth" class="panel">
+        <div class="card">
+          <div class="card-head"><div><h2>授权模式</h2><p>控制哪些客户端允许连接</p></div></div>
+          <div class="mode-grid">
+            <label class="mode-opt"><input type="radio" name="mode" value="off"><div><strong>仅 Token</strong><span>只校验通信密钥</span></div></label>
+            <label class="mode-opt"><input type="radio" name="mode" value="whitelist"><div><strong>白名单</strong><span>仅命中允许规则才放行</span></div></label>
+            <label class="mode-opt"><input type="radio" name="mode" value="blacklist"><div><strong>黑名单</strong><span>命中拒绝规则则拦截</span></div></label>
+          </div>
+          <div class="form-actions left"><button id="save-mode" class="btn primary">保存模式</button><span id="mode-msg" class="form-msg"></span></div>
+        </div>
+        <div class="card">
+          <div class="card-head"><div><h2>添加规则</h2><p>IP 支持通配与 CIDR，机器码支持通配</p></div></div>
+          <form id="rule-form" class="form-grid">
+            <div class="field"><label>类型</label><select id="r-kind"><option value="ip">IP 地址</option><option value="machine">机器码</option></select></div>
+            <div class="field wide"><label>值</label><input id="r-value" placeholder="如 192.168.1.* / 10.0.0.0/8 / 机器码"></div>
+            <div class="field"><label>动作</label><select id="r-action"><option value="allow">允许</option><option value="deny">拒绝</option></select></div>
+            <div class="field wide"><label>备注</label><input id="r-note" placeholder="可选"></div>
+            <div class="form-actions"><button type="submit" class="btn primary"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>添加规则</button></div>
+          </form>
+        </div>
+        <div class="card">
+          <div class="card-head"><div><h2>规则列表</h2><p></p></div></div>
+          <div class="table-wrap"><table>
+            <thead><tr><th>类型</th><th>值</th><th>动作</th><th>备注</th><th>启用</th><th></th></tr></thead>
+            <tbody id="rules-body"><tr><td colspan="6" class="empty-state">暂无规则</td></tr></tbody>
+          </table></div>
+        </div>
+      </section>
+
+      <!-- 流量记录 -->
+      <section id="tab-traffic" class="panel">
+        <div class="card">
+          <div class="card-head"><div><h2>隧道记录</h2><p>最近 100 条已结束的连接</p></div></div>
+          <div class="table-wrap"><table>
+            <thead><tr><th>时间</th><th>服务</th><th>来源 IP</th><th>机器码</th><th>上行</th><th>下行</th><th>时长</th></tr></thead>
+            <tbody id="traffic-body"><tr><td colspan="7" class="empty-state">暂无记录</td></tr></tbody>
+          </table></div>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+<script>
+const $=(s)=>document.querySelector(s), $$=(s)=>Array.from(document.querySelectorAll(s));
+const M={overview:['总览','服务运行状态与实时数据'],ports:['端口管理','实时新增与关闭端口映射'],connections:['实时连接','当前活跃的转发隧道'],clients:['客户端','所有曾连接过的内网客户端'],auth:['授权管理','黑白名单与访问控制'],traffic:['流量记录','历史隧道连接明细']};
+function fb(n){n=Number(n)||0;if(n<1024)return n+' B';const u=['KB','MB','GB','TB'];let i=-1;do{n/=1024;i++}while(n>=1024&&i<u.length-1);return n.toFixed(1)+' '+u[i]}
+$$('.nav-item').forEach(n=>n.addEventListener('click',()=>{const t=n.dataset.tab;$$('.nav-item').forEach(x=>x.classList.toggle('active',x===n));$$('.panel').forEach(x=>x.classList.remove('active'));document.getElementById('tab-'+t).classList.add('active');$('#page-title').textContent=M[t][0];$('#page-sub').textContent=M[t][1];if(t==='overview')chart()}));
+$('#clock').textContent=new Date().toLocaleTimeString('zh-CN',{hour12:false});setInterval(()=>$('#clock').textContent=new Date().toLocaleTimeString('zh-CN',{hour12:false}),1000);
+$('#m-online').textContent='3';$('#m-tunnels').textContent='12';$('#m-ports').textContent='6';$('#m-traffic').textContent='2.4 GB';$('#m-conns').textContent='1,284 次连接';$('#nav-port-count').textContent='6';$('#connDot').classList.add('on');$('#connText').textContent='实时已连接';
+function chart(){const el=$('#chart'),W=el.clientWidth||700,H=250,pl=46,pr=12,pt=16,pb=28,pts=[];for(let i=0;i<24;i++)pts.push({bytes_up:Math.max(0,(20+30*Math.sin(i/3)+Math.random()*30)*1e6),bytes_down:Math.max(0,(35+25*Math.cos(i/4)+Math.random()*40)*1e6),h:i});const max=Math.max(1,...pts.map(p=>p.bytes_up+p.bytes_down)),base=H-pb,ph=H-pt-pb,step=(W-pl-pr)/pts.length,bw=Math.max(3,Math.min(20,step*.55));let g=`<svg width="100%" height="${H}" viewBox="0 0 ${W} ${H}">`;for(let i=0;i<=4;i++){const y=pt+ph*i/4;g+=`<line x1="${pl}" y1="${y}" x2="${W-pr}" y2="${y}" stroke="#eef0f5"/><text x="${pl-8}" y="${y+4}" fill="#a6adbd" font-size="10" text-anchor="end">${fb(max*(1-i/4))}</text>`}pts.forEach((p,i)=>{const x=pl+i*step+(step-bw)/2,u=p.bytes_up/max*ph,d=p.bytes_down/max*ph;g+=`<rect x="${x}" y="${base-u}" width="${bw}" height="${u}" fill="#0f9d76" rx="2"/><rect x="${x}" y="${base-u-d}" width="${bw}" height="${d}" fill="#7c5cf5" rx="2"/>`;if(i%4===0)g+=`<text x="${x+bw/2}" y="${H-8}" fill="#a6adbd" font-size="10" text-anchor="middle">${String(p.h).padStart(2,'0')}:00</text>`});g+='</svg>';el.innerHTML=g}
+chart();
+const C=[{id:10231,s:'web',ip:'203.0.113.42',m:'da064f7da1b2',u:184320,d:892331,t:125000},{id:10230,s:'ssh',ip:'198.51.100.7',m:'9f3c21ab7788',u:45213,d:301992,t:340000},{id:10229,s:'rdp',ip:'192.0.2.15',m:'c1a0e9f34421',u:98012,d:220144,t:62000}];
+$('#live-body').innerHTML=C.map(c=>`<tr><td class="mono">${c.id}</td><td>${c.s}</td><td class="mono">${c.ip}</td><td class="mono">${c.m}</td><td style="color:var(--up)">${fb(c.u)}</td><td style="color:var(--down)">${fb(c.d)}</td><td>${Math.floor(c.t/1000)}s</td></tr>`).join('');
+$('#mini-live').innerHTML=C.map(c=>`<div class="mini-row"><span class="mini-svc"></span><div class="mini-main"><strong>${c.s}</strong><span class="mono">${c.ip}</span></div><span class="mini-bytes">↑${fb(c.u)} ↓${fb(c.d)}</span></div>`).join('');
+const P=[[true,9080,'127.0.0.1:8080','web','office-pc','static'],[true,6022,'127.0.0.1:22','ssh','office-pc','static'],[true,9081,'127.0.0.1:3000','dev-api','dev-box','dynamic'],[true,3389,'192.168.1.9:3389','rdp','win-host','dynamic'],[false,9090,'127.0.0.1:5000','old-api','office-pc','dynamic'],[false,8088,'127.0.0.1:80','backup','(离线)','dynamic']];
+$('#ports-body').innerHTML=P.map(p=>`<tr><td><span class="tag ${p[0]?'ok':'off'}">${p[0]?'运行中':'已关闭'}</span></td><td><span class="mono" style="font-weight:700">:${p[1]}</span></td><td class="mono">${p[2]}</td><td>${p[3]}</td><td class="mono">${p[4]}</td><td><span class="tag ${p[5]}">${p[5]==='dynamic'?'动态':'配置'}</span></td><td><button class="btn sm danger">关闭</button></td></tr>`).join('');
+$('#clients-body').innerHTML=[['da064f7da1b2','office-pc','10.0.0.12','1.2 GB','890 MB',1],['9f3c21ab7788','dev-box','10.0.0.31','540 MB','1.1 GB',1],['c1a0e9f34421','win-host','10.0.0.55','320 MB','670 MB',1],['7a2b3c4d5e6f','','-','88 MB','210 MB',0]].map(c=>`<tr><td><span class="tag ${c[5]?'ok':'off'}">${c[5]?'在线':'离线'}</span></td><td class="mono">${c[0]}</td><td>${c[1]||'-'}</td><td class="mono">${c[2]}</td><td style="color:var(--up)">${c[3]}</td><td style="color:var(--down)">${c[4]}</td><td class="sub">刚刚</td></tr>`).join('');
+$('#rules-body').innerHTML=`<tr><td><span class="tag ip">IP</span></td><td class="mono">10.0.0.0/8</td><td><span class="tag allow">允许</span></td><td>内网段</td><td><button class="btn sm">已启用</button></td><td><button class="btn sm danger">删除</button></td></tr><tr><td><span class="tag machine">机器码</span></td><td class="mono">a3f9c2e1*</td><td><span class="tag deny">拒绝</span></td><td>过期设备</td><td><button class="btn sm">已启用</button></td><td><button class="btn sm danger">删除</button></td></tr>`;
+document.querySelector('input[name=mode][value=whitelist]').checked=true;
+$('#traffic-body').innerHTML=C.map(c=>`<tr><td class="sub">--</td><td>${c.s}</td><td class="mono">${c.ip}</td><td class="mono">${c.m.slice(0,12)}</td><td style="color:var(--up)">${fb(c.u)}</td><td style="color:var(--down)">${fb(c.d)}</td><td>${Math.floor(c.t/1000)}s</td></tr>`).join('');
+</script>
+</body>
+</html>

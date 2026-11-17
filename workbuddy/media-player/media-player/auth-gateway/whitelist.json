@@ -1,0 +1,5 @@
+{
+  "_note": "微信用户白名单。openid 必填；unionid 可选，用于把服务号/网站应用/小程序的同一微信用户打通。enabled:false 可临时停用某人。改完保存即生效，无需重启网关。未授权用户会被自动记入 pending，把 openid 复制到 users 即可放行。",
+  "users": [],
+  "pending": []
+}

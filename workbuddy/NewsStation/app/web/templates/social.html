@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% set active = 'social' %}
+{% block title %}社媒热榜 · NewsStation{% endblock %}
+
+{% block content %}
+<section class="pagehead">
+  <h1>社交媒体热榜</h1>
+  <p class="hint">
+    全球 {{ platforms|length }} 个平台（国内 {{ cn_count }} + 境外 {{ foreign_count }}）· 每轮抓取留一份榜单快照 · 当前 {{ total_trends }} 条 ·
+    最近更新 {{ captured_at | localtime }} · {{ ok_platforms }}/{{ status|length }} 平台正常
+  </p>
+</section>
+
+{% if not boards %}
+<div class="card empty">
+  还没有抓到榜单数据。到 <a href="/sources">媒体源</a> 点「立即抓取」，或等下一轮定时任务（{{ interval }} 分钟）。
+</div>
+{% else %}
+
+<div class="pf-tabs">
+  <a class="chip {{ 'sel' if not selected else '' }}" href="/social">全部</a>
+  {% for key, meta in platforms.items() %}
+  <a class="chip {{ 'sel' if selected == key else '' }}" href="/social?platform={{ key }}">
+    <i class="dotind" style="background:{{ meta.color }}"></i>{{ meta.short }}
+  </a>
+  {% endfor %}
+  <span class="hint">「新 / ↑n / ↓n」为与上一批的排名变化</span>
+</div>
+
+{% if resonance %}
+<section class="card reso">
+  <div class="card-head">
+    <h2>跨平台共振</h2>
+    <span class="hint">同一话题在 ≥2 个热搜词平台同时上榜 · B 站视频榜不参与聚合</span>
+  </div>
+  <div class="reso-list">
+    {% for g in resonance %}
+    <div class="reso-row">
+      <span class="reso-n">{{ loop.index }}</span>
+      <a href="{{ read_url(g.url) }}" data-read title="在站内查看" {{ tr_attr(g.title) }}>{{ g.title }}</a>
+      <span class="reso-platforms">
+        {% for p in g.platforms %}<i class="pdot" style="background:{{ platforms[p].color }}" title="{{ platforms[p].name }}"></i>{% endfor %}
+        <b>{{ g.platforms|length }} 平台</b>
+      </span>
+      <span class="hint">{% for m in g.members %}{{ platforms[m.platform].short }} #{{ m.rank }}{% if not loop.last %} · {% endif %}{% endfor %}</span>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+<div class="board-grid">
+  {% for key, board in boards.items() %}
+  {% if not selected or selected == key %}
+  <section class="card board" style="--pc:{{ platforms[key].color }}">
+    <div class="board-head">
+      <span class="pbadge" style="background:{{ platforms[key].color }}">{{ platforms[key].badge }}</span>
+      <h2>{{ platforms[key].name }}</h2>
+      <span class="hint">{{ board['items']|length }} 条 · {{ board.captured_at | localtime }}</span>
+    </div>
+    <ol class="trend-list">
+      {% for it in board['items'] %}
+      <li>
+        <span class="rk {{ 'top' if it.rank <= 3 else '' }}">{{ it.rank }}</span>
+        <div class="tr-body">
+          <a href="{{ read_url(it.url) }}" data-read title="在站内查看" {{ tr_attr(it.title) }}>{{ it.title }}</a>
+          {% if it.summary %}<p class="tr-sum">{{ it.summary[:70] }}{% if it.summary|length > 70 %}…{% endif %}</p>{% endif %}
+          {% if it.extra_obj.category %}<span class="mini-tag">{{ it.extra_obj.category }}</span>{% endif %}
+          {% if it.extra_obj.author %}<span class="mini-tag">{{ it.extra_obj.author }}</span>{% endif %}
+        </div>
+        <div class="tr-side">
+          <span class="heat">{{ it.heat_label }}</span>
+          <span class="delta {{ it.delta_class }}">{{ it.delta_text }}</span>
+        </div>
+      </li>
+      {% endfor %}
+    </ol>
+  </section>
+  {% endif %}
+  {% endfor %}
+</div>
+
+<section class="card note-card">
+  <p><b>数据说明</b>：榜单按「每平台一批快照」存储，可看到排名升降；网址按热搜词/内容 ID 构造，同一话题不会因反复上榜重复入库。</p>
+  {% if inject %}
+  <p>当前每平台前 <b>{{ inject_top }}</b> 条会注入主事件流，自动获得四维标签、事件聚类、订阅命中与一键翻译；可在 <code>config.yaml</code> 的 <code>social.inject_articles</code> 关闭。</p>
+  {% else %}
+  <p>当前未注入事件流（<code>social.inject_articles: false</code>），只保留榜单快照。</p>
+  {% endif %}
+  <p class="hint">境外平台（Hacker News / Lobsters / GitHub Trending）已接入，经本地代理抓取，标题与摘要可用「一键翻译」转中文。Reddit 经代理仍被反爬 403、X / YouTube 需付费 API，暂未列入；扩展只需新增解析器 + 一行配置。接口：<a href="/api/social/trends">/api/social/trends</a> · <a href="/api/social/status">/api/social/status</a></p>
+</section>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,14 @@
+<view class="wrap">
+  <view class="card">
+    <view class="title">影音播放器</view>
+    <view class="status">{{status}}</view>
+    <view wx:if="{{openid}}" class="oid" bindtap="copyOpenid">openid: {{openid}}（点击复制，发给管理员在网关管理端一键放行）</view>
+    <view wx:if="{{denied}}" class="tip">本次授权失败已记录，管理员可在管理端「授权记录」里直接放行</view>
+    <view wx:if="{{deviceMode}}" class="tip">当前网关已切换为「设备登录」模式，微信验证暂时停用。请改用浏览器打开网关地址，页面会自动生成机器码；把机器码发给管理员，在「网关管理端 → 设备白名单」放行后即可访问。</view>
+    <view wx:if="{{!configured}}" class="tip">小程序后台还需把该域名加入 request 合法域名（HTTPS 公网地址）。</view>
+    <view class="base" bindtap="setGateway">网关：{{base}} <text class="edit">修改</text></view>
+    <button wx:if="{{!done && !deviceMode}}" class="btn" bindtap="login">重新验证</button>
+    <button wx:if="{{done}}" class="btn" bindtap="goWeb">进入播放器</button>
+    <button class="btn ghost" bindtap="setGateway">设置网关地址</button>
+  </view>
+</view>

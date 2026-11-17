@@ -1,0 +1,19 @@
+{
+  "role": "client",
+  "server_addr": "127.0.0.1",
+  "server_port": 7010,
+  "token": "bighat258611!",
+  "heartbeat_interval": 10,
+  "heartbeat_timeout": 30,
+  "reconnect_interval": 1,
+  "max_reconnect_interval": 30,
+  "connect_timeout": 10,
+  "services": [
+    {
+      "name": "test",
+      "local_ip": "127.0.0.1",
+      "local_port": 7000,
+      "remote_port": 7012
+    }
+  ]
+}

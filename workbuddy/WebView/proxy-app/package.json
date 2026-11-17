@@ -1,0 +1,10 @@
+{
+  "name": "sitedock-fetch-proxy",
+  "version": "1.0.0",
+  "private": true,
+  "description": "站点坞预览抓取代理：服务端抓取调试站点并回传 HTML，绕开浏览器对自签证书的拦截",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  }
+}

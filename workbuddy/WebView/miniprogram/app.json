@@ -1,0 +1,38 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/browse/browse",
+    "pages/site-edit/site-edit",
+    "pages/settings/settings"
+  ],
+  "window": {
+    "navigationBarTitleText": "站点坞",
+    "navigationBarBackgroundColor": "#ffffff",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#f5f7fa",
+    "backgroundTextStyle": "dark"
+  },
+  "tabBar": {
+    "color": "#9aa2ac",
+    "selectedColor": "#1769e0",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "站点",
+        "iconPath": "assets/icons/tab-site.png",
+        "selectedIconPath": "assets/icons/tab-site-active.png"
+      },
+      {
+        "pagePath": "pages/settings/settings",
+        "text": "设置",
+        "iconPath": "assets/icons/tab-settings.png",
+        "selectedIconPath": "assets/icons/tab-settings-active.png"
+      }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}

@@ -1,0 +1,7 @@
+.wrap { min-height: 100vh; background: #0d1117; display: flex; align-items: center; justify-content: center; padding: 32rpx; box-sizing: border-box; }
+.card { width: 100%; background: #151b23; border-radius: 24rpx; padding: 48rpx 36rpx; text-align: center; }
+.title { color: #e6edf3; font-size: 36rpx; font-weight: 600; margin-bottom: 20rpx; }
+.tip { color: #8b98a9; font-size: 28rpx; line-height: 1.7; margin-bottom: 28rpx; }
+.base { color: #9ecbff; font-size: 24rpx; line-height: 1.6; margin-bottom: 24rpx; word-break: break-all; }
+.btn { background: #4c8dff; color: #fff; border-radius: 16rpx; margin-top: 16rpx; }
+.btn.ghost { background: transparent; color: #7aa7ff; border: 1rpx solid #33456a; }

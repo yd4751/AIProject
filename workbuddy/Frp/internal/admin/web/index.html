@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>frptun 管理控制台</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div class="layout">
+  <!-- 侧边栏 -->
+  <aside class="sidebar">
+    <div class="side-brand">
+      <div class="brand-mark">f</div>
+      <div class="brand-name">frptun<span>控制台</span></div>
+    </div>
+    <nav class="side-nav">
+      <div class="nav-label">工作台</div>
+      <a class="nav-item active" data-tab="overview">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+        <span>总览</span>
+      </a>
+      <a class="nav-item" data-tab="ports">
+        <svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/><circle cx="8" cy="7" r="2"/><circle cx="16" cy="12" r="2"/><circle cx="10" cy="17" r="2"/></svg>
+        <span>端口管理</span>
+        <span class="nav-badge" id="nav-port-count">0</span>
+      </a>
+      <a class="nav-item" data-tab="connections">
+        <svg viewBox="0 0 24 24"><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M8.2 10.8 15.8 7.2M8.2 13.2l7.6 3.6"/></svg>
+        <span>实时连接</span>
+      </a>
+      <a class="nav-item" data-tab="clients">
+        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="11" rx="2"/><path d="M8 21h8M12 15v6"/></svg>
+        <span>客户端</span>
+      </a>
+      <div class="nav-label">系统</div>
+      <a class="nav-item" data-tab="auth">
+        <svg viewBox="0 0 24 24"><path d="M12 3 5 6v5c0 4.5 3 8 7 10 4-2 7-5.5 7-10V6z"/><path d="m9.5 12 1.8 1.8 3.4-3.6"/></svg>
+        <span>授权管理</span>
+      </a>
+      <a class="nav-item" data-tab="traffic">
+        <svg viewBox="0 0 24 24"><path d="M4 19V5M4 19h16"/><path d="m7 15 4-5 3 3 5-7"/></svg>
+        <span>流量记录</span>
+      </a>
+    </nav>
+    <div class="side-foot">
+      <div class="live-pill"><span class="dot" id="connDot"></span><span id="connText">连接中</span></div>
+      <div class="side-version">v1.0.0</div>
+    </div>
+  </aside>
+
+  <!-- 主区域 -->
+  <div class="main">
+    <header class="topbar">
+      <div class="page-head">
+        <h1 id="page-title">总览</h1>
+        <p id="page-sub">服务运行状态与实时数据</p>
+      </div>
+      <div class="topbar-right">
+        <div class="clock" id="clock">--:--:--</div>
+        <div class="user-chip"><div class="avatar">A</div><span id="admin-user">admin</span></div>
+      </div>
+    </header>
+
+    <main class="content">
+      <!-- 总览 -->
+      <section id="tab-overview" class="panel active">
+        <div class="stat-grid">
+          <div class="stat-card">
+            <div class="stat-icon indigo"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="11" rx="2"/><path d="M8 21h8M12 15v6"/></svg></div>
+            <div class="stat-body"><div class="stat-label">在线客户端</div><div class="stat-value" id="m-online">0</div><div class="stat-foot">当前已连接的内网客户端</div></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon teal"><svg viewBox="0 0 24 24"><path d="M8 3 4 7l4 4M16 21l4-4-4-4M20 7H9M4 17h11"/></svg></div>
+            <div class="stat-body"><div class="stat-label">活跃隧道</div><div class="stat-value" id="m-tunnels">0</div><div class="stat-foot">正在转发的连接数</div></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon amber"><svg viewBox="0 0 24 24"><path d="M4 6h16v12H4zM4 10h16M8 15h4"/></svg></div>
+            <div class="stat-body"><div class="stat-label">端口映射</div><div class="stat-value" id="m-ports">0</div><div class="stat-foot">已配置的转发端口</div></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon violet"><svg viewBox="0 0 24 24"><path d="M4 19V5M4 19h16M7 15l4-5 3 3 5-7"/></svg></div>
+            <div class="stat-body"><div class="stat-label">累计流量</div><div class="stat-value" id="m-traffic">0 B</div><div class="stat-foot" id="m-conns">0 次连接</div></div>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="card chart-card">
+            <div class="card-head"><div><h2>流量趋势</h2><p>最近 24 小时上行 / 下行</p></div>
+              <div class="legend"><span><i class="lg-up"></i>上行</span><span><i class="lg-down"></i>下行</span></div>
+            </div>
+            <div id="chart" class="chart"></div>
+          </div>
+          <div class="card">
+            <div class="card-head"><div><h2>实时连接</h2><p>当前活跃的转发隧道</p></div><span class="live-tag">LIVE</span></div>
+            <div id="mini-live" class="mini-live"><div class="empty-state">暂无活跃连接</div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 端口管理 -->
+      <section id="tab-ports" class="panel">
+        <div class="card">
+          <div class="card-head">
+            <div><h2>新增端口映射</h2><p>选择在线客户端，实时新增一条转发端口</p></div>
+          </div>
+          <form id="port-form" class="form-grid">
+            <div class="field"><label>目标客户端</label>
+              <select id="p-machine" required><option value="">加载中…</option></select>
+            </div>
+            <div class="field"><label>服务名</label><input id="p-name" placeholder="如 web-2"></div>
+            <div class="field"><label>本地 IP</label><input id="p-localip" value="127.0.0.1"></div>
+            <div class="field"><label>本地端口</label><input id="p-localport" type="number" min="1" max="65535" placeholder="8080" required></div>
+            <div class="field"><label>远端端口</label><input id="p-remoteport" type="number" min="1" max="65535" placeholder="9081" required></div>
+            <div class="field"><label>备注</label><input id="p-note" placeholder="可选"></div>
+            <div class="form-actions"><button type="submit" class="btn primary">
+              <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>新增映射</button>
+              <span id="port-msg" class="form-msg"></span>
+            </div>
+          </form>
+        </div>
+        <div class="card">
+          <div class="card-head"><div><h2>端口映射列表</h2><p>关闭操作立即生效，断开该端口上的所有连接</p></div></div>
+          <div class="table-wrap"><table>
+            <thead><tr><th>状态</th><th>远端端口</th><th>本地目标</th><th>服务名</th><th>客户端</th><th>来源</th><th>操作</th></tr></thead>
+            <tbody id="ports-body"><tr><td colspan="7" class="empty-state">暂无端口映射</td></tr></tbody>
+          </table></div>
+        </div>
+      </section>
+
+      <!-- 实时连接 -->
+      <section id="tab-connections" class="panel">
+        <div class="card">
+          <div class="card-head"><div><h2>实时连接</h2><p>每秒自动刷新的活跃隧道</p></div><span class="live-tag">LIVE</span></div>
+          <div class="table-wrap"><table>
+            <thead><tr><th>ID</th><th>服务</th><th>来源 IP</th><th>机器码</th><th>上行</th><th>下行</th><th>时长</th></tr></thead>
+            <tbody id="live-body"><tr><td colspan="7" class="empty-state">暂无活跃连接</td></tr></tbody>
+          </table></div>
+        </div>
+      </section>
+
+      <!-- 客户端 -->
+      <section id="tab-clients" class="panel">
+        <div class="card">
+          <div class="card-head"><div><h2>客户端列表</h2><p>所有曾连接过的内网客户端</p></div></div>
+          <div class="table-wrap"><table>
+            <thead><tr><th>状态</th><th>机器码</th><th>主机名</th><th>IP</th><th>累计上行</th><th>累计下行</th><th>最后上线</th></tr></thead>
+            <tbody id="clients-body"><tr><td colspan="7" class="empty-state">暂无数据</td></tr></tbody>
+          </table></div>
+        </div>
+      </section>
+
+      <!-- 授权管理 -->
+      <section id="tab-auth" class="panel">
+        <div class="card">
+          <div class="card-head"><div><h2>授权模式</h2><p>控制哪些客户端允许连接</p></div></div>
+          <div class="mode-grid">
+            <label class="mode-opt"><input type="radio" name="mode" value="off"><div><strong>仅 Token</strong><span>只校验通信密钥</span></div></label>
+            <label class="mode-opt"><input type="radio" name="mode" value="whitelist"><div><strong>白名单</strong><span>仅命中允许规则才放行</span></div></label>
+            <label class="mode-opt"><input type="radio" name="mode" value="blacklist"><div><strong>黑名单</strong><span>命中拒绝规则则拦截</span></div></label>
+          </div>
+          <div class="form-actions left"><button id="save-mode" class="btn primary">保存模式</button><span id="mode-msg" class="form-msg"></span></div>
+        </div>
+        <div class="card">
+          <div class="card-head"><div><h2>添加规则</h2><p>IP 支持通配与 CIDR，机器码支持通配</p></div></div>
+          <form id="rule-form" class="form-grid">
+            <div class="field"><label>类型</label><select id="r-kind"><option value="ip">IP 地址</option><option value="machine">机器码</option></select></div>
+            <div class="field wide"><label>值</label><input id="r-value" placeholder="如 192.168.1.* / 10.0.0.0/8 / 机器码"></div>
+            <div class="field"><label>动作</label><select id="r-action"><option value="allow">允许</option><option value="deny">拒绝</option></select></div>
+            <div class="field wide"><label>备注</label><input id="r-note" placeholder="可选"></div>
+            <div class="form-actions"><button type="submit" class="btn primary"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>添加规则</button></div>
+          </form>
+        </div>
+        <div class="card">
+          <div class="card-head"><div><h2>规则列表</h2><p></p></div></div>
+          <div class="table-wrap"><table>
+            <thead><tr><th>类型</th><th>值</th><th>动作</th><th>备注</th><th>启用</th><th></th></tr></thead>
+            <tbody id="rules-body"><tr><td colspan="6" class="empty-state">暂无规则</td></tr></tbody>
+          </table></div>
+        </div>
+      </section>
+
+      <!-- 流量记录 -->
+      <section id="tab-traffic" class="panel">
+        <div class="card">
+          <div class="card-head"><div><h2>隧道记录</h2><p>最近 100 条已结束的连接</p></div></div>
+          <div class="table-wrap"><table>
+            <thead><tr><th>时间</th><th>服务</th><th>来源 IP</th><th>机器码</th><th>上行</th><th>下行</th><th>时长</th></tr></thead>
+            <tbody id="traffic-body"><tr><td colspan="7" class="empty-state">暂无记录</td></tr></tbody>
+          </table></div>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+<script src="/app.js"></script>
+</body>
+</html>

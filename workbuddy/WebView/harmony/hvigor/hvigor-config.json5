@@ -1,0 +1,10 @@
+// hvigor 运行时配置；插件版本由 DevEco Studio / ohpm 在首次 Sync 时补齐。
+{
+  "modelVersion": "6.0.0",
+  "dependencies": {},
+  "execution": {},
+  "logging": {},
+  "nodeOptions": {
+    "maxOldSpaceSize": 8192
+  }
+}

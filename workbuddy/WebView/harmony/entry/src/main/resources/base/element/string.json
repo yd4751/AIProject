@@ -1,0 +1,7 @@
+{
+  "string": [
+    { "name": "app_name", "value": "站点坞" },
+    { "name": "ability_desc", "value": "管理并全屏浏览自有站点" },
+    { "name": "internet_reason", "value": "加载站点网页并检测站点可达性" }
+  ]
+}

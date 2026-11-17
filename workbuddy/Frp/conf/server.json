@@ -1,0 +1,21 @@
+{
+  "role": "server",
+  "bind_addr": "0.0.0.0",
+  "bind_port": 7010,
+  "token": "bighat258611!",
+
+  "db_path": "frptun.db",
+  "auth_mode": "off",
+
+  "admin": {
+    "enabled": true,
+    "addr": "0.0.0.0",
+    "port": 7011,
+    "user": "admin",
+    "password": "bighat258611!"
+  },
+
+  "heartbeat_timeout": 30,
+  "max_connections": 10000,
+  "services": []
+}

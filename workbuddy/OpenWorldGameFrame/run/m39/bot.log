@@ -1,0 +1,26 @@
+2026/11/04 09:04:39 starting 100 bots against 127.0.0.1:7001 (move=100ms, rampup=5ms)
+2026/11/04 09:04:40 [    1s] online=100 logined=100 failed=0 fps=2280/s avgRTT=0s attr/s=302 switches=2 hits=62 kills=0
+2026/11/04 09:04:41 [    2s] online=100 logined=100 failed=0 fps=1922/s avgRTT=0s attr/s=136 switches=2 hits=117 kills=0
+2026/11/04 09:04:42 [    3s] online=100 logined=100 failed=0 fps=1711/s avgRTT=0s attr/s=155 switches=4 hits=154 kills=2
+2026/11/04 09:04:43 [    4s] online=100 logined=100 failed=0 fps=2150/s avgRTT=0s attr/s=120 switches=5 hits=204 kills=2
+2026/11/04 09:04:44 [    5s] online=100 logined=100 failed=0 fps=2037/s avgRTT=2.285ms attr/s=131 switches=5 hits=236 kills=2
+2026/11/04 09:04:45 [    6s] online=100 logined=100 failed=0 fps=1924/s avgRTT=2.282ms attr/s=119 switches=5 hits=274 kills=5
+2026/11/04 09:04:46 [    7s] online=100 logined=100 failed=0 fps=1802/s avgRTT=2.282ms attr/s=116 switches=7 hits=319 kills=10
+2026/11/04 09:04:47 [    8s] online=100 logined=100 failed=0 fps=1787/s avgRTT=2.282ms attr/s=117 switches=7 hits=357 kills=17
+2026/11/04 09:04:48 [    9s] online=100 logined=100 failed=0 fps=1625/s avgRTT=2.282ms attr/s=89 switches=9 hits=379 kills=19
+2026/11/04 09:04:49 [   10s] online=100 logined=100 failed=0 fps=1578/s avgRTT=2.081ms attr/s=79 switches=9 hits=395 kills=23
+2026/11/04 09:04:50 [   11s] online=100 logined=100 failed=0 fps=1588/s avgRTT=2.008ms attr/s=82 switches=9 hits=406 kills=23
+2026/11/04 09:04:51 [   12s] online=100 logined=100 failed=0 fps=1418/s avgRTT=2.008ms attr/s=85 switches=12 hits=419 kills=27
+2026/11/04 09:04:52 [   13s] online=100 logined=100 failed=0 fps=1329/s avgRTT=2.008ms attr/s=76 switches=14 hits=438 kills=27
+2026/11/04 09:04:53 [   14s] online=100 logined=100 failed=0 fps=1380/s avgRTT=2.008ms attr/s=79 switches=14 hits=455 kills=28
+2026/11/04 09:04:54 [   15s] online=100 logined=100 failed=0 fps=1335/s avgRTT=4.487ms attr/s=77 switches=14 hits=467 kills=29
+2026/11/04 09:04:55 [   16s] online=100 logined=100 failed=0 fps=1378/s avgRTT=4.377ms attr/s=63 switches=14 hits=471 kills=31
+2026/11/04 09:04:56 [   17s] online=100 logined=100 failed=0 fps=1349/s avgRTT=4.377ms attr/s=60 switches=15 hits=478 kills=31
+2026/11/04 09:04:57 [   18s] online=100 logined=100 failed=0 fps=1390/s avgRTT=4.377ms attr/s=58 switches=16 hits=492 kills=35
+2026/11/04 09:04:58 [   19s] online=100 logined=100 failed=0 fps=1245/s avgRTT=4.377ms attr/s=49 switches=17 hits=497 kills=37
+2026/11/04 09:04:59 [   20s] online=100 logined=100 failed=0 fps=1208/s avgRTT=3.819ms attr/s=62 switches=18 hits=514 kills=37
+2026/11/04 09:05:00 [   21s] online=100 logined=100 failed=0 fps=1282/s avgRTT=3.788ms attr/s=58 switches=18 hits=518 kills=38
+2026/11/04 09:05:01 [   22s] online=100 logined=100 failed=0 fps=1210/s avgRTT=3.788ms attr/s=54 switches=18 hits=520 kills=38
+2026/11/04 09:05:02 [   23s] online=100 logined=100 failed=0 fps=1204/s avgRTT=3.788ms attr/s=53 switches=18 hits=525 kills=38
+2026/11/04 09:05:03 [   24s] online=100 logined=100 failed=0 fps=1154/s avgRTT=3.788ms attr/s=56 switches=18 hits=528 kills=38
+2026/11/04 09:05:04 done. logined=100 failed=0 online=0 totalFrames=37901 totalAttrs=2276 sceneSwitches=19 hits=528 kills=38

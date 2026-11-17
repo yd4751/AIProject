@@ -1,0 +1,21 @@
+{
+  "role": "server",
+  "bind_addr": "127.0.0.1",
+  "bind_port": 17000,
+  "token": "test-token",
+
+  "db_path": "tests/test.db",
+  "auth_mode": "off",
+
+  "admin": {
+    "enabled": true,
+    "addr": "127.0.0.1",
+    "port": 17500,
+    "user": "admin",
+    "password": "test-admin"
+  },
+
+  "heartbeat_timeout": 30,
+  "max_connections": 1000,
+  "services": []
+}

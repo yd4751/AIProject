@@ -1,0 +1,43 @@
+// 站点坞 · HarmonyOS 工程级构建配置
+// SDK 版本串格式必须是 "<platformVersion>(<apiVersion>)"，例如 "6.1.1(24)"；
+// 纯 "26.0.0" 会触发 hvigor 00306042 Specification Limit Violation。
+// 本机 Command Line Tools 6.1.1.268 自带 SDK = HarmonyOS 6.1.1 / API 24
+// （实读 sdk/default/sdk-pkg.json：platformVersion 6.1.1、apiVersion 24）。
+// compatibleSdkVersion 24 编出的 HAP 可向下兼容运行在 HarmonyOS 7 / API 26 真机上。
+// 装好 DevEco Studio 26 + API 26 SDK 后，把下面三个字段一并改成 "7.0.0(26)" 即可升级。
+// 注意：signingConfigs 为空且 products 未引用签名配置 = 产出未签名 HAP，无法安装到真机。
+// 首次用 DevEco Studio 26 打开后：File > Project Structure > Signing Configs > 自动签名，
+// IDE 会写回 signingConfigs[] 与 products[0].signingConfig="default"。
+{
+  "app": {
+    "signingConfigs": [],
+    "products": [
+      {
+        "name": "default",
+        "compatibleSdkVersion": "6.1.1(24)",
+        "targetSdkVersion": "6.1.1(24)",
+        "compileSdkVersion": "6.1.1(24)",
+        "runtimeOS": "HarmonyOS",
+        "buildOption": {
+          "strictMode": {
+            "caseSensitiveCheck": true,
+            "useNormalizedOHMUrl": true
+          }
+        }
+      }
+    ],
+    "buildModeSet": [
+      { "name": "debug" },
+      { "name": "release" }
+    ]
+  },
+  "modules": [
+    {
+      "name": "entry",
+      "srcPath": "./entry",
+      "targets": [
+        { "name": "default", "applyToProducts": ["default"] }
+      ]
+    }
+  ]
+}

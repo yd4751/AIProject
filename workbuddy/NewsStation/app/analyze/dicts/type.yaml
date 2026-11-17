@@ -1,0 +1,93 @@
+# 类型词典。单个词不足以判定类型，所以支持两种模式：
+#   any: 命中任意一个即得分
+#   all: 每一组里的词必须全部出现（组内 AND，组间 OR），用于提升精度
+# 例：只出现 "营收" 可能是行业报道；"营收"+"增长/下滑" 才是财报业绩。
+- value: earnings
+  label: 财报业绩
+  any: [财报, 季报, 半年报, 年报, 业绩, 净利润, 营收, 毛利率, 每股收益, 预告, 指引,
+        earnings, quarterly results, quarterly profit, revenue, revenues, net income,
+        profit, profits, guidance, earnings call, eps, fiscal quarter, beat estimates,
+        missed estimates, same-store sales]
+  all:
+    - [营收, 增长]
+    - [revenue, growth]
+    - [利润, 下滑]
+
+- value: mna
+  label: 并购融资
+  # 教训：不要用「融资 + 亿元」这类单位词做组合——"60万亿元社零""融资支持"都会误命中。
+  # 只收有判别力的短语：轮次、要约、收购类动词。
+  any: [收购, 并购, 合并, 入股, 私有化, 要约收购, 分拆, 换股, 天使轮, 种子轮, 完成融资,
+        战略融资, 投后估值, 挂牌上市, 登陆科创板,
+        takeover, acquisition, acquire, acquires, merger, merges, buyout, tender offer,
+        spin-off, spinoff, controlling stake, funding round, series a, series b, series c,
+        seed round, pre-ipo, valuation,
+     出售, 转让, 剥离, divest, sell-off]
+
+- value: lawsuit
+  label: 诉讼调查
+  any: [起诉, 诉讼, 控告, 索赔, 判决, 裁定, 罚单, 处罚, 调查, 立案, 反垄断, 合规审查,
+        lawsuit, sued, sues, litigation, class action, antitrust, probe, investigation,
+        investigation, fine, fined, penalty, settlement, court ruling, verdict, indictment,
+        charged, charges, regulator, regulators, subpoena,
+     公诉, 受贿, 刑拘, 判刑, 落马, 立案侦查]
+
+- value: policy
+  label: 政策法规
+  any: [政策, 法规, 条例, 立法, 法案, 监管, 新规, 草案, 征求意见, 国务院, 发改委, 央行,
+        关税, 出口管制, 禁令, 牌照, 补贴, 减税, 降准, 降息, 加息,
+        policy, regulation, regulations, legislation, bill, law, rule, rules, ban, tariff,
+        tariffs, subsidy, subsidies, stimulus, executive order, export controls,
+        regulator, central bank decision, rate cut, rate hike]
+
+- value: conflict
+  label: 冲突安全
+  any: [袭击, 空袭, 交火, 炮击, 冲突, 战争, 开战, 停火, 军方, 武装, 恐怖袭击,
+        爆炸, 伤亡, 阵亡, 人质, 边境冲突, 军事行动, 无人机袭击, 导弹袭击, 反击,
+        attack, attacks, airstrike, air strike, missile, missiles,
+        war, wars, fighting, clashes, ceasefire, offensive, troops, militant, militants,
+        insurgent, insurgents, terrorism, terrorist, hostage, hostages, casualties,
+        killed, wounded, shelling, drone strike, military operation, invasion,
+     试射]
+
+- value: disaster
+  label: 突发灾害
+  any: [地震, 海啸, 洪水, 台风, 飓风, 龙卷风, 山火, 森林火灾, 泥石流, 山体滑坡, 暴雨,
+        干旱, 热浪, 雪灾, 火山喷发, 坠机, 空难, 沉船, 坍塌, 爆炸事故, 泄漏, 核泄漏,
+        earthquake, tsunami, flood, floods, flooding, typhoon, hurricane, tornado,
+        wildfire, wildfires, landslide, mudslide, heavy rain, downpour, drought,
+        heatwave, heat wave, blizzard, volcano, volcanic eruption, plane crash, crash,
+        derailment, collapse, explosion, leak, oil spill, disaster, disaster zone]
+
+- value: product
+  label: 产品发布
+  # "发布" 不收：政策发布、财报发布、人事任命发布会都含这个词，噪声远大于收益
+  any: [新品, 开售, 预售, 量产, 交付, 投产, 上市开卖, 首发, 迭代新版,
+        unveils, unveiled, launches, launched, launch, release, releases, released,
+        debut, debuts, rollout, new model, preorder, ships, shipping,
+        now available, product launch, keynote,
+     新品上市]
+
+- value: personnel
+  label: 人事变动
+  any: [辞职, 卸任, 离职, 任命, 接任, 出任, 免职, 解雇, 罢免, 换帅, 换届, 退休, 聘任,
+        resign, resigns, resigned, resignation, steps down, stepping down, appoint,
+        appointed, appointment, names new, replaces, replaced, fired, ousted, dismissed,
+        retires, retirement, interim ceo, new ceo, chief executive]
+
+- value: research
+  label: 科研突破
+  any: [研究, 论文, 实验, 突破, 发现, 首次观测, 临床试验, 样本, 卫星发射, 探月, 火星,
+        基因组, 刊发, 学术, 科学团队, 新证据,
+        study, studies, research, researchers, paper, journal, experiment, breakthrough,
+        discovery, discovers, scientists, science, findings, peer-reviewed, clinical trial,
+        genome, spacecraft, satellite, rocket, lunar, mars, telescope, nasa, preprint]
+
+- value: sports
+  label: 体育赛事
+  any: [比赛, 赛季, 夺冠, 冠军, 决赛, 半决赛, 小组赛, 积分榜, 转会, 进球, 主场, 客场,
+        世界杯, 奥运, 奥运会, 联赛, 球员, 主教练, 裁判, 加时赛, 点球,
+        match, matches, season, championship, final, semifinal, quarterfinal, league,
+        standings, transfer, goal, goals, home game, away game, world cup, olympics,
+        olympic, tournament, player, coach, referee, overtime, penalty, playoffs,
+        fixture, fixtures, squad, injury]

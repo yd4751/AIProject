@@ -1,0 +1,19 @@
+# 实体 → 行业提示。标题常常只出现公司名（"AMD 财报大超预期"），
+# 光靠行业关键词会漏标。命中实体时顺带给对应行业加权重，权重与普通关键词一致。
+# 只标主营业务，跨业巨头取新闻语境里最常见的那一个。
+tech: [apple, microsoft, nvidia, google, meta, amazon, openai, anthropic, spacex, tsmc,
+       samsung, intel, amd, qualcomm, broadcom, asml, skhynix, huawei, xiaomi, alibaba,
+       tencent, bytedance, baidu, smic, deepseek, uber]
+auto: [tesla, byd, nio, xpeng, lixiang, geely, toyota, volkswagen, bmw, mercedes, ford, gm,
+       rivian]
+finance: [fed, ecb, boj, pboc, imf, worldbank, goldmansachs, jpmorgan, morganstanley,
+          blackrock, berkshire, visa, mastercard, hsbc, citi]
+energy: [aramco, exxon, shell, bp, chevron, opec, catl, state_grid, sinopec, petrochina, cnooc]
+consumer: [walmart, costco, starbucks, mcdonalds, coca_cola, pepsi, nike, adidas, lvmh,
+           shein, jd, meituan, pdd]
+health: [pfizer, moderna, astrazeneca, novartis, roche, merck, jnj, lilly, novo]
+defense: [boeing, airbus, lockheed, raytheon]
+politics: [un, nato, eu, wto, g7, g20, brics, iaea, icc]
+culture: [disney, netflix, warner, sony, nintendo, spotify, fifa, ioc, nba, nfl, uefa,
+          premierleague]
+society: [iata]

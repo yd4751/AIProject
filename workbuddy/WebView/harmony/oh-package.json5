@@ -1,0 +1,13 @@
+// modelVersion 需与本机 DevEco Studio 26 内置工具链一致；
+// 若 IDE 首次 Sync 提示版本不匹配，以 DevEco 同版本新建的空工程同名文件为准覆盖。
+{
+  "modelVersion": "6.0.0",
+  "name": "sitedock",
+  "version": "1.0.0",
+  "description": "站点坞 HarmonyOS 客户端",
+  "main": "",
+  "author": "",
+  "license": "",
+  "dependencies": {},
+  "devDependencies": {}
+}

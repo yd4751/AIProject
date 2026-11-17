@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}NewsStation{% endblock %}</title>
+  <link rel="stylesheet" href="/static/app.css?v={{ asset_v|default('0') }}">
+</head>
+<body class="{{ 'embed' if embed|default(false) else '' }}">
+  <header class="topbar">
+    <div class="wrap">
+      <a class="brand" href="/">NewsStation</a>
+      <nav>
+        <a href="/" class="{{ 'on' if active == 'home' else '' }}">热点</a>
+        <a href="/industries" class="{{ 'on' if active == 'industries' else '' }}">行业</a>
+        <a href="/social" class="{{ 'on' if active == 'social' else '' }}">社媒热榜</a>
+        <a href="/search" class="{{ 'on' if active == 'search' else '' }}">搜索</a>
+        <a href="/subscriptions" class="{{ 'on' if active == 'subs' else '' }}">订阅{% if unread_total|default(0) %}<span class="unread-badge">{{ unread_total }}</span>{% endif %}</a>
+        <a href="/sources" class="{{ 'on' if active == 'sources' else '' }}">媒体源</a>
+      </nav>
+      <form class="topsearch" action="/search" method="get" role="search">
+        {% set eopts = engine_options|default([], true) %}
+        {% if eopts|length > 1 %}
+        <select class="ts-engine" name="engines" data-engine-choice aria-label="选择搜索引擎" title="选择搜索引擎，随搜索一起提交">
+          {% for o in eopts %}
+          <option value="{{ o.value }}" title="{{ o.subtitle }}"{% if o.value == engines_param|default('') %} selected{% endif %}>{{ o.label }}</option>
+          {% endfor %}
+        </select>
+        {% endif %}
+        <input type="search" name="q" value="{{ q|default('') }}" placeholder="搜索新闻热点…" aria-label="搜索关键字">
+        <button type="submit" title="搜索">⌕</button>
+      </form>
+      <div id="tr-group" class="tr-group" hidden>
+        <button type="button" class="tr-btn" data-tr-scope="title" title="只翻译本页标题">译标题</button>
+        <button type="button" class="tr-btn" data-tr-scope="para" title="只翻译本页摘要/段落">译段落</button>
+        <button type="button" id="tr-toggle" class="tr-btn" data-tr-scope="all" title="翻译本页全部外文（标题+段落）">译全文</button>
+      </div>
+      <span class="top-status">{{ total }} 篇 · {{ total_events }} 事件</span>
+    </div>
+  </header>
+
+  <main class="wrap">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="wrap foot">
+    本地运行 · 抓取周期 {{ interval }} 分钟{% if proxy %} · 代理已启用{% endif %} · 原文由服务端代取后在站内阅读 · 页面构建 {{ build_tag|default('未知（服务未重启）') }}
+  </footer>
+
+  <div id="tip" class="tip" hidden></div>
+  <script src="/static/app.js?v={{ asset_v|default('0') }}" defer></script>
+</body>
+</html>

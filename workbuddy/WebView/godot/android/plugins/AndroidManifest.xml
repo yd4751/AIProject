@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Godot 4 v2 Android plugin 注册片段：应合并进 AAR 的 AndroidManifest.xml。
+  android:name  前缀固定 org.godotengine.plugin.v2. ，后缀必须与 getPluginName() 一致。
+  android:value 为插件类完整类名。
+  打包后的 AAR 放置路径：res://android/plugins/SiteDockWebView-release.aar
+  状态：参考片段，尚未参与构建（本机缺 JDK 17 / Android SDK）。
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <application>
+        <meta-data
+            android:name="org.godotengine.plugin.v2.SiteDockWebView"
+            android:value="com.sitedock.webview.SiteDockWebView" />
+    </application>
+</manifest>

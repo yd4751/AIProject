@@ -1,0 +1,51 @@
+time=2026-11-03T17:36:19.217+08:00 level=INFO msg="id partition" stride=4 offset=2 node=n3 maxNodes=4
+time=2026-11-03T17:36:19.226+08:00 level=INFO msg="remote scene declared" scene=1 node=n1 bounds=[0,0)-[512,512)
+time=2026-11-03T17:36:19.226+08:00 level=INFO msg="remote scene declared" scene=2 node=n1 bounds=[512,0)-[1024,512)
+time=2026-11-03T17:36:19.226+08:00 level=INFO msg="remote scene declared" scene=3 node=n1 bounds=[1024,0)-[1536,512)
+time=2026-11-03T17:36:19.226+08:00 level=INFO msg="remote scene declared" scene=4 node=n2 bounds=[1536,0)-[2048,512)
+time=2026-11-03T17:36:19.227+08:00 level=INFO msg="mobs spawned" scene=5 count=100 radius=200
+time=2026-11-03T17:36:19.227+08:00 level=INFO msg="openworld server starting" instance="" zone="" node=n3 nodeAddr=127.0.0.1:7203 disc=file discDir=run/m37/nodes scenes=1 gate=:7201 admin=:7202 tick=50ms go=go1.23.1
+time=2026-11-03T17:36:19.227+08:00 level=INFO msg="tcp server listening" addr=127.0.0.1:7203
+time=2026-11-03T17:36:19.227+08:00 level=INFO msg="component started" component=mesh
+time=2026-11-03T17:36:19.230+08:00 level=INFO msg="registered to discovery" node=n3 addr=127.0.0.1:7203 kind=file
+time=2026-11-03T17:36:19.230+08:00 level=INFO msg="component started" component=discovery
+time=2026-11-03T17:36:19.230+08:00 level=INFO msg="scene started" scene=5 tick=50ms systems=4
+time=2026-11-03T17:36:19.230+08:00 level=INFO msg="component started" component=scene-5
+time=2026-11-03T17:36:19.230+08:00 level=INFO msg="component started" component=dyn-scenes
+time=2026-11-03T17:36:19.232+08:00 level=INFO msg="tcp dial ok" addr=127.0.0.1:7003 remote=127.0.0.1:7003
+time=2026-11-03T17:36:19.233+08:00 level=INFO msg="tcp dial ok" addr=127.0.0.1:7103 remote=127.0.0.1:7103
+time=2026-11-03T17:36:19.534+08:00 level=INFO msg="component started" component=topo-reconcile
+time=2026-11-03T17:36:19.534+08:00 level=INFO msg="component started" component=auto-rebalance
+time=2026-11-03T17:36:19.534+08:00 level=INFO msg="tcp server listening" addr=[::]:7201
+time=2026-11-03T17:36:19.534+08:00 level=INFO msg="component started" component=gate
+time=2026-11-03T17:36:19.535+08:00 level=INFO msg="admin server listening" addr=[::]:7202 endpoints="[/healthz /readyz /admin/state /admin/drain /admin/shutdown /metrics]"
+time=2026-11-03T17:36:19.535+08:00 level=INFO msg="component started" component=admin
+time=2026-11-03T17:36:19.535+08:00 level=INFO msg="app started" name=openworld-server components=8 uptime_from=2026-11-03T17:36:19+08:00
+time=2026-11-03T17:36:20.105+08:00 level=INFO msg="repartition: route updated" scene=3 to=n2 ver=1 chunks=1
+time=2026-11-03T17:37:49.561+08:00 level=INFO msg="tcp dial ok" addr=127.0.0.1:7003 remote=127.0.0.1:7003
+time=2026-11-03T17:37:49.563+08:00 level=INFO msg="tcp dial ok" addr=127.0.0.1:7103 remote=127.0.0.1:7103
+time=2026-11-03T17:37:49.743+08:00 level=INFO msg="peer link closed" remote=127.0.0.1:49497
+time=2026-11-03T17:37:49.921+08:00 level=INFO msg="peer link closed" remote=127.0.0.1:49504
+time=2026-11-03T17:39:09.235+08:00 level=WARN msg="discovery: 心跳改名失败" node=n3 err="rename run\\m37\\nodes\\n3.node.tmp run\\m37\\nodes\\n3.node: Access is denied."
+time=2026-11-03T17:39:14.233+08:00 level=WARN msg="discovery: 心跳改名失败" node=n3 err="rename run\\m37\\nodes\\n3.node.tmp run\\m37\\nodes\\n3.node: Access is denied."
+time=2026-11-03T17:39:19.927+08:00 level=INFO msg="peer link closed" remote=127.0.0.1:49709
+time=2026-11-03T17:39:20.045+08:00 level=INFO msg="peer link closed" remote=127.0.0.1:49712
+time=2026-11-03T17:39:21.533+08:00 level=INFO msg="tcp dial ok" addr=127.0.0.1:7103 remote=127.0.0.1:7103
+time=2026-11-03T17:39:21.534+08:00 level=INFO msg="tcp dial ok" addr=127.0.0.1:7003 remote=127.0.0.1:7003
+time=2026-11-03T17:40:35.230+08:00 level=INFO msg="member view changed" alive="[n1 n3]" joined=[] lost=[n2] scenes=3
+time=2026-11-03T17:40:36.229+08:00 level=INFO msg="member view changed" alive="[n1 n2 n3]" joined=[n2] lost=[] scenes=5
+time=2026-11-03T17:40:41.171+08:00 level=WARN msg="shutdown requested via admin api" reason="admin request"
+time=2026-11-03T17:40:41.271+08:00 level=WARN msg="shutdown requested" reason="admin request"
+time=2026-11-03T17:40:41.271+08:00 level=INFO msg="shutdown signal received" name=openworld-server reason="admin request"
+time=2026-11-03T17:40:41.271+08:00 level=INFO msg="component stopped" component=admin cost=0s
+time=2026-11-03T17:40:41.372+08:00 level=INFO msg="component stopped" component=gate cost=100.267ms
+time=2026-11-03T17:40:41.372+08:00 level=INFO msg="component stopped" component=auto-rebalance cost=0s
+time=2026-11-03T17:40:41.372+08:00 level=INFO msg="component stopped" component=topo-reconcile cost=0s
+time=2026-11-03T17:40:41.372+08:00 level=INFO msg="component stopped" component=dyn-scenes cost=0s
+time=2026-11-03T17:40:41.372+08:00 level=INFO msg="scene stopped" scene=5 entities=100
+time=2026-11-03T17:40:41.372+08:00 level=INFO msg="component stopped" component=scene-5 cost=0s
+time=2026-11-03T17:40:41.377+08:00 level=INFO msg="peer link closed" remote=127.0.0.1:49809
+time=2026-11-03T17:40:41.404+08:00 level=INFO msg="peer link closed" remote=127.0.0.1:49803
+time=2026-11-03T17:40:41.411+08:00 level=INFO msg="component stopped" component=discovery cost=39.104ms
+time=2026-11-03T17:40:41.411+08:00 level=INFO msg="component stopped" component=mesh cost=0s
+time=2026-11-03T17:40:41.411+08:00 level=INFO msg="app stopped" name=openworld-server uptime=4m22.1984148s

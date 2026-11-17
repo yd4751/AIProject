@@ -1,0 +1,2063 @@
+/* 影音播放器 —— 前端主逻辑 */
+(function () {
+  'use strict';
+
+  const $ = (s, r) => (r || document).querySelector(s);
+  const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+
+  const SKINS = [
+    { id: 'midnight', name: '极夜', c: ['#4c8dff', '#0d1117'] },
+    { id: 'dawn', name: '晨光', c: ['#2563eb', '#f2f5fb'] },
+    { id: 'aurora', name: '极光', c: ['#2fd4a0', '#0c1a1c'] },
+    { id: 'sakura', name: '樱', c: ['#f0568a', '#fdf3f6'] },
+    { id: 'ocean', name: '深海', c: ['#2ea8ff', '#061626'] },
+    { id: 'amber', name: '琥珀', c: ['#f5a524', '#171208'] },
+  ];
+
+  const AUDIO_EXT = new Set(['mp3', 'm4a', 'wav', 'flac', 'aac', 'opus', 'ogg', 'oga', 'aiff', 'aif']);
+  const extOf = (n) => (String(n).split('.').pop() || '').toLowerCase();
+
+  const FORMATS = [
+    ['MP4 / H.264', 'video/mp4; codecs="avc1.42E01E,mp4a.40.2"'],
+    ['MP4 / H.265', 'video/mp4; codecs="hvc1.1.6.L93.B0"'],
+    ['MP4 / AV1', 'video/mp4; codecs="av01.0.05M.08"'],
+    ['WebM / VP9', 'video/webm; codecs="vp9"'],
+    ['WebM / VP8', 'video/webm; codecs="vp8"'],
+    ['Matroska MKV', 'video/x-matroska'],
+    ['QuickTime MOV', 'video/quicktime'],
+    ['AVI', 'video/x-msvideo'],
+    ['WMV', 'video/x-ms-wmv'],
+    ['MP3', 'audio/mpeg'],
+    ['AAC / M4A', 'audio/mp4; codecs="mp4a.40.2"'],
+    ['FLAC', 'audio/flac'],
+    ['WAV', 'audio/wav'],
+    ['Ogg Vorbis', 'audio/ogg; codecs="vorbis"'],
+    ['Opus', 'audio/ogg; codecs="opus"'],
+  ];
+
+  /* ------------------------------ 状态 ------------------------------ */
+  const state = {
+    entries: [],     // {id, name, kind, url, file, path, cover, tags, parsed}
+    index: -1,
+    repeat: 0,       // 0 不循环 / 1 单曲 / 2 列表
+    shots: [],
+    subject: null,   // 豆瓣条目
+    candidates: [],
+    fallbackUrl: '',
+    fallbackMovieUrl: '',
+    fallbackMusicUrl: '',
+    dbKind: 'all',   // 豆瓣检索类型：all / movie / music
+    dbMsg: '',
+    sites: [],       // 已启用的抓取站点
+    allSites: [],    // 全部站点（含停用，用于站点管理）
+    siteSel: [],     // 用户勾选的站点 id
+    autoLyric: true, // 本地无歌词时自动在线补抓
+    tasks: [],       // 下载任务
+    lyric: { lines: [], meta: {}, source: '', raw: '', path: '' },
+    libDir: '',
+    skin: 'midnight',
+  };
+
+  const player = $('#player');
+  const media = $('#media');
+  let dragging = false;
+  let lyricIdx = -1;
+  let idleTimer = 0;
+  let thumbTimer = 0;
+  let previewVideo = null;
+  let previewSrc = '';
+
+  /* ------------------------------ 工具 ------------------------------ */
+  function fmt(sec) {
+    if (!isFinite(sec) || sec < 0) sec = 0;
+    const h = Math.floor(sec / 3600);
+    const m = Math.floor((sec % 3600) / 60);
+    const s = Math.floor(sec % 60);
+    const p = (n) => String(n).padStart(2, '0');
+    return h > 0 ? `${h}:${p(m)}:${p(s)}` : `${p(m)}:${p(s)}`;
+  }
+
+  let toastTimer = 0;
+  function toast(msg) {
+    const el = $('#toast');
+    el.textContent = msg;
+    el.hidden = false;
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => { el.hidden = true; }, 2000);
+  }
+
+  function isAudio() { return player.classList.contains('audio-mode'); }
+  function cur() { return state.entries[state.index] || null; }
+
+  /* ------------------------------ 换肤 ------------------------------ */
+  function setSkin(id) {
+    state.skin = id;
+    document.documentElement.dataset.skin = id;
+    $$('.skin-chip').forEach((c) => c.classList.toggle('active', c.dataset.skin === id));
+    try { localStorage.setItem('mp.skin', id); } catch (e) { /* 忽略 */ }
+    if (vizActive) drawViz();
+  }
+
+  function buildSkins() {
+    const box = $('#skins');
+    box.innerHTML = '';
+    SKINS.forEach((s) => {
+      const b = document.createElement('button');
+      b.className = 'skin-chip';
+      b.dataset.skin = s.id;
+      b.title = s.name;
+      b.style.background = `linear-gradient(135deg, ${s.c[0]} 0%, ${s.c[0]} 55%, ${s.c[1]} 56%, ${s.c[1]} 100%)`;
+      b.addEventListener('click', () => setSkin(s.id));
+      box.appendChild(b);
+    });
+  }
+
+  /* ---------------------------- 文件名解析 ---------------------------- */
+  const JUNK = new Set([
+    '1080p', '1080i', '720p', '480p', '2160p', '4320p', '4k', '8k', 'uhd', 'hd', 'sd', 'fhd', 'fullhd',
+    'bluray', 'blu-ray', 'bdrip', 'brrip', 'bd', 'dvdrip', 'dvdscr', 'dvd', 'hdrip', 'hdtv', 'hdtvrip',
+    'webrip', 'web-dl', 'webdl', 'web', 'cam', 'ts', 'tc', 'r5', 'r6', 'hdr', 'hdr10', 'sdr', 'dv',
+    '10bit', '8bit', '12bit', 'x264', 'x265', 'h264', 'h265', 'hevc', 'avc', 'xvid', 'divx', 'av1',
+    'aac', 'ac3', 'eac3', 'dts', 'dts-hd', 'truehd', 'atmos', 'mp3', 'flac', 'opus', 'ogg', 'wav', 'm4a',
+    '320k', '256k', '192k', '128k', 'kbps', 'remux', 'imax', 'proper', 'repack', 'extended', 'theatrical',
+    'uncut', 'directors', 'directorscut', 'internal', 'limited', 'multilingual', 'chs', 'cht', 'gb', 'big5',
+    'eng', 'english', 'chinese', '国语', '粤语', '中字', '中英', '字幕', 'subbed', 'hardcoded', 'sample',
+    'amzn', 'nf', 'netflix', 'dsnp', 'hmax', 'atvp', 'hulu', 'itunes', 'max', 'pcok', '60fps', '120fps', 'fps',
+    'yify', 'rarbg', 'yts', 'eztv', 'fgt', 'sparks', 'ntb', 'tgx', 'ctrls', 'cm8', 'w4f', 'd3g', 'movies',
+    'movie', 'film', 'video', 'audio', 'track', 'cd1', 'cd2', 'disc1', 'disc2', 'part1', 'part2', 'ova', 'oad',
+  ]);
+
+  function cleanTokens(str) {
+    return String(str)
+      .replace(/[\[【(][^\]】)]*[\]】)]/g, ' ')
+      .split(/[\s._+&·、]+/g)
+      .map((t) => t.replace(/^-+|-+$/g, ''))
+      .filter((t) => {
+        if (!t) return false;
+        const low = t.toLowerCase();
+        if (JUNK.has(low)) return false;
+        if (/^\d{3,4}[pi]$/i.test(t)) return false;
+        if (/^\d+(k|kb|mb|gb|fps|hz)$/i.test(t)) return false;
+        if (/^(19|20)\d{2}$/.test(t)) return false;
+        if (/^\d+$/.test(t)) return false;
+        if (/^(cd|disc|part|ep|s)\d+$/i.test(t)) return false;
+        return true;
+      });
+  }
+
+  function parseName(name) {
+    const base = String(name || '').replace(/\.[A-Za-z0-9]{1,5}$/, '');
+    const yearM = base.match(/(?:^|[^0-9])(19\d{2}|20\d{2})(?:[^0-9]|$)/);
+    const year = yearM ? yearM[1] : '';
+    let season = ''; let episode = '';
+    const seM = base.match(/[Ss](\d{1,2})[\s._-]?[Ee](\d{1,3})/) || base.match(/第\s*(\d{1,3})\s*[集话]/);
+    if (seM) {
+      if (seM[2]) { season = seM[1]; episode = seM[2]; } else { episode = seM[1]; }
+    }
+    let raw = base;
+    if (yearM) raw = base.slice(0, yearM.index + yearM[0].length);
+    if (seM) raw = raw.slice(0, seM.index);
+
+    let title = cleanTokens(raw).join(' ').trim();
+    if (!title) title = cleanTokens(base).join(' ').trim();
+    if (!title) title = base.trim();
+
+    let artist = ''; let album = '';
+    const dash = base.split(/\s+-\s+|\s+–\s+/);
+    if (dash.length >= 2) {
+      const a = cleanTokens(dash[0]).join(' ').trim();
+      const t = cleanTokens(dash[1]).join(' ').trim();
+      if (a && t) { artist = a; if (!title || title === base.trim()) title = t; }
+    }
+    return { title, year, season, episode, artist, album, raw: base };
+  }
+
+  /* ------------------------------ ID3 ------------------------------ */
+  function decodeID3Text(u8) {
+    if (!u8 || !u8.length) return '';
+    const enc = u8[0];
+    let data = u8.subarray(1);
+    let label = 'utf-8';
+    if (enc === 0) label = 'gb18030';
+    else if (enc === 1) {
+      if (data[0] === 0xff && data[1] === 0xfe) { label = 'utf-16le'; data = data.subarray(2); }
+      else if (data[0] === 0xfe && data[1] === 0xff) { label = 'utf-16be'; data = data.subarray(2); }
+      else label = 'utf-16be';
+    } else if (enc === 2) label = 'utf-16be';
+    try {
+      return new TextDecoder(label).decode(data).replace(/\0[\s\S]*$/, '').trim();
+    } catch (e) {
+      try { return new TextDecoder('utf-8').decode(data).replace(/\0[\s\S]*$/, '').trim(); } catch (e2) { return ''; }
+    }
+  }
+
+  function cstringLen(u8, enc) {
+    if (!u8.length) return 0;
+    if (enc === 1 || enc === 2) {
+      for (let i = 0; i + 1 < u8.length; i++) if (u8[i] === 0 && u8[i + 1] === 0) return i + 2;
+      return u8.length;
+    }
+    const i = u8.indexOf(0);
+    return i < 0 ? u8.length : i + 1;
+  }
+
+  function synchsafe(n) {
+    return ((n & 0x7f000000) >> 3) + ((n & 0x7f0000) >> 2) + ((n & 0x7f00) >> 1) + (n & 0x7f);
+  }
+
+  async function readID3(file, kind) {
+    const out = { title: '', artist: '', album: '', year: '', cover: '' };
+    if (!file || kind !== 'audio') return out;
+    try {
+      const head = new Uint8Array(await file.slice(0, 260 * 1024).arrayBuffer());
+      const dv = new DataView(head.buffer);
+      if (head.length > 10 && String.fromCharCode(head[0], head[1], head[2]) === 'ID3') {
+        const ver = dv.getUint8(3);
+        const flags = dv.getUint8(5);
+        const total = synchsafe(dv.getUint32(6));
+        let p = 10;
+        if (flags & 0x40) {
+          const es = ver === 4 ? synchsafe(dv.getUint32(p)) : dv.getUint32(p);
+          p += 4 + es;
+        }
+        const end = Math.min(10 + total, head.length);
+        while (p + 10 <= end) {
+          const id = String.fromCharCode(head[p], head[p + 1], head[p + 2], head[p + 3]);
+          if (!/^[A-Z0-9]{4}$/.test(id)) break;
+          const fsize = ver === 4 ? synchsafe(dv.getUint32(p + 4)) : dv.getUint32(p + 4);
+          if (fsize <= 0 || p + 10 + fsize > head.length) break;
+          const body = head.subarray(p + 10, p + 10 + fsize);
+          if (id === 'APIC' && !out.cover) {
+            const enc = body[0];
+            let q = 1;
+            const mimeEnd = body.indexOf(0, q);
+            if (mimeEnd > 0) {
+              const mime = new TextDecoder('latin1').decode(body.subarray(q, mimeEnd)) || 'image/jpeg';
+              q = mimeEnd + 2; // mime 结束符 + 图片类型
+              q += cstringLen(body.subarray(q), enc);
+              const img = body.subarray(q);
+              if (img.length > 1024) {
+                out.cover = URL.createObjectURL(new Blob([img], { type: mime === 'image/jpg' ? 'image/jpeg' : mime }));
+              }
+            }
+          } else if (id === 'TIT2' && !out.title) out.title = decodeID3Text(body);
+          else if (id === 'TPE1' && !out.artist) out.artist = decodeID3Text(body);
+          else if (id === 'TALB' && !out.album) out.album = decodeID3Text(body);
+          else if ((id === 'TYER' || id === 'TDRC') && !out.year) out.year = (decodeID3Text(body).match(/\d{4}/) || [''])[0];
+          p += 10 + fsize;
+        }
+      }
+      // ID3v1
+      if (!out.title && file.size >= 128) {
+        const tail = new Uint8Array(await file.slice(file.size - 128).arrayBuffer());
+        if (String.fromCharCode(tail[0], tail[1], tail[2]) === 'TAG') {
+          const seg = (a, b) => new TextDecoder('gb18030').decode(tail.subarray(a, b)).replace(/\0[\s\S]*$/, '').trim();
+          out.title = seg(3, 33);
+          out.artist = seg(33, 63);
+          out.album = seg(63, 93);
+          out.year = (seg(93, 97).match(/\d{4}/) || [''])[0];
+        }
+      }
+    } catch (e) { /* 标签解析失败不影响播放 */ }
+    return out;
+  }
+
+  /* ---------------------------- 文件入口 ---------------------------- */
+  function addFiles(fileList) {
+    try {
+      const list = Array.from(fileList || []).filter((f) => {
+        const e = extOf(f.name);
+        return AUDIO_EXT.has(e) || /\.(mp4|m4v|webm|mkv|mov|avi|wmv|flv|ogv|mpg|mpeg|ts|3gp)$/i.test(f.name) || /^(video|audio)\//.test(f.type);
+      });
+      if (!list.length) { toast('没有可播放的媒体文件'); return; }
+      const start = state.entries.length;
+      list.forEach((f) => {
+        const kind = AUDIO_EXT.has(extOf(f.name)) ? 'audio' : 'video';
+        state.entries.push({
+          id: 'f' + Date.now() + Math.random().toString(36).slice(2, 7),
+          name: f.name,
+          path: f.webkitRelativePath || f.name,
+          kind,
+          file: f,
+          url: URL.createObjectURL(f),
+          tags: null,
+          parsed: parseName(f.name),
+        });
+      });
+      afterAdd(start);
+      toast(`已添加 ${list.length} 个文件`);
+    } catch (err) {
+      console.error(err);
+      toast('添加文件失败：' + err.message);
+    }
+  }
+
+  // 从服务端路径导入（资源导入面板里的「已下载」列表用）
+  function addServerFiles(paths) {
+    const start = state.entries.length;
+    paths.forEach((p) => {
+      const kind = AUDIO_EXT.has(extOf(p)) ? 'audio' : 'video';
+      state.entries.push({
+        id: 's' + Date.now() + Math.random().toString(36).slice(2, 7),
+        name: p.split(/[\\/]/).pop(),
+        path: p,
+        kind,
+        file: null,
+        url: '/api/stream?file=' + encodeURIComponent(p),
+        tags: null,
+        parsed: parseName(p.split(/[\\/]/).pop()),
+      });
+    });
+    afterAdd(start);
+  }
+
+  // 资源导入面板：列出下载目录里已有的文件，点一下即加入播放列表
+  async function loadImportList() {
+    const ul = $('#ipList');
+    if (!ul) return;
+    ul.innerHTML = '<li class="ip-empty">读取中…</li>';
+    try {
+      const data = await apiJSON('/api/browse?dir=@downloads');
+      if (!data.ok) { ul.innerHTML = `<li class="ip-empty">${escapeHtml(data.error || '读取失败')}</li>`; return; }
+      if (data.dir) $('#ipDir').textContent = 'downloads';
+      const files = (data.files || []).slice().sort((a, b) => (b.mtime || 0) - (a.mtime || 0));
+      ul.innerHTML = '';
+      if (!files.length) { ul.innerHTML = '<li class="ip-empty">下载目录还是空的</li>'; return; }
+      files.slice(0, 50).forEach((f) => {
+        const li = document.createElement('li');
+        const audio = AUDIO_EXT.has(extOf(f.name));
+        li.innerHTML = `<svg class="ic" viewBox="0 0 24 24"><use href="#i-${audio ? 'music' : 'film'}"/></svg>`
+          + `<span class="nm" title="${escapeHtml(f.name)}">${escapeHtml(f.name)}</span>`
+          + `<span class="sz">${(f.size / 1048576).toFixed(1)} MB</span>`;
+        li.addEventListener('click', () => {
+          addServerFiles([f.path]);
+          $('#importPop').hidden = true;
+          toast('已导入：' + f.name);
+        });
+        ul.appendChild(li);
+      });
+    } catch (err) {
+      ul.innerHTML = '<li class="ip-empty">无法连接本地服务</li>';
+    }
+  }
+
+  function afterAdd(start) {
+    addAll();
+    renderList();
+    // 始终跳到本次新加入的第一个文件，避免「选了文件却没反应」
+    loadEntry(start, true);
+  }
+
+  function addAll() {
+    const pending = state.entries.filter((e) => e.kind === 'audio' && e.file && !e.tags);
+    if (!pending.length) return;
+    Promise.all(pending.map(async (e) => {
+      e.tags = await readID3(e.file, 'audio');
+      if (e.tags.cover) e.cover = e.tags.cover;
+      if (e.tags.title) e.parsed.title = e.tags.title;
+    })).then(() => {
+      renderList();
+      if (cur() && cur().kind === 'audio') { renderInfo(); updateAudioStage(); }
+    });
+  }
+
+  async function loadEntry(i, autoplay) {
+    const e = state.entries[i];
+    if (!e) return;
+    state.index = i;
+    state.subject = e.info || null;   // 站点抓来的信息优先，不被自动匹配冲掉
+    media.src = e.url;
+    media.load();
+    syncPlayUI();
+    player.classList.add('has-media');
+    player.classList.toggle('audio-mode', e.kind === 'audio');
+    $('#ptTitle').textContent = e.name;
+    $('#ptBadge').hidden = true;
+    $('#dropHint').hidden = true;
+    $('#centerPlay').hidden = !!autoplay;
+    $('#dbQuery').value = '';
+    $('#dbCands').innerHTML = '';
+    if (!e.tags && e.kind === 'audio' && e.file) { e.tags = await readID3(e.file, 'audio'); if (e.tags.cover) e.cover = e.tags.cover; }
+    previewSrc = '';
+    updateAudioStage();
+    renderList();
+    renderInfo();
+    if (e.lyric) setLyric(e.lyric, e.lyricSrc || '站点歌词', '');
+    else ensureLyric(e);
+    if (autoplay) play().catch(() => { /* 需要用户手势 */ });
+    if (!e.info) autoFetch();
+  }
+
+  function updateAudioStage() {
+    const e = cur();
+    const img = $('#discImg');
+    const src = (e && (e.cover || (e.tags && e.tags.cover))) || '';
+    if (src) { img.src = src; img.hidden = false; } else { img.removeAttribute('src'); img.hidden = true; }
+    $('#audioTitle').textContent = e ? (e.tags && e.tags.title ? `${e.tags.title} - ${e.tags.artist || ''}`.replace(/ - $/, '') : e.parsed.title || e.name) : '';
+  }
+
+  /* ---------------------------- 播放控制 ---------------------------- */
+  function play() {
+    const p = media.play();
+    if (p && p.catch) p.catch(() => { $('#centerPlay').hidden = false; });
+    return p;
+  }
+
+  function toggle() {
+    if (!state.entries.length) {
+      toast('列表是空的：点左上角「打开」添加本地文件，或在右侧搜索后点选站点结果在线播放');
+      return;
+    }
+    if (media.paused) { $('#centerPlay').hidden = true; play(); } else { media.pause(); $('#centerPlay').hidden = false; }
+    syncPlayUI();
+  }
+
+  // 播放/暂停图标随状态切换
+  function syncPlayUI() {
+    const playing = !media.paused && !media.ended && !!media.src;
+    const btn = $('#btnPlay');
+    btn.innerHTML = `<svg class="ic" viewBox="0 0 24 24"><use href="#${playing ? 'i-pause' : 'i-play'}"/></svg>`;
+    btn.title = `${playing ? '暂停' : '播放'} (空格)`;
+    btn.classList.toggle('is-playing', playing);
+    player.classList.toggle('playing', playing);
+    if (playing) player.classList.remove('idle');
+  }
+
+  function step(n) {
+    if (!state.entries.length) return;
+    if (state.repeat === 1) { media.currentTime = 0; play(); return; }
+    let i = state.index + n;
+    if (state.repeat === 2) i = (i + state.entries.length) % state.entries.length;
+    if (i < 0 || i >= state.entries.length) { media.pause(); toast(n > 0 ? '已到列表末尾' : '已到列表开头'); return; }
+    loadEntry(i, true);
+  }
+
+  function setRate(r, quiet) {
+    r = clamp(Number(r) || 1, 0.25, 4);
+    media.playbackRate = r;
+    $('#btnSpeed').innerHTML = r.toFixed(2).replace(/0$/, '') + '<em>×</em>';
+    $('#speedRange').value = r;
+    paintRange($('#speedRange'));
+    $$('#speedChips button').forEach((b) => b.classList.toggle('active', Math.abs(Number(b.dataset.r) - r) < 0.001));
+    try { localStorage.setItem('mp.rate', r); } catch (e) { /* 忽略 */ }
+    if (!quiet) toast(`倍速 ${r.toFixed(2).replace(/0$/, '')}×`);
+  }
+
+  // 把滑杆当前值换算成 0~1 写入 --v，供 CSS 绘制已填充部分
+  function paintRange(el) {
+    if (!el) return;
+    const min = Number(el.min || 0);
+    const max = Number(el.max || 1);
+    const v = Number(el.value);
+    const r = max > min ? (v - min) / (max - min) : 0;
+    el.style.setProperty('--v', String(Math.min(1, Math.max(0, r))));
+  }
+
+  function setVolume(v, quiet) {
+    v = clamp(Number(v), 0, 1);
+    media.volume = v;
+    media.muted = v === 0;
+    $('#vol').value = v;
+    paintRange($('#vol'));
+    $('#btnMute').innerHTML = `<svg class="ic" viewBox="0 0 24 24"><use href="#i-${v === 0 ? 'mute' : 'vol'}"/></svg>`;
+    try { localStorage.setItem('mp.vol', v); } catch (e) { /* 忽略 */ }
+    if (!quiet) toast(`音量 ${Math.round(v * 100)}%`);
+  }
+
+  async function toggleFull() {
+    try {
+      if (document.fullscreenElement || document.webkitFullscreenElement) {
+        await (document.exitFullscreen ? document.exitFullscreen() : document.webkitExitFullscreen());
+      } else if (player.requestFullscreen) {
+        await player.requestFullscreen();
+      } else if (player.webkitRequestFullscreen) {
+        player.webkitRequestFullscreen();
+      }
+    } catch (e) { toast('当前环境不支持全屏'); }
+  }
+
+  async function togglePip() {
+    try {
+      if (document.pictureInPictureElement) await document.exitPictureInPicture();
+      else if (media.requestPictureInPicture) await media.requestPictureInPicture();
+      else toast('当前浏览器不支持画中画');
+    } catch (e) { toast('画中画不可用'); }
+  }
+
+  /* ------------------------------ 截图 ------------------------------ */
+  const coverImg = new Image();
+
+  function loadImg(src) {
+    return new Promise((resolve) => {
+      if (!src) return resolve(false);
+      if (coverImg.src === src && coverImg.complete) return resolve(!!coverImg.naturalWidth);
+      coverImg.onload = () => resolve(true);
+      coverImg.onerror = () => resolve(false);
+      coverImg.src = src;
+    });
+  }
+
+  function drawAudioCard(c, ctx, coverOK) {
+    const W = 960; const H = 540;
+    c.width = W; c.height = H;
+    const e = cur();
+    const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#4c8dff';
+    const g = ctx.createLinearGradient(0, 0, W, H);
+    g.addColorStop(0, '#11161d');
+    g.addColorStop(1, '#05080c');
+    ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = accent; ctx.globalAlpha = 0.12;
+    ctx.beginPath(); ctx.arc(W - 120, 120, 260, 0, Math.PI * 2); ctx.fill(); ctx.globalAlpha = 1;
+
+    const size = 280; const cx = 240; const cy = H / 2; const r = size / 2;
+    ctx.save();
+    ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.clip();
+    if (coverOK && coverImg.naturalWidth) {
+      ctx.drawImage(coverImg, cx - r, cy - r, size, size);
+    } else {
+      ctx.fillStyle = '#1c2430'; ctx.fillRect(cx - r, cy - r, size, size);
+      ctx.strokeStyle = 'rgba(255,255,255,.07)'; ctx.lineWidth = 2;
+      for (let i = 1; i <= 4; i++) {
+        ctx.beginPath(); ctx.arc(cx, cy, (r * i) / 5, 0, Math.PI * 2); ctx.stroke();
+      }
+    }
+    ctx.restore();
+    ctx.strokeStyle = 'rgba(255,255,255,.15)'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.stroke();
+    ctx.fillStyle = '#05080c';
+    ctx.beginPath(); ctx.arc(cx, cy, 24, 0, Math.PI * 2); ctx.fill();
+
+    const title = (e && e.tags && e.tags.title) || (e && e.parsed.title) || '未知音轨';
+    const artist = (e && e.tags && e.tags.artist) || (e && e.parsed.artist) || '';
+    const album = (e && e.tags && e.tags.album) || '';
+    ctx.textBaseline = 'top';
+    ctx.fillStyle = '#fff';
+    ctx.font = '600 46px "Microsoft YaHei", sans-serif';
+    wrapText(ctx, title, cx + size / 2 + 40, 150, 380, 56);
+    ctx.fillStyle = 'rgba(255,255,255,.7)';
+    ctx.font = '28px "Microsoft YaHei", sans-serif';
+    if (artist) ctx.fillText(artist, cx + size / 2 + 40, 240);
+    if (album) ctx.fillText(album, cx + size / 2 + 40, 284);
+
+    const y = H - 96; const w = W - 160;
+    ctx.fillStyle = 'rgba(255,255,255,.18)'; ctx.fillRect(80, y, w, 8);
+    ctx.fillStyle = accent;
+    const p = media.duration ? media.currentTime / media.duration : 0;
+    ctx.fillRect(80, y, w * clamp(p, 0, 1), 8);
+    ctx.fillStyle = 'rgba(255,255,255,.65)';
+    ctx.font = '22px Consolas, monospace';
+    ctx.fillText(`${fmt(media.currentTime)} / ${fmt(media.duration)}`, 80, y + 24);
+  }
+
+  function wrapText(ctx, text, x, y, maxW, lh) {
+    let line = ''; let ty = y;
+    for (const ch of String(text)) {
+      const test = line + ch;
+      if (ctx.measureText(test).width > maxW && line) {
+        ctx.fillText(line, x, ty); line = ch; ty += lh;
+      } else line = test;
+    }
+    if (line) ctx.fillText(line, x, ty);
+  }
+
+  async function capture() {
+    const e = cur();
+    if (!e) { toast('请先载入媒体文件'); return; }
+    const c = document.createElement('canvas');
+    const ctx = c.getContext('2d');
+    if (e.kind === 'audio') {
+      const cover = e.cover || (e.tags && e.tags.cover) || (state.subject && proxiedCover(state.subject.cover)) || '';
+      drawAudioCard(c, ctx, await loadImg(cover));
+    } else {
+      if (!media.videoWidth) { toast('视频尚未就绪'); return; }
+      c.width = media.videoWidth;
+      c.height = media.videoHeight;
+      try { ctx.drawImage(media, 0, 0, c.width, c.height); } catch (err) { toast('无法截取该画面'); return; }
+    }
+    const stamp = `${e.name.replace(/\.[^.]+$/, '')}_${fmt(media.currentTime).replace(/:/g, '')}.png`;
+    c.toBlob((blob) => {
+      if (!blob) { toast('截图失败'); return; }
+      const url = URL.createObjectURL(blob);
+      state.shots.unshift({ url, blob, name: stamp });
+      if (state.shots.length > 24) {
+        const old = state.shots.pop();
+        URL.revokeObjectURL(old.url);
+      }
+      renderShots();
+      toast('已截图：' + stamp);
+    }, 'image/png');
+  }
+
+  function renderShots() {
+    const wrap = $('#shotsWrap');
+    wrap.hidden = state.shots.length === 0;
+    $('#shotsCount').textContent = state.shots.length;
+    const list = $('#shotsList');
+    list.innerHTML = '';
+    state.shots.forEach((s) => {
+      const d = document.createElement('div');
+      d.className = 'shot';
+      const img = document.createElement('img');
+      img.src = s.url; img.alt = s.name;
+      const acts = document.createElement('div');
+      acts.className = 'shot-acts';
+      const dl = document.createElement('button');
+      dl.title = '下载';
+      dl.innerHTML = '<svg class="ic" viewBox="0 0 24 24"><use href="#i-download"/></svg>';
+      dl.onclick = () => {
+        const a = document.createElement('a');
+        a.href = s.url; a.download = s.name; a.click();
+      };
+      const cp = document.createElement('button');
+      cp.title = '复制到剪贴板';
+      cp.innerHTML = '<svg class="ic" viewBox="0 0 24 24"><use href="#i-copy"/></svg>';
+      cp.onclick = async () => {
+        try {
+          await navigator.clipboard.write([new ClipboardItem({ 'image/png': s.blob })]);
+          toast('图片已复制');
+        } catch (err) { toast('浏览器拒绝了剪贴板写入'); }
+      };
+      acts.append(dl, cp);
+      d.append(img, acts);
+      list.appendChild(d);
+    });
+  }
+
+  /* ---------------------------- 进度条 ---------------------------- */
+  function ratioAt(e) {
+    const r = $('#ptrack').getBoundingClientRect();
+    return clamp((e.clientX - r.left) / r.width, 0, 1);
+  }
+
+  function updateProgress() {
+    const d = media.duration;
+    const p = d ? clamp(media.currentTime / d, 0, 1) : 0;
+    $('#pplayed').style.width = (p * 100).toFixed(3) + '%';
+    $('#pknob').style.left = (p * 100).toFixed(3) + '%';
+    $('#tCur').textContent = fmt(media.currentTime);
+    $('#tDur').textContent = fmt(d);
+  }
+
+  function renderBuffered() {
+    const d = media.duration;
+    const box = $('#pbuf');
+    if (!d || !media.buffered || !media.buffered.length) { box.innerHTML = ''; return; }
+    let html = '';
+    for (let i = 0; i < media.buffered.length; i++) {
+      const s = media.buffered.start(i) / d;
+      const en = media.buffered.end(i) / d;
+      html += `<i style="left:${(s * 100).toFixed(2)}%;width:${((en - s) * 100).toFixed(2)}%"></i>`;
+    }
+    box.innerHTML = html;
+  }
+
+  function showTip(e) {
+    const d = media.duration;
+    if (!d) return;
+    const r = $('#ptrack').getBoundingClientRect();
+    const x = clamp(e.clientX - r.left, 0, r.width);
+    const t = (x / r.width) * d;
+    const tip = $('#ptip');
+    tip.hidden = false;
+    tip.classList.toggle('audio', isAudio());
+    tip.style.left = (r.left - $('#pwrap').getBoundingClientRect().left + x) + 'px';
+    $('#ptipTime').textContent = fmt(t);
+    if (isAudio()) return;
+    const pv = ensurePreview();
+    clearTimeout(thumbTimer);
+    thumbTimer = setTimeout(() => {
+      if (!pv) return;
+      try { pv.currentTime = t; } catch (err) { /* 忽略 */ }
+    }, 90);
+  }
+
+  function ensurePreview() {
+    if (isAudio()) return null;
+    const src = media.currentSrc || (cur() && cur().url) || '';
+    if (!src) return null;
+    if (previewSrc !== src) {
+      previewSrc = src;
+      if (!previewVideo) {
+        previewVideo = document.createElement('video');
+        previewVideo.muted = true;
+        previewVideo.preload = 'metadata';
+        previewVideo.addEventListener('seeked', () => {
+          const c = $('#pthumb');
+          const ctx = c.getContext('2d');
+          if (!previewVideo.videoWidth) return;
+          ctx.drawImage(previewVideo, 0, 0, c.width, c.height);
+        });
+      }
+      previewVideo.src = src;
+    }
+    return previewVideo;
+  }
+
+  /* ---------------------------- 频谱 ---------------------------- */
+  let actx = null; let analyser = null; let vizActive = false; let vizRaf = 0;
+
+  function initAudioCtx() {
+    if (actx) return;
+    try {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return;
+      actx = new AC();
+      const src = actx.createMediaElementSource(media);
+      analyser = actx.createAnalyser();
+      analyser.fftSize = 128;
+      analyser.smoothingTimeConstant = 0.75;
+      src.connect(analyser);
+      analyser.connect(actx.destination);
+    } catch (e) { actx = null; }
+  }
+
+  function startViz() {
+    if (!isAudio() || vizActive) return;
+    initAudioCtx();
+    if (!analyser) return;
+    if (actx && actx.state === 'suspended') actx.resume().catch(() => {});
+    vizActive = true;
+    const loop = () => {
+      if (!vizActive) return;
+      drawViz();
+      vizRaf = requestAnimationFrame(loop);
+    };
+    loop();
+  }
+
+  function stopViz() {
+    vizActive = false;
+    cancelAnimationFrame(vizRaf);
+    const c = $('#viz');
+    c.getContext('2d').clearRect(0, 0, c.width, c.height);
+  }
+
+  function drawViz() {
+    const c = $('#viz');
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const w = c.clientWidth; const h = c.clientHeight;
+    if (!w || !h) return;
+    if (c.width !== Math.floor(w * dpr)) { c.width = Math.floor(w * dpr); c.height = Math.floor(h * dpr); }
+    const ctx = c.getContext('2d');
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, w, h);
+    if (!analyser) return;
+    const data = new Uint8Array(analyser.frequencyBinCount);
+    analyser.getByteFrequencyData(data);
+    const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#4c8dff';
+    const n = 48;
+    const bw = w / n;
+    for (let i = 0; i < n; i++) {
+      const v = data[Math.floor((i / n) * data.length * 0.8)] / 255;
+      const bh = Math.max(2, v * h * 0.92);
+      ctx.fillStyle = accent;
+      ctx.globalAlpha = 0.25 + v * 0.75;
+      ctx.fillRect(i * bw + 1, h - bh, bw - 2, bh);
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  /* ---------------------------- 豆瓣 ---------------------------- */
+  function proxiedCover(url) {
+    if (!url) return '';
+    if (url.startsWith('/api/img')) return url;
+    return '/api/img?url=' + encodeURIComponent(url);
+  }
+
+  async function apiJSON(url) {
+    const res = await fetch(url, { headers: { Accept: 'application/json' } });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    return res.json();
+  }
+
+  let fetchToken = 0;
+  async function autoFetch() {
+    const e = cur();
+    if (!e) return;
+    if (location.protocol === 'file:') {
+      state.dbMsg = '自动抓取需要本地服务：<br>在项目目录执行 <code>node server.js</code> 后访问 http://127.0.0.1:5173';
+      renderInfo();
+      return;
+    }
+    const token = ++fetchToken;
+    const p = e.parsed;
+    let title = ''; let year = p.year || '';
+    if (e.kind === 'audio') {
+      title = (e.tags && (e.tags.album || e.tags.title)) || p.title || e.name;
+      if (e.tags && e.tags.year) year = e.tags.year;
+    } else {
+      title = p.title || e.name;
+    }
+    title = String(title).replace(/\.[^.]+$/, '').trim();
+    if (!title) return;
+    if ($('#dbQuery').value === '') $('#dbQuery').value = title + (year ? ` ${year}` : '');
+    const isMusic = e.kind === 'audio';
+    // 检索类型：用户手动指定时听用户的，否则「全部」按当前文件类型决定
+    const kind = state.dbKind === 'all' ? (isMusic ? 'music' : 'movie') : state.dbKind;
+    state.dbMsg = '正在从豆瓣匹配信息…';
+    renderInfo();
+    doLookup({ title, year, kind, prefer: isMusic ? 'music' : 'movie', token, auto: true });
+  }
+
+  async function doLookup(opts) {
+    const { title, year, kind, prefer, token, auto } = opts;
+    try {
+      const qs = `title=${encodeURIComponent(title)}&year=${encodeURIComponent(year || '')}&kind=${encodeURIComponent(kind)}&prefer=${encodeURIComponent(prefer || '')}`;
+      const data = await apiJSON(`/api/douban/lookup?${qs}`);
+      if (token !== fetchToken) return;
+      state.candidates = data.items || [];
+      state.fallbackUrl = data.fallbackUrl || '';
+      state.fallbackMovieUrl = data.fallbackMovieUrl || data.fallbackUrl || '';
+      state.fallbackMusicUrl = data.fallbackMusicUrl || '';
+      const subject = data.subject;
+      state.subject = subject && subject.title ? subject : null;
+      const ce2 = cur();
+      if (ce2 && state.subject) ce2.info = state.subject;   // 记住结果，切歌回来不会丢
+      const links = [
+        state.fallbackMovieUrl ? `<a href="${escapeHtml(state.fallbackMovieUrl)}" target="_blank" rel="noreferrer">豆瓣影视</a>` : '',
+        state.fallbackMusicUrl ? `<a href="${escapeHtml(state.fallbackMusicUrl)}" target="_blank" rel="noreferrer">豆瓣音乐</a>` : '',
+      ].filter(Boolean).join(' / ');
+      state.dbMsg = state.subject ? '' : (data.notice
+        ? `豆瓣返回：${escapeHtml(data.notice)}<br>请稍等片刻后重试（或点「重新匹配」）`
+        : `豆瓣没有匹配到「${escapeHtml(title)}」，可用上方输入框手动搜索，或到 ${links} 查看`);
+      // 豆瓣作为默认信息源：服务端已按相关度挑出最优匹配，直接展示；其余候选折叠起来
+      if (state.subject) markBest('auto');
+      renderCandidates(state.candidates, kind);
+      updateMediaSession();
+      renderInfo();
+    } catch (err) {
+      if (token !== fetchToken) return;
+      state.dbMsg = '豆瓣信息获取失败：' + escapeHtml(err.message) + '<br>请确认本地服务在运行';
+      renderInfo();
+    }
+  }
+
+  function markBest(mode) {
+    const el = $('#dbBest');
+    if (!el) return;
+    const kind = state.subject ? kindLabel(state.subject.kind) : '';
+    if (mode === 'auto') { el.textContent = `豆瓣最优匹配 · ${kind}`; el.hidden = false; }
+    else if (mode === 'manual') { el.textContent = `已手动选择 · ${kind}`; el.hidden = false; }
+    else el.hidden = true;
+  }
+
+  async function pickSubject(id, kind) {
+    try {
+      const data = await apiJSON(`/api/douban/subject?id=${encodeURIComponent(id)}&kind=${encodeURIComponent(kind || 'movie')}`);
+      if (data && data.subject) {
+        state.subject = data.subject;
+        const ce = cur();
+        if (ce) ce.info = data.subject;
+        markBest('manual');
+        renderCandidates(state.candidates, state.dbKind);
+        renderInfo();
+        updateMediaSession();
+        toast('已切换到：' + data.subject.title);
+      } else toast('未取到条目详情');
+    } catch (err) { toast('获取失败：' + err.message); }
+  }
+
+  /* -------------------------- 可配置抓取站点 -------------------------- */
+
+  function siteById(id) { return (state.sites || []).find((s) => s.id === id) || null; }
+
+  async function loadSites() {
+    try {
+      const data = await apiJSON('/api/sites');
+      state.allSites = data.sites || [];
+      state.sites = (data.sites || []).filter((s) => s.enabled);
+    } catch (err) {
+      state.allSites = []; state.sites = [];
+    }
+    renderSiteChips();
+    renderSiteList();
+  }
+
+  // 资源站点列表：豆瓣已作为「豆瓣信息」子页的默认源，这里不再重复检索，避免两份一样的結果
+  function resourceSites() {
+    return (state.sites || []).filter((s) => s.parser !== 'douban');
+  }
+
+  // 站点是否参与本次检索：按搜索栏选的分类过滤，影视/音乐互不掺和
+  function sitesForKind(kind) {
+    return resourceSites().filter((s) => kind === 'all' || s.kind === kind);
+  }
+
+  function selectedSites() {
+    const pool = sitesForKind(state.dbKind);
+    const sel = (state.siteSel || []).filter((id) => pool.some((s) => s.id === id));
+    return sel.length ? pool.filter((s) => sel.includes(s.id)) : pool;
+  }
+
+  function renderSiteChips() {
+    const box = $('#siteRow');
+    if (!box) return;
+    box.innerHTML = '';
+    const kind = state.dbKind;
+    const list = sitesForKind(kind);
+    if (!list.length) {
+      box.innerHTML = '<span class="seg-hint">当前分类没有可用站点，可在下方「站点管理」添加</span>';
+      return;
+    }
+    const sel = selectedSites().map((s) => s.id);
+    const other = resourceSites().length - list.length;
+    list.forEach((s) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'site-chip' + (sel.includes(s.id) ? ' on' : '');
+      b.innerHTML = `${escapeHtml(s.name)}<span class="tag ${s.kind === 'music' ? 'music' : 'movie'}">${s.kind === 'music' ? '音乐' : '影视'}</span>${s.lyric ? '<span class="ly">词</span>' : ''}`;
+      b.addEventListener('click', () => {
+        const i = state.siteSel.indexOf(s.id);
+        if (i >= 0) state.siteSel.splice(i, 1); else state.siteSel.push(s.id);
+        try { localStorage.setItem('mp.sitesel', JSON.stringify(state.siteSel)); } catch (err) { /* 忽略 */ }
+        renderSiteChips();
+      });
+      box.appendChild(b);
+    });
+    if (other > 0) {
+      const hint = document.createElement('span');
+      hint.className = 'seg-hint';
+      hint.textContent = `已按「${kindLabel(kind)}」隐藏 ${other} 个其它分类站点`;
+      box.appendChild(hint);
+    }
+  }
+
+  function renderSiteList() {
+    const ul = $('#siteList');
+    if (!ul) return;
+    ul.innerHTML = '';
+    (state.allSites || []).forEach((s) => {
+      const li = document.createElement('li');
+      li.className = s.enabled ? '' : 'off';
+      const nm = document.createElement('div');
+      nm.className = 'sn';
+      nm.innerHTML = `${escapeHtml(s.name)} <span class="tag ${s.kind === 'music' ? 'music' : 'movie'}">${s.kind === 'music' ? '音乐' : '影视'}</span>${s.lyric ? '<span class="ly">词</span>' : ''}`;
+      const meta = document.createElement('div');
+      meta.className = 'sm';
+      meta.textContent = s.parser === 'douban' ? '内置' : (s.searchUrl ? s.searchUrl.replace(/^https?:\/\//, '').slice(0, 32) : '—');
+      li.append(nm, meta);
+      if (!s.builtin) {
+        const ed = document.createElement('button');
+        ed.className = 'sbtn'; ed.type = 'button'; ed.textContent = '编辑';
+        ed.addEventListener('click', () => openSiteForm(s));
+        const del = document.createElement('button');
+        del.className = 'sbtn del'; del.type = 'button'; del.textContent = '删除';
+        del.addEventListener('click', () => persistSites((state.allSites || []).filter((x) => x.id !== s.id)));
+        li.append(ed, del);
+      }
+      const tg = document.createElement('button');
+      tg.className = 'sbtn'; tg.type = 'button'; tg.textContent = s.enabled ? '停用' : '启用';
+      tg.addEventListener('click', () => persistSites((state.allSites || []).map((x) => (x.id === s.id ? Object.assign({}, x, { enabled: !x.enabled }) : x))));
+      li.appendChild(tg);
+      ul.appendChild(li);
+    });
+  }
+
+  async function persistSites(list) {
+    try {
+      const res = await fetch('/api/sites/save', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sites: list }),
+      });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      await loadSites();
+    } catch (err) {
+      toast('保存失败：' + err.message);
+    }
+  }
+
+  function openSiteForm(site) {
+    const f = $('#siteForm');
+    f.hidden = false;
+    f.dataset.edit = site ? site.id : '';
+    $('#sfName').value = site ? site.name : '';
+    $('#sfKind').value = site ? site.kind : 'music';
+    $('#sfSearch').value = site ? (site.searchUrl || '') : '';
+    $('#sfDetail').value = site ? (site.detailUrl || '') : '';
+    $('#sfLyric').value = site ? (site.lyricUrl || '') : '';
+    $('#sfPattern').value = site ? (site.linkPattern || '') : '';
+    $('#sfEnabled').checked = site ? site.enabled !== false : true;
+    $('#sfName').focus();
+  }
+
+  function closeSiteForm() { const f = $('#siteForm'); f.hidden = true; f.dataset.edit = ''; }
+
+  function saveSiteForm() {
+    const name = $('#sfName').value.trim();
+    const search = $('#sfSearch').value.trim();
+    if (!name || !search) { toast('名称和搜索地址必填'); return; }
+    const id = $('#siteForm').dataset.edit || ('site' + Date.now().toString(36));
+    const prev = (state.allSites || []).find((s) => s.id === id) || {};
+    const item = Object.assign({}, prev, {
+      id, name,
+      kind: $('#sfKind').value,
+      parser: prev.parser || 'generic',
+      enabled: $('#sfEnabled').checked,
+      lyric: !!$('#sfLyric').value.trim(),
+      base: prev.base || '',
+      searchUrl: search,
+      detailUrl: $('#sfDetail').value.trim(),
+      lyricUrl: $('#sfLyric').value.trim(),
+      linkPattern: $('#sfPattern').value.trim(),
+    });
+    const exists = (state.allSites || []).some((s) => s.id === id);
+    const next = exists
+      ? (state.allSites || []).map((s) => (s.id === id ? item : s))
+      : (state.allSites || []).concat([item]);
+    closeSiteForm();
+    persistSites(next);
+  }
+
+  /* 按站点分组渲染搜索结果 */
+  function renderGroups(groups) {
+    const box = $('#siteCands');
+    const emptyHint = $('#siteEmpty');
+    if (!box) return;
+    box.innerHTML = '';
+    if (emptyHint) emptyHint.hidden = groups.length > 0;
+    groups.forEach((g) => {
+      if (!g.items.length && !g.busy) return;
+      const h = document.createElement('div');
+      h.className = 'cand-group';
+      h.textContent = `${g.label} · ${g.items.length}${g.busy ? ' · 搜索中…' : ''}`;
+      box.appendChild(h);
+      g.items.slice(0, 8).forEach((it) => {
+        const music = String(it.kind || '') === 'music' || !!g.music;
+        const b = document.createElement('button');
+        b.className = 'cand';
+        b.type = 'button';
+        const img = document.createElement('img');
+        img.src = it.cover ? proxiedCover(it.cover) : '';
+        img.alt = '';
+        const t = document.createElement('div');
+        const sub = [it.artist, it.album].filter(Boolean).join(' / ') || it.sub || '';
+        t.innerHTML =
+          `<div class="cand-t">${escapeHtml(it.title)}<span class="tag ${music ? 'music' : 'movie'}">${music ? '音乐' : '影视'}</span></div>` +
+          `<div class="cand-s">${escapeHtml(sub)}</div>`;
+        b.append(img, t);
+        b.addEventListener('click', () => (it.onPick || g.onPick)(it));
+        box.appendChild(b);
+      });
+    });
+  }
+
+  async function runSiteSearch(token) {
+    const q = $('#dbQuery').value.trim();
+    if (!q) return;
+    if (!(state.sites || []).length) await loadSites();
+    const chosen = selectedSites();
+    const box = $('#siteCands');
+    if (!chosen.length) {
+      if (box) box.innerHTML = '<div class="sites-empty">当前分类没有可检索的站点</div>';
+      setSiteTabCount(0);
+      return;
+    }
+    setSiteTabCount(0);
+    // 先给出「搜索中」占位，多个站点并行返回后替换
+    renderGroups(chosen.map((s) => ({ label: s.name, items: [], busy: true })));
+    const results = await Promise.all(chosen.map(async (s) => {
+      try {
+        const d = await apiJSON(`/api/site/search?site=${encodeURIComponent(s.id)}&q=${encodeURIComponent(q)}`);
+        return { site: s, items: d.items || [], error: d.error || '' };
+      } catch (err) {
+        return { site: s, items: [], error: err.message };
+      }
+    }));
+    if (token !== fetchToken) return;
+
+    renderGroups(results.map((r) => ({
+      label: r.error ? `${r.site.name}（失败：${r.error}）` : r.site.name,
+      music: r.site.kind === 'music',
+      items: r.items,
+      onPick: (it) => applySiteItem(r.site, it),
+    })));
+    const total = results.reduce((n, r) => n + r.items.length, 0);
+    setSiteTabCount(total);
+    // 站点有收获时自动切到「站点资源」页，省得用户自己找
+    if (total) switchSub('sites');
+    else toast('所选站点都没搜到结果');
+  }
+
+  function setSiteTabCount(n) {
+    const el = $('#siteTabN');
+    if (!el) return;
+    el.textContent = String(n);
+    el.hidden = !n;
+  }
+
+  async function applySiteItem(site, item) {
+    try {
+      toast('正在从「' + site.name + '」抓取…');
+      const d = await apiJSON(`/api/site/detail?site=${encodeURIComponent(site.id)}&id=${encodeURIComponent(item.id)}`);
+      const deadHint = d.dead ? '（站点标记已下架）' : '';
+      const sub = d.subject || {};
+      const title = sub.title || item.title || '';
+      const artist = (Array.isArray(sub.singer) ? sub.singer[0] : '') || item.artist || '';
+
+      if (d.audio) {
+        // 有音频资源：加入播放列表并立即在线播放，同时后台下载到本地
+        const e = addRemoteEntry({
+          siteId: site.id, itemId: item.id, title, artist,
+          cover: sub.cover || item.cover || '', album: sub.album || '',
+          subject: d.subject, lyric: d.lyric, source: site.name,
+        });
+        state.subject = d.subject && d.subject.title ? d.subject : state.subject;
+        renderInfo();
+        startDownload({ site: site.id, id: item.id, title, artist, entryId: e.id });
+        toast('正在播放：' + [artist, title].filter(Boolean).join(' - ') + deadHint);
+      } else {
+        state.subject = d.subject && d.subject.title ? d.subject : state.subject;
+        renderInfo();
+        updateMediaSession();
+        if (d.lyric) setLyric(d.lyric, site.name + ' · 歌词', '');
+        toast(d.dead
+          ? '该条目站点已下架，且没有可用音频资源'
+          : `「${title}」没有可用的音频资源，仅更新了元数据${d.lyric ? '和歌词' : ''}`);
+      }
+    } catch (err) {
+      toast('抓取失败：' + err.message);
+    }
+  }
+
+  /* ---------------------- 远端资源：在线播放 + 后台下载 ---------------------- */
+
+  function addRemoteEntry(o) {
+    const name = [o.artist, o.title].filter(Boolean).join(' - ');
+    const idx = state.entries.findIndex((x) => x.siteId === o.siteId && x.itemId === o.itemId);
+    if (idx >= 0) {
+      const hit = state.entries[idx];
+      hit.info = o.subject || hit.info;
+      hit.cover = o.cover || hit.cover;
+      hit.lyric = o.lyric || hit.lyric;
+      hit.lyricSrc = (o.source || hit.lyricSrc || '') + ' · 歌词';
+      loadEntry(idx, true);
+      return hit;
+    }
+    const e = {
+      id: 'r' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+      name: name + '.mp3',
+      path: '',
+      kind: 'audio',
+      file: null,
+      url: `/api/site/play?site=${encodeURIComponent(o.siteId)}&id=${encodeURIComponent(o.itemId)}`,
+      tags: { title: o.title, artist: o.artist, album: o.album },
+      cover: o.cover || '',
+      parsed: { title: o.title, artist: o.artist, episode: 0, year: '' },
+      remote: true, siteId: o.siteId, itemId: o.itemId, taskId: '',
+      info: o.subject || null, lyric: o.lyric || '', lyricSrc: (o.source || '') + ' · 歌词',
+    };
+    const start = state.entries.length;
+    state.entries.push(e);
+    afterAdd(start);
+    return e;
+  }
+
+  async function startDownload(o) {
+    try {
+      const d = await apiJSON(`/api/site/download?site=${encodeURIComponent(o.site)}&id=${encodeURIComponent(o.id)}`
+        + `&title=${encodeURIComponent(o.title || '')}&artist=${encodeURIComponent(o.artist || '')}`);
+      const task = d.task;
+      if (!task) return;
+      const e = state.entries.find((x) => x.id === o.entryId);
+      if (e) e.taskId = task.id;
+      // 立刻插进任务表让进度条即时出现，别等第一次轮询（小文件可能在 600ms 内就下完了）
+      state.tasks = [task].concat((state.tasks || []).filter((t) => t.id !== task.id));
+      syncListProgress();
+      if (task.status === 'done') { adoptTask(task); return; }
+      pollDownloads();
+    } catch (err) {
+      toast('下载失败：' + err.message);
+    }
+  }
+
+  let dlTimer = 0;
+  function pollDownloads() {
+    clearInterval(dlTimer);
+    dlTimer = setInterval(async () => {
+      try {
+        const d = await apiJSON('/api/site/tasks');
+        const tasks = d.tasks || [];
+        renderDownloads(tasks);
+        tasks.forEach((t) => { if (t.status === 'done') adoptTask(t); });
+        if (!tasks.some((t) => t.status === 'pending' || t.status === 'downloading')) {
+          clearInterval(dlTimer);
+        }
+      } catch (err) {
+        clearInterval(dlTimer);
+      }
+    }, 600);
+  }
+
+  // 下载完成后把播放列表里的远端条目切换成本地文件（保持播放位置不中断）
+  function adoptTask(task) {
+    if (!task.file || task._adopted) return;
+    task._adopted = true;
+    const e = state.entries.find((x) => x.taskId === task.id);
+    const same = e === cur();
+    if (!e) return;
+    const resumeAt = same && media.duration ? media.currentTime : 0;
+    const wasPlaying = same && !media.paused;
+    e.remote = false;
+    e.path = task.file;
+    e.name = task.name || e.name;
+    e.url = '/api/stream?file=' + encodeURIComponent(task.file);
+    e.taskId = ''; // 已落地成本地文件，条目上的下载进度条收起
+    renderList();
+    toast('已下载完成：' + (task.name || ''));
+    if (same) {
+      media.src = e.url;
+      media.load();
+      const onReady = () => {
+        media.removeEventListener('loadedmetadata', onReady);
+        try { media.currentTime = resumeAt; } catch (err) { /* 忽略 */ }
+        if (wasPlaying) play().catch(() => { /* 忽略 */ });
+      };
+      media.addEventListener('loadedmetadata', onReady);
+    }
+    renderDownloads();
+  }
+
+  // 下载任务只用来驱动播放列表条目上的进度条，不再单独占一块面板
+  function renderDownloads(tasks) {
+    state.tasks = tasks || state.tasks || [];
+    syncListProgress();
+  }
+
+  function fmtBytes(n) {
+    const v = Number(n) || 0;
+    return v >= 1048576 ? (v / 1048576).toFixed(1) + ' MB' : Math.round(v / 1024) + ' KB';
+  }
+
+  /* -------------------------------- 歌词 -------------------------------- */
+
+  function lyricKey(e) {
+    const tags = (e && e.tags) || {};
+    const artist = tags.artist || (e && e.parsed && e.parsed.artist) || '';
+    const title = tags.title || (e && e.parsed && e.parsed.title) || (e && e.name) || '';
+    return 'mp.lrc.' + String(artist + '-' + title).replace(/\s+/g, '').slice(0, 60);
+  }
+
+  function parseLRC(text) {
+    const meta = {};
+    const lines = [];
+    String(text || '').split(/\r?\n/).forEach((raw) => {
+      const line = raw.trim();
+      if (!line) return;
+      const metaTag = line.match(/^\[(ti|ar|al|by|offset):([^\]]*)\]$/i);
+      if (metaTag) { meta[metaTag[1].toLowerCase()] = metaTag[2].trim(); return; }
+      const times = [...line.matchAll(/\[(\d{1,3}):(\d{1,2}(?:[.:]\d{1,3})?)\]/g)];
+      if (!times.length) return;
+      const body = line.replace(/\[[^\]]*\]/g, '').trim();
+      if (!body) return;
+      if (/https?:\/\/|www\.|欢迎来访|本站|QQ音乐|酷狗/.test(body)) return; // 去广告行
+      const offset = Number(String(meta.offset || '0').replace(/[^\d-]/g, '')) || 0;
+      times.forEach((m) => {
+        const t = Number(m[1]) * 60 + Number(String(m[2]).replace(':', '.'));
+        lines.push({ t: Math.max(0, t + offset / 1000), text: body });
+      });
+    });
+    lines.sort((a, b) => a.t - b.t);
+    return { lines, meta };
+  }
+
+  function setLyric(raw, source, path) {
+    const parsed = parseLRC(raw);
+    if (!parsed.lines.length) { toast('歌词内容无法解析'); return false; }
+    state.lyric = { lines: parsed.lines, meta: parsed.meta, source: source || '歌词', raw: String(raw || ''), path: path || '' };
+    lyricIdx = -1;
+    renderLyric();
+    showLyric(true);
+    $('#lyricSrc').textContent = state.lyric.source + `（${parsed.lines.length} 行）`;
+    const e = cur();
+    if (e && e.kind === 'audio') {
+      try { localStorage.setItem(lyricKey(e), state.lyric.raw); } catch (err) { /* 忽略 */ }
+    }
+    return true;
+  }
+
+  function clearLyric() {
+    state.lyric = { lines: [], meta: {}, source: '', raw: '', path: '' };
+    lyricIdx = -1;
+    $('#lyricInner').innerHTML = '';
+    $('#lyricSrc').textContent = '歌词';
+    showLyric(false);
+  }
+
+  function renderLyric() {
+    const box = $('#lyricInner');
+    box.innerHTML = '';
+    if (!state.lyric.lines.length) {
+      box.innerHTML = '<div class="lyric-empty">暂无歌词，可点「抓歌词」或「本地」载入</div>';
+      return;
+    }
+    state.lyric.lines.forEach((l) => {
+      const d = document.createElement('div');
+      d.className = 'lyric-line';
+      d.textContent = l.text;
+      d.addEventListener('click', () => {
+        if (media.duration) media.currentTime = Math.min(media.duration - 0.05, l.t);
+        poke();
+      });
+      box.appendChild(d);
+    });
+  }
+
+  function showLyric(on) {
+    const box = $('#lyricBox');
+    box.hidden = !on;
+    player.classList.toggle('lyric-on', !!on);
+    const btn = $('#btnLyric');
+    if (btn) btn.classList.toggle('on', !!on);
+    if (on) requestAnimationFrame(() => syncLyric(true));
+  }
+
+  function syncLyric(force) {
+    const lrc = state.lyric;
+    if (!lrc || !lrc.lines.length || $('#lyricBox').hidden) return;
+    const t = media.currentTime;
+    let idx = -1;
+    for (let i = 0; i < lrc.lines.length; i++) {
+      if (lrc.lines[i].t <= t + 0.12) idx = i; else break;
+    }
+    if (idx === lyricIdx && !force) return;
+    lyricIdx = idx;
+    const nodes = $('#lyricInner').children;
+    for (let i = 0; i < nodes.length; i++) nodes[i].classList.toggle('on', i === idx);
+    const active = nodes[idx];
+    if (!active) return;
+    // 把当前行滚到视口中央（覆盖在黑胶上的歌词面板是浮动的，靠容器内平移实现滚动）
+    const scroll = $('#lyricScroll');
+    const want = active.offsetTop + active.offsetHeight / 2 - scroll.clientHeight / 2;
+    const maxShift = Math.max(0, $('#lyricInner').scrollHeight - scroll.clientHeight);
+    // 注意：滚动量取负号表示向上平移；开头几行不足一屏时不滚，末尾不越过底部
+    const shift = -Math.max(0, Math.min(want, maxShift));
+    $('#lyricInner').style.transform = `translateY(${shift}px)`;
+  }
+
+  async function ensureLyric(e) {
+    clearLyric();
+    if (!e || e.kind !== 'audio') return;
+    // 1) 同目录本地歌词（媒体库文件带服务端路径）
+    if (e.path && !e.file) {
+      try {
+        const d = await apiJSON('/api/lrc/local?path=' + encodeURIComponent(e.path));
+        if (d.ok && d.lyric) {
+          setLyric(d.lyric, '本地歌词 · ' + String(d.path || '').split(/[\\/]/).pop(), d.path || '');
+          return;
+        }
+      } catch (err) { /* 继续 */ }
+    }
+    // 2) 之前抓过的缓存
+    try {
+      const cached = localStorage.getItem(lyricKey(e));
+      if (cached) { setLyric(cached, '歌词缓存', ''); return; }
+    } catch (err) { /* 忽略 */ }
+    // 3) 在线补抓
+    if (state.autoLyric) autoFetchLyric(e);
+  }
+
+  async function autoFetchLyric(e) {
+    const tags = e.tags || {};
+    const q = [tags.artist, tags.title || e.parsed.title].filter(Boolean).join(' ')
+      || (e.parsed.title || e.name.replace(/\.[^.]+$/, ''));
+    const sitesToTry = (state.sites || []).filter((s) => s.kind === 'music' && s.lyric);
+    if (!sitesToTry.length) return;
+    for (const site of sitesToTry.slice(0, 2)) {
+      let items = [];
+      try {
+        const d = await apiJSON(`/api/site/search?site=${encodeURIComponent(site.id)}&q=${encodeURIComponent(q)}`);
+        items = d.items || [];
+      } catch (err) { continue; }
+      for (const item of items.slice(0, 5)) {
+        try {
+          const det = await apiJSON(`/api/site/detail?site=${encodeURIComponent(site.id)}&id=${encodeURIComponent(item.id)}`);
+          if (det.lyric && det.lyric.length > 40) {
+            setLyric(det.lyric, site.name + ' · 自动歌词', '');
+            return;
+          }
+        } catch (err) { /* 换下一个 */ }
+      }
+    }
+  }
+
+  async function saveLyricFile() {
+    const e = cur();
+    if (!e || !state.lyric.raw) { toast('还没有歌词'); return; }
+    if (!e.path || e.file) { toast('只有媒体库里的文件才能保存到同目录'); return; }
+    try {
+      const res = await fetch('/api/lrc/save', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ path: e.path, content: state.lyric.raw }),
+      });
+      const d = await res.json();
+      if (!d.ok) throw new Error(d.error || '保存失败');
+      toast('歌词已保存：' + String(d.path).split(/[\\/]/).pop());
+      state.lyric.path = d.path;
+      state.lyric.source = '本地歌词 · ' + String(d.path).split(/[\\/]/).pop();
+      $('#lyricSrc').textContent = state.lyric.source;
+    } catch (err) {
+      toast('保存失败：' + err.message);
+    }
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  }
+
+  function starStr(n) {
+    const v = Math.round(clamp(n, 0, 5));
+    return '★'.repeat(v) + `<span class="off">${'★'.repeat(5 - v)}</span>`;
+  }
+
+  function kindLabel(k) { return k === 'music' ? '音乐' : '影视'; }
+  function isMusicItem(it) { return String((it && it.kind) || '') === 'music'; }
+
+  /* 候选列表：自动选中的那条已在上方卡片展示，其余折叠起来，需要时再展开 */
+  function renderCandidates(items, kind) {
+    const box = $('#dbCands');
+    box.innerHTML = '';
+    const bestId = state.subject ? String(state.subject.id || '') : '';
+    const rest = (items || []).filter((it) => String(it.id) !== bestId);
+    if (!rest.length) return;
+
+    const det = document.createElement('details');
+    det.className = 'cands-fold';
+    // 折叠状态下也能扫一眼匹配到了什么
+    const preview = rest.slice(0, 3).map((it) => it.title).join('、');
+    det.innerHTML = `<summary>其它 ${rest.length} 个豆瓣结果<span class="fold-preview">${escapeHtml(preview)}${rest.length > 3 ? ' …' : ''}</span></summary>`;
+    const wrap = document.createElement('div');
+    det.appendChild(wrap);
+
+    const groups = [];
+    if (kind === 'all') {
+      const mv = rest.filter((it) => !isMusicItem(it));
+      const mu = rest.filter(isMusicItem);
+      if (mv.length) groups.push(['影视', mv]);
+      if (mu.length) groups.push(['音乐', mu]);
+    } else {
+      groups.push([kindLabel(kind), rest]);
+    }
+
+    groups.forEach(([label, list]) => {
+      if (kind === 'all') {
+        const g = document.createElement('div');
+        g.className = 'cand-group';
+        g.textContent = `${label} · ${list.length}`;
+        wrap.appendChild(g);
+      }
+      list.forEach((it) => {
+        const music = isMusicItem(it);
+        const b = document.createElement('button');
+        b.className = 'cand';
+        const img = document.createElement('img');
+        img.src = it.cover ? proxiedCover(it.cover) : '';
+        img.alt = '';
+        const t = document.createElement('div');
+        const meta = [it.year, it.original].filter(Boolean).join(' / ');
+        t.innerHTML =
+          `<div class="cand-t">${escapeHtml(it.title)}<span class="tag ${music ? 'music' : 'movie'}">${kindLabel(it.kind)}</span></div>` +
+          `<div class="cand-s">${escapeHtml(meta || (it.abstract || ''))}</div>`;
+        b.append(img, t);
+        b.addEventListener('click', () => pickSubject(it.id, it.kind || kind));
+        wrap.appendChild(b);
+      });
+    });
+    box.appendChild(det);
+  }
+
+  function renderInfo() {
+    const e = cur();
+    const s = state.subject;
+    const card = $('#dbCard');
+    const empty = $('#dbEmpty');
+    if (!e && !s) {
+      card.hidden = true;
+      markBest('');
+      empty.hidden = false;
+      empty.textContent = '载入媒体文件后，会自动从豆瓣抓取匹配的信息';
+      return;
+    }
+    if (!e && s) {
+      // 尚未载入文件，但用户已手动搜索到条目：直接展示豆瓣卡片
+      const fake = { name: '', path: '', kind: s.kind === 'music' ? 'audio' : 'video', cover: '', tags: {}, parsed: { title: s.title, year: s.year } };
+      return renderSubject(s, fake);
+    }
+    if (!s) {
+      // 无豆瓣结果：展示本地（ID3 标签 / 文件名）解析出的信息
+      markBest('');
+      const tags = e.tags || {};
+      const isA = e.kind === 'audio';
+      const local = e.cover || tags.cover || '';
+      const title = (isA && (tags.title || e.parsed.title)) || e.parsed.title || e.name;
+      card.hidden = false;
+      if (local) {
+        $('#dbCover').src = local; $('#dbCover').hidden = false; $('#dbCoverPh').hidden = true;
+      } else {
+        $('#dbCover').hidden = true; $('#dbCover').removeAttribute('src'); $('#dbCoverPh').hidden = false;
+      }
+      $('#dbCoverPh').textContent = isA ? '无封面' : '海报';
+      empty.hidden = !state.dbMsg;
+      if (state.dbMsg) empty.innerHTML = state.dbMsg;
+      $('#ptBadge').hidden = true;
+      $('#dbTitle').textContent = title;
+      const subs = [];
+      if (isA && tags.artist) subs.push(tags.artist);
+      if (isA && tags.album) subs.push(tags.album);
+      if (e.parsed.year) subs.push(e.parsed.year);
+      if (!isA && e.parsed.season) subs.push(`第 ${e.parsed.season} 季 第 ${e.parsed.episode} 集`);
+      subs.push(extOf(e.name).toUpperCase());
+      $('#dbSub').textContent = subs.filter(Boolean).join(' · ');
+      $('#dbRate').hidden = true;
+      const rows = [];
+      rows.push(row('文件', e.name));
+      if (e.path && e.path !== e.name) rows.push(row('路径', e.path.replace(/[\\/][^\\/]+$/, '')));
+      if (isA && tags.artist) rows.push(row('艺术家', tags.artist));
+      if (isA && tags.album) rows.push(row('专辑', tags.album));
+      $('#dbRows').innerHTML = rows.join('');
+      $('#dbIntro').textContent = '';
+      const link = $('#dbLink');
+      link.href = state.fallbackUrl || `https://search.douban.com/${e.kind === 'audio' ? 'music' : 'movie'}/subject_search?search_text=${encodeURIComponent(e.parsed.title || e.name)}`;
+      link.hidden = false;
+      $('#btnUseCover').hidden = true;
+      return;
+    }
+
+    return renderSubject(s, e);
+  }
+
+  function renderSubject(s, e) {
+    const card = $('#dbCard');
+    const empty = $('#dbEmpty');
+    card.hidden = false;
+    empty.hidden = true;
+    $('#btnUseCover').hidden = !s.cover || !e;
+    const img = $('#dbCover');
+    if (s.cover) { img.src = proxiedCover(s.cover); img.hidden = false; $('#dbCoverPh').hidden = true; }
+    else { img.hidden = true; img.removeAttribute('src'); $('#dbCoverPh').hidden = false; }
+    $('#dbTitle').textContent = s.title;
+    const sub = [kindLabel(s.kind), s.originalTitle && s.originalTitle !== s.title ? s.originalTitle : '', s.year].filter(Boolean).join(' · ');
+    $('#dbSub').textContent = sub;
+    if (s.rating && s.rating.value) {
+      $('#dbRate').hidden = false;
+      $('#dbStars').innerHTML = starStr(s.rating.stars || s.rating.value / 2);
+      $('#dbScore').textContent = Number(s.rating.value).toFixed(1);
+      $('#dbCount').textContent = s.rating.count ? `${(s.rating.count / 10000).toFixed(1)} 万人评价` : '';
+      const badge = $('#ptBadge');
+      badge.textContent = '豆瓣 ' + Number(s.rating.value).toFixed(1);
+      badge.hidden = false;
+    } else {
+      $('#dbRate').hidden = true;
+      $('#ptBadge').hidden = true;
+    }
+    const rows = [];
+    const isMusic = s.kind === 'music';
+    if (s.subtitle) rows.push(row('信息', s.subtitle));
+    if (s.genres && s.genres.length) rows.push(row('类型', s.genres.join(' / ')));
+    if (isMusic) {
+      if (s.singer && s.singer.length) rows.push(row('艺人', s.singer.join(' / ')));
+      if (s.album) rows.push(row('专辑', s.album));
+      if (s.pubdate) rows.push(row('发行', s.pubdate));
+      if (s.publisher && s.publisher.length) rows.push(row('出版', s.publisher.join(' / ')));
+      if (s.tracks) rows.push(row('曲目', s.tracks + ' 首'));
+    } else {
+      if (s.directors && s.directors.length) rows.push(row('导演', s.directors.join(' / ')));
+      if (s.actors && s.actors.length) rows.push(row('主演', s.actors.slice(0, 6).join(' / ')));
+      if (s.duration) rows.push(row('片长', s.duration));
+      if (s.pubdate) rows.push(row('上映', s.pubdate));
+      if (s.region) rows.push(row('地区', s.region));
+      if (s.episodes) rows.push(row('集数', s.episodes + ' 集'));
+    }
+    if (e && e.parsed.episode) rows.push(row('正在播放', `第 ${e.parsed.episode} 集`));
+    if (e && e.name) rows.push(row('文件', e.name));
+    $('#dbRows').innerHTML = rows.join('');
+    $('#dbIntro').textContent = s.intro || '';
+    $('#dbLink').href = s.url;
+    $('#dbLink').hidden = false;
+
+    if (e && e.kind === 'audio' && !e.cover && s.cover) {
+      e.cover = proxiedCover(s.cover);
+      updateAudioStage();
+    }
+  }
+
+  function row(k, v) {
+    return `<div class="db-row"><span>${escapeHtml(k)}</span><div>${escapeHtml(v || '')}</div></div>`;
+  }
+
+  function updateMediaSession() {
+    if (!('mediaSession' in navigator)) return;
+    const e = cur();
+    if (!e) return;
+    const s = state.subject;
+    const title = (s && s.title) || (e.tags && e.tags.title) || e.parsed.title || e.name;
+    const artist = (e.tags && e.tags.artist) || (s && s.directors && s.directors.join(' / ')) || '';
+    const album = (e.tags && e.tags.album) || (s && s.genres && s.genres.join(' / ')) || '';
+    const cover = (e.cover || (e.tags && e.tags.cover)) || (s && proxiedCover(s.cover));
+    try {
+      navigator.mediaSession.metadata = new MediaMetadata({
+        title, artist, album,
+        artwork: cover ? [{ src: new URL(cover, location.href).href, sizes: '512x512', type: 'image/jpeg' }] : [],
+      });
+    } catch (err) { /* 忽略 */ }
+    const acts = [
+      ['play', () => play()], ['pause', () => media.pause()],
+      ['previoustrack', () => step(-1)], ['nexttrack', () => step(1)],
+      ['seekbackward', (d) => { media.currentTime = Math.max(0, media.currentTime - (d.seekOffset || 10)); }],
+      ['seekforward', (d) => { media.currentTime = Math.min(media.duration || 0, media.currentTime + (d.seekOffset || 10)); }],
+    ];
+    acts.forEach(([k, fn]) => { try { navigator.mediaSession.setActionHandler(k, fn); } catch (err) { /* 忽略 */ } });
+  }
+
+  /* ---------------------------- 播放列表 ---------------------------- */
+  function renderList() {
+    const ul = $('#plist');
+    ul.innerHTML = '';
+    $('#listInfo').textContent = state.entries.length ? `${state.entries.length} 个文件 · 第 ${state.index + 1} 个` : '还没有文件';
+    state.entries.forEach((e, i) => {
+      const li = document.createElement('li');
+      if (i === state.index) li.classList.add('cur');
+      const ic = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      ic.setAttribute('class', 'ic');
+      ic.setAttribute('viewBox', '0 0 24 24');
+      const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+      use.setAttribute('href', e.kind === 'audio' ? '#i-music' : '#i-film');
+      ic.appendChild(use);
+      const nm = document.createElement('span');
+      nm.className = 'nm';
+      nm.textContent = e.name;
+      nm.title = e.path;
+      const tag = document.createElement('span');
+      tag.className = 'tag';
+      tag.textContent = e.kind === 'audio' ? '音频' : '视频';
+      const del = document.createElement('button');
+      del.className = 'del';
+      del.title = '移除';
+      del.innerHTML = '<svg class="ic" viewBox="0 0 24 24"><use href="#i-trash"/></svg>';
+      del.addEventListener('click', (ev) => {
+        ev.stopPropagation();
+        removeEntry(i);
+      });
+
+      const main = document.createElement('div');
+      main.className = 'pl-main';
+      main.append(ic, nm, tag, del);
+
+      // 下载进度：直接挂在对应条目下面，只有还在下载的条目才显示
+      const dl = document.createElement('div');
+      dl.className = 'pl-dl';
+      dl.hidden = true;
+      dl.innerHTML = '<div class="pl-track"><i></i></div><span class="pl-pct"></span>';
+
+      li.append(main, dl);
+      li.addEventListener('click', () => { if (i !== state.index) loadEntry(i, true); });
+      ul.appendChild(li);
+    });
+    syncListProgress();
+  }
+
+  // 把下载任务进度映射到播放列表的对应条目上（不整表重绘，避免闪烁和点击丢失）
+  function syncListProgress() {
+    const ul = $('#plist');
+    if (!ul) return;
+    const tasks = state.tasks || [];
+    state.entries.forEach((e, i) => {
+      const li = ul.children[i];
+      if (!li) return;
+      const box = li.querySelector('.pl-dl');
+      if (!box) return;
+      const t = e.taskId ? tasks.find((x) => x.id === e.taskId) : null;
+      // 已完成的任务由 adoptTask 切成本地文件，进度条随之收起
+      const show = !!t && t.status !== 'done';
+      box.hidden = !show;
+      li.classList.toggle('has-dl', show);
+      li.classList.toggle('dl-err', !!(t && t.status === 'error'));
+      if (!show) return;
+      const pct = t.status === 'error' ? 100 : (t.percent || 0);
+      box.querySelector('i').style.width = pct + '%';
+      box.querySelector('.pl-pct').textContent =
+        t.status === 'error' ? '失败' : t.status === 'pending' ? '准备中' : (t.percent || 0) + '%';
+    });
+  }
+
+  function removeEntry(i) {
+    const e = state.entries[i];
+    if (!e) return;
+    if (e.file && e.url) URL.revokeObjectURL(e.url);
+    state.entries.splice(i, 1);
+    if (state.index === i) {
+      if (!state.entries.length) {
+        state.index = -1;
+        media.removeAttribute('src');
+        media.load();
+        player.classList.remove('has-media', 'audio-mode', 'playing');
+        $('#dropHint').hidden = false;
+        $('#centerPlay').hidden = true;
+        state.subject = null;
+        renderInfo();
+      } else {
+        loadEntry(Math.min(i, state.entries.length - 1), true);
+        return;
+      }
+    } else if (state.index > i) state.index--;
+    renderList();
+  }
+
+  /* ---------------------------- 初始化 ---------------------------- */
+  function bind() {
+    // 资源导入：本地文件选择 + 从下载目录挑选已下载的文件
+    $('#btnImport').addEventListener('click', (ev) => {
+      ev.stopPropagation();
+      const pop = $('#importPop');
+      pop.hidden = !pop.hidden;
+      if (!pop.hidden) loadImportList();
+    });
+    document.addEventListener('click', (ev) => {
+      const pop = $('#importPop');
+      if (!pop || pop.hidden) return;
+      if (!pop.contains(ev.target) && ev.target !== $('#btnImport')) pop.hidden = true;
+    });
+    $('#ipLocal').addEventListener('click', () => { $('#importPop').hidden = true; $('#fileInput').click(); });
+    $('#fileInput').addEventListener('change', (ev) => { addFiles(ev.target.files); ev.target.value = ''; });
+
+    ['dragenter', 'dragover'].forEach((t) => {
+      document.addEventListener(t, (ev) => {
+        if (!Array.from(ev.dataTransfer.types || []).includes('Files')) return;
+        ev.preventDefault();
+        player.classList.add('dragover');
+      });
+    });
+    ['dragleave', 'drop'].forEach((t) => {
+      document.addEventListener(t, (ev) => {
+        ev.preventDefault();
+        if (t === 'dragleave' && ev.relatedTarget) return;
+        player.classList.remove('dragover');
+        if (t === 'drop' && ev.dataTransfer && ev.dataTransfer.files.length) addFiles(ev.dataTransfer.files);
+      });
+    });
+
+    $('#btnPlay').addEventListener('click', toggle);
+    $('#centerPlay').addEventListener('click', toggle);
+    $('#btnPrev').addEventListener('click', () => step(-1));
+    $('#btnNext').addEventListener('click', () => step(1));
+    $('#btnRepeat').addEventListener('click', () => {
+      state.repeat = (state.repeat + 1) % 3;
+      const btn = $('#btnRepeat');
+      btn.innerHTML = `<svg class="ic" viewBox="0 0 24 24"><use href="#i-${state.repeat === 1 ? 'repeat-one' : 'repeat'}"/></svg>`;
+      btn.classList.toggle('on', state.repeat > 0);
+      media.loop = state.repeat === 1;
+      toast(['不循环', '单曲循环', '列表循环'][state.repeat]);
+    });
+
+    $('#vol').addEventListener('input', (ev) => setVolume(ev.target.value, true));
+    $('#btnMute').addEventListener('click', () => {
+      if (media.muted || media.volume === 0) { media.muted = false; setVolume(1, true); } else setVolume(0, true);
+    });
+
+    $('#btnShot').addEventListener('click', capture);
+    $('#btnPip').addEventListener('click', togglePip);
+    $('#btnFull').addEventListener('click', toggleFull);
+    player.addEventListener('dblclick', toggleFull);
+
+    $('#btnSpeed').addEventListener('click', (ev) => {
+      ev.stopPropagation();
+      $('#popSpeed').classList.toggle('open');
+    });
+    $('#speedRange').addEventListener('input', (ev) => setRate(ev.target.value, true));
+    $$('#speedChips button').forEach((b) => b.addEventListener('click', () => setRate(b.dataset.r)));
+    $('#pitch').addEventListener('change', (ev) => { media.preservesPitch = ev.target.checked; });
+    document.addEventListener('click', (ev) => {
+      if (!ev.target.closest('.pop-host')) $('#popSpeed').classList.remove('open');
+    });
+
+    $('#btnShotsClear').addEventListener('click', () => {
+      state.shots.forEach((s) => URL.revokeObjectURL(s.url));
+      state.shots = [];
+      renderShots();
+    });
+
+    $('#btnClearList').addEventListener('click', () => {
+      state.entries.forEach((e) => { if (e.file && e.url) URL.revokeObjectURL(e.url); });
+      state.entries = [];
+      state.index = -1;
+      state.subject = null;
+      media.removeAttribute('src');
+      media.load();
+      player.classList.remove('has-media', 'audio-mode', 'playing');
+      $('#dropHint').hidden = false;
+      $('#centerPlay').hidden = true;
+      renderList();
+      renderInfo();
+    });
+
+    // 进度条（用外层包裹元素扩大命中区域）
+    const track = $('#pwrap');
+    track.addEventListener('pointerdown', (ev) => {
+      if (!media.duration || !isFinite(media.duration)) return;
+      dragging = true;
+      try { track.setPointerCapture(ev.pointerId); } catch (err) { /* 合成事件无指针 */ }
+      $('#pknob').classList.add('active');
+      media.currentTime = ratioAt(ev) * media.duration;
+      updateProgress();
+    });
+    track.addEventListener('pointermove', (ev) => {
+      if (dragging) {
+        media.currentTime = ratioAt(ev) * media.duration;
+        updateProgress();
+      }
+      showTip(ev);
+    });
+    track.addEventListener('pointerup', (ev) => {
+      if (!dragging) return;
+      dragging = false;
+      $('#pknob').classList.remove('active');
+      try { track.releasePointerCapture(ev.pointerId); } catch (err) { /* 合成事件无指针 */ }
+    });
+    track.addEventListener('pointerleave', () => { $('#ptip').hidden = true; });
+    track.addEventListener('pointerenter', (ev) => { if (media.duration) showTip(ev); });
+
+    // 媒体事件
+    media.addEventListener('loadedmetadata', () => {
+      $('#spinner').hidden = true;
+      updateProgress();
+      renderBuffered();
+      const e = cur();
+      if (e && e.kind === 'video' && media.videoWidth === 0) {
+        // 浏览器无法解码时的兜底提示
+      }
+    });
+    media.addEventListener('timeupdate', () => { if (!dragging) updateProgress(); syncLyric(); });
+    media.addEventListener('progress', renderBuffered);
+    media.addEventListener('waiting', () => { $('#spinner').hidden = false; });
+    media.addEventListener('canplay', () => { $('#spinner').hidden = true; });
+    media.addEventListener('playing', () => {
+      $('#spinner').hidden = true;
+      $('#centerPlay').hidden = true;
+      player.classList.add('playing');
+      poke();
+      if (isAudio()) startViz();
+      updateMediaSession();
+      syncPlayUI();
+    });
+    media.addEventListener('pause', () => {
+      player.classList.remove('playing', 'idle');
+      player.classList.add('show-top');
+      if (isAudio()) stopViz();
+      syncPlayUI();
+    });
+    ['play', 'ended', 'emptied', 'loadstart', 'loadedmetadata', 'ratechange'].forEach((ev) => {
+      media.addEventListener(ev, syncPlayUI);
+    });
+    media.addEventListener('ended', () => {
+      if (state.repeat === 1) { media.currentTime = 0; play(); return; }
+      step(1);
+    });
+    media.addEventListener('error', () => {
+      $('#spinner').hidden = true;
+      const e = cur();
+      const code = media.error && media.error.code;
+      toast(code === 4 ? '浏览器无法解码该格式，请查看右侧格式支持' : '播放出错');
+      if (e) $('#dbEmpty').textContent = '该文件无法解码，可尝试 mp4 / webm 等浏览器原生支持的格式';
+    });
+    media.addEventListener('volumechange', () => {
+      const v = media.muted ? 0 : media.volume;
+      $('#vol').value = v;
+      paintRange($('#vol'));
+      $('#btnMute').innerHTML = `<svg class="ic" viewBox="0 0 24 24"><use href="#i-${v === 0 ? 'mute' : 'vol'}"/></svg>`;
+    });
+
+    // 主标签页
+    $$('#tabs .tab').forEach((t) => t.addEventListener('click', () => {
+      $$('#tabs .tab').forEach((x) => x.classList.toggle('active', x === t));
+      $$('.panel').forEach((p) => p.classList.toggle('active', p.dataset.panel === t.dataset.tab));
+    }));
+
+    // 信息页内部的子页：豆瓣信息 / 站点资源
+    $$('#infoTabs .subtab').forEach((t) => t.addEventListener('click', () => switchSub(t.dataset.sub)));
+
+    // 搜索栏分类：同时决定检索类型与参与检索的站点
+    $('#dbKindSel').addEventListener('change', (ev) => setDbKind(ev.target.value));
+
+    // 豆瓣搜索
+    $('#btnDbSearch').addEventListener('click', () => runSearch());
+
+    // 站点管理
+    $('#btnSiteAdd').addEventListener('click', () => openSiteForm(null));
+    $('#sfSave').addEventListener('click', saveSiteForm);
+    $('#sfCancel').addEventListener('click', closeSiteForm);
+    $('#autoLyric').addEventListener('change', (ev) => {
+      state.autoLyric = ev.target.checked;
+      try { localStorage.setItem('mp.autolyric', ev.target.checked ? '1' : '0'); } catch (err) { /* 忽略 */ }
+    });
+
+    // 歌词
+    $('#btnLyric').addEventListener('click', () => {
+      if ($('#lyricBox').hidden) {
+        if (!state.lyric.lines.length) { toast('当前没有歌词，点「抓歌词」试试'); showLyric(true); }
+        else showLyric(true);
+      } else showLyric(false);
+    });
+    $('#btnLyricClose').addEventListener('click', () => showLyric(false));
+    $('#btnLyricFetch').addEventListener('click', () => {
+      const e = cur();
+      if (!e) { toast('请先载入音频'); return; }
+      toast('正在从音乐站点抓歌词…');
+      autoFetchLyric(e).then(() => {
+        if (!state.lyric.lines.length) toast('没抓到歌词，可换站点或手动载入本地 .lrc');
+      });
+    });
+    $('#btnLyricPick').addEventListener('click', () => $('#lrcInput').click());
+    $('#lrcInput').addEventListener('change', (ev) => {
+      const f = ev.target.files && ev.target.files[0];
+      if (!f) return;
+      const rd = new FileReader();
+      rd.onload = () => setLyric(rd.result, '本地文件 · ' + f.name, '');
+      rd.readAsText(f, 'utf-8');
+      ev.target.value = '';
+    });
+    $('#btnLyricSave').addEventListener('click', saveLyricFile);
+    $('#btnDbRetry').addEventListener('click', () => {
+      const e = cur();
+      if (!e) { toast('请先载入媒体文件'); return; }
+      $('#dbCands').innerHTML = '';
+      state.subject = null;
+      autoFetch();
+      toast('正在重新匹配…');
+    });
+    $('#dbQuery').addEventListener('keydown', (ev) => { if (ev.key === 'Enter') runSearch(); });
+    $('#btnUseCover').addEventListener('click', () => {
+      const e = cur(); const s = state.subject;
+      if (!e || !s || !s.cover) return;
+      e.cover = proxiedCover(s.cover);
+      updateAudioStage();
+      updateMediaSession();
+      toast('已应用封面');
+    });
+
+    // 空闲隐藏控制条
+    ['mousemove', 'mousedown', 'touchstart'].forEach((t) => player.addEventListener(t, poke));
+    player.addEventListener('mouseleave', () => { if (!media.paused) player.classList.add('idle'); });
+
+    // 快捷键
+    document.addEventListener('keydown', onKey);
+    window.addEventListener('resize', () => { if (vizActive) drawViz(); });
+    document.addEventListener('fullscreenchange', () => {
+      $('#btnFull').innerHTML = `<svg class="ic" viewBox="0 0 24 24"><use href="#i-${document.fullscreenElement ? 'collapse' : 'expand'}"/></svg>`;
+    });
+  }
+
+  function runSearch() {
+    // 豆瓣是默认信息源：选最优匹配直接展示详情；资源站点并行检索，结果放进「站点资源」子页
+    const q = $('#dbQuery').value.trim();
+    if (!q) { toast('请输入关键词'); return; }
+    const e = cur();
+    const prefer = e ? (e.kind === 'audio' ? 'music' : 'movie') : '';
+    doLookup({ title: q, year: '', kind: state.dbKind, prefer, token: ++fetchToken, auto: false });
+    runSiteSearch(fetchToken);
+  }
+
+  function setDbKind(k, quiet) {
+    state.dbKind = k;
+    const sel = $('#dbKindSel');
+    if (sel) sel.value = k;
+    try { localStorage.setItem('mp.dbkind', k); } catch (err) { /* 忽略 */ }
+    renderSiteChips();
+    if (quiet) return;
+    // 换分类后：有关键词就按新分类重搜（站点列表会被重新过滤），否则只对当前文件重做自动匹配
+    if ($('#dbQuery').value.trim()) runSearch();
+    else if (cur()) autoFetch();
+  }
+
+  function switchSub(name) {
+    $$('#infoTabs .subtab').forEach((x) => x.classList.toggle('active', x.dataset.sub === name));
+    $$('.subpanel').forEach((p) => p.classList.toggle('active', p.dataset.sub === name));
+  }
+
+  function poke() {
+    player.classList.remove('idle');
+    player.classList.add('show-top');
+    clearTimeout(idleTimer);
+    idleTimer = setTimeout(() => {
+      if (!media.paused) { player.classList.add('idle'); player.classList.remove('show-top'); }
+    }, 2600);
+  }
+
+  function onKey(ev) {
+    const t = ev.target;
+    if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
+    if (ev.metaKey || ev.ctrlKey || ev.altKey) return;
+    const k = ev.key.toLowerCase();
+    let handled = true;
+    switch (k) {
+      case ' ': case 'k': toggle(); break;
+      case 'arrowleft': media.currentTime = Math.max(0, media.currentTime - 5); break;
+      case 'arrowright': media.currentTime = Math.min(media.duration || 0, media.currentTime + 5); break;
+      case 'j': media.currentTime = Math.max(0, media.currentTime - 10); break;
+      case 'l': media.currentTime = Math.min(media.duration || 0, media.currentTime + 10); break;
+      case 'arrowup': setVolume(media.volume + 0.05); break;
+      case 'arrowdown': setVolume(media.volume - 0.05); break;
+      case 'm': media.muted ? (media.muted = false, setVolume(media.volume || 1, true)) : setVolume(0, true); break;
+      case 's': capture(); break;
+      case 'l': { const box = $('#lyricBox'); showLyric(box.hidden); break; }
+      case 'f': toggleFull(); break;
+      case '[': setRate(media.playbackRate - 0.25); break;
+      case ']': setRate(media.playbackRate + 0.25); break;
+      case ',': media.pause(); media.currentTime = Math.max(0, media.currentTime - 1 / 24); break;
+      case '.': media.pause(); media.currentTime = Math.min(media.duration || 0, media.currentTime + 1 / 24); break;
+      case 'n': step(1); break;
+      case 'p': step(-1); break;
+      case 'r': $('#btnRepeat').click(); break;
+      default:
+        if (/^[0-9]$/.test(k) && media.duration) {
+          media.currentTime = media.duration * (Number(k) / 10);
+        } else handled = false;
+    }
+    if (handled) { ev.preventDefault(); poke(); }
+  }
+
+  function buildFormatList() {
+    const box = $('#fmtList');
+    box.innerHTML = '';
+    FORMATS.forEach(([label, mime]) => {
+      const can = media.canPlayType(mime);
+      const cls = can === 'probably' ? 'y' : can === 'maybe' ? 'p' : 'n';
+      const d = document.createElement('div');
+      d.innerHTML = `<span class="dot ${cls}"></span><b>${label}</b>`;
+      box.appendChild(d);
+    });
+  }
+
+  // 初始化
+  buildSkins();
+  let skin = 'midnight'; let vol = 1; let rate = 1;
+  try {
+    skin = localStorage.getItem('mp.skin') || 'midnight';
+    vol = Number(localStorage.getItem('mp.vol') || 1);
+    rate = Number(localStorage.getItem('mp.rate') || 1);
+  } catch (e) { /* 忽略 */ }
+  setSkin(skin);
+  let dbKind = 'all';
+  try {
+    dbKind = localStorage.getItem('mp.dbkind') || 'all';
+    state.siteSel = JSON.parse(localStorage.getItem('mp.sitesel') || '[]');
+    state.autoLyric = localStorage.getItem('mp.autolyric') !== '0';
+  } catch (e) { /* 忽略 */ }
+  bind();
+  setDbKind(dbKind, true);
+  $('#autoLyric').checked = state.autoLyric;
+  loadSites();
+  setVolume(vol, true);
+  setRate(rate, true);
+  syncPlayUI();
+  buildFormatList();
+  renderList();
+  renderInfo();
+  // 载入此前的下载记录（含已完成、可立即播放的）
+  (async () => {
+    try {
+      const d = await apiJSON('/api/site/tasks');
+      renderDownloads(d.tasks || []);
+      (d.tasks || []).forEach((t) => { if (t.status === 'done') adoptTask(t); });
+    } catch (err) { /* 忽略 */ }
+  })();
+})();

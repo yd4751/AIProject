@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>开放世界 · 服务管理控制台</title>
+<style>
+  :root{
+    --bg:#0d1117; --panel:#161b22; --panel-2:#1c2330; --line:#2a3444;
+    --text:#e6edf3; --muted:#8b98a9; --accent:#4a9eff;
+    --ok:#34d399; --warn:#fbbf24; --err:#f87171; --idle:#6b7280; --info:#60a5fa; --maint:#a78bfa;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--bg); color:var(--text);
+    font:13px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  code,.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px}
+  header{
+    display:flex;align-items:center;gap:20px;flex-wrap:wrap;
+    padding:14px 22px;border-bottom:1px solid var(--line);background:var(--panel);
+    position:sticky;top:0;z-index:10;
+  }
+  .brand{display:flex;align-items:baseline;gap:10px}
+  .brand h1{font-size:15px;margin:0;font-weight:600;letter-spacing:.3px}
+  .brand span{color:var(--muted);font-size:12px}
+  .stats{display:flex;gap:22px;margin-left:auto;flex-wrap:wrap}
+  .stat{display:flex;flex-direction:column;align-items:flex-end}
+  .stat b{font-size:16px;font-weight:600;font-variant-numeric:tabular-nums}
+  .stat i{font-style:normal;color:var(--muted);font-size:11px}
+  .live{display:flex;align-items:center;gap:6px;color:var(--muted);font-size:11px}
+  .pulse{width:7px;height:7px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 0 rgba(52,211,153,.6);animation:p 2s infinite}
+  @keyframes p{0%{box-shadow:0 0 0 0 rgba(52,211,153,.5)}70%{box-shadow:0 0 0 7px rgba(52,211,153,0)}100%{box-shadow:0 0 0 0 rgba(52,211,153,0)}}
+  main{padding:20px 22px 60px;max-width:1440px;margin:0 auto}
+  section{margin-bottom:26px}
+  .sec-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+  .sec-head h2{font-size:13px;margin:0;font-weight:600;color:var(--muted);letter-spacing:.6px;text-transform:uppercase}
+  .sec-head .hint{color:var(--muted);font-size:11px}
+  .zones{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px;transition:border-color .15s}
+  .card:hover{border-color:#38455c}
+  .card.failed{border-color:rgba(248,113,113,.45)}
+  .card-top{display:flex;align-items:center;gap:9px}
+  .card-top h3{margin:0;font-size:14px;font-weight:600;flex:1}
+  .dot{width:9px;height:9px;border-radius:50%;flex:none}
+  .tag{font-size:11px;padding:1px 8px;border-radius:99px;border:1px solid currentColor;opacity:.95}
+  .metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0 12px}
+  .m{background:var(--panel-2);border-radius:7px;padding:8px 10px}
+  .m b{display:block;font-size:15px;font-variant-numeric:tabular-nums}
+  .m i{font-style:normal;color:var(--muted);font-size:11px}
+  .actions{display:flex;gap:8px;align-items:center}
+  button{
+    font:inherit;font-size:12px;padding:5px 12px;border-radius:6px;cursor:pointer;
+    background:#222c3c;color:var(--text);border:1px solid var(--line);transition:.15s;
+  }
+  button:hover:not(:disabled){background:#2b374a;border-color:#3d4c63}
+  button.primary{background:#173a5e;border-color:#2b5c8a;color:#cfe6ff}
+  button.primary:hover:not(:disabled){background:#1c4674}
+  button.danger{background:#3a1d1d;border-color:#5c2b2b;color:#ffc9c9}
+  button.danger:hover:not(:disabled){background:#4a2424}
+  button:disabled{opacity:.4;cursor:not-allowed}
+  select{font:inherit;font-size:12px;background:#222c3c;color:var(--text);border:1px solid var(--line);border-radius:6px;padding:5px 6px}
+  table{width:100%;border-collapse:collapse;background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  th{text-align:left;font-weight:500;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.5px;padding:9px 12px;background:var(--panel-2);border-bottom:1px solid var(--line);white-space:nowrap}
+  td{padding:9px 12px;border-bottom:1px solid rgba(42,52,68,.6);font-variant-numeric:tabular-nums;white-space:nowrap}
+  tr:last-child td{border-bottom:none}
+  tbody tr:hover{background:rgba(74,158,255,.05)}
+  .state{display:inline-flex;align-items:center;gap:7px}
+  .muted{color:var(--muted)}
+  .tasks{display:flex;flex-direction:column;gap:10px}
+  .task{background:var(--panel);border:1px solid var(--line);border-radius:9px;padding:11px 14px}
+  .task-head{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+  .task-head b{font-size:12px}
+  .task-head .mono{color:var(--muted)}
+  .steps{display:flex;flex-wrap:wrap;gap:6px}
+  .step{font-size:11px;padding:2px 8px;border-radius:5px;background:var(--panel-2);border:1px solid transparent;color:var(--muted)}
+  .step.ok{color:#8ce8c0;border-color:rgba(52,211,153,.3)}
+  .step.failed{color:#ffb3b3;border-color:rgba(248,113,113,.4)}
+  .step.warn{color:#f7d488;border-color:rgba(251,191,36,.35)}
+  .step.running{color:#a9cdff;border-color:rgba(96,165,250,.4);animation:blink 1.4s infinite}
+  @keyframes blink{50%{opacity:.55}}
+  .empty{color:var(--muted);padding:18px;text-align:center;border:1px dashed var(--line);border-radius:9px}
+  #toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);background:#1f2a3a;border:1px solid var(--line);color:var(--text);padding:9px 18px;border-radius:8px;opacity:0;transition:.25s;pointer-events:none;box-shadow:0 8px 28px rgba(0,0,0,.5);z-index:50}
+  #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .bar{height:3px;border-radius:2px;background:var(--panel-2);overflow:hidden;margin-top:10px}
+  .bar i{display:block;height:100%;background:linear-gradient(90deg,#2b5c8a,#4a9eff);transition:width .4s}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <h1>开放世界 · 服务管理</h1>
+    <span class="mono" id="clock">—</span>
+  </div>
+  <div class="stats">
+    <div class="stat"><b id="s-zones">0</b><i>区服</i></div>
+    <div class="stat"><b id="s-running">0/0</b><i>运行实例</i></div>
+    <div class="stat"><b id="s-online">0</b><i>在线玩家</i></div>
+    <div class="stat"><b id="s-entities">0</b><i>场景实体</i></div>
+    <div class="stat"><b id="s-lag">0ms</b><i>最大 tick 滞后</i></div>
+  </div>
+  <div class="live"><span class="pulse" id="pulse"></span><span id="live-text">连接中</span></div>
+</header>
+
+<main>
+  <section>
+    <div class="sec-head">
+      <h2>区服总览</h2>
+      <span class="hint">异常区服置顶 · 状态实时推送</span>
+    </div>
+    <div class="zones" id="zones"></div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <h2>实例列表</h2>
+      <span class="hint">启停为异步任务，进度见下方执行记录</span>
+    </div>
+    <table>
+      <thead><tr>
+        <th>实例</th><th>状态</th><th>网关</th><th>运维接口</th><th>PID</th><th>运行时长</th>
+        <th>在线</th><th>实体</th><th>tick 滞后</th><th>移动合并率</th><th>操作</th>
+      </tr></thead>
+      <tbody id="instances"></tbody>
+    </table>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>执行记录</h2><span class="hint">最近 20 条开服 / 关服任务</span></div>
+    <div class="tasks" id="tasks"></div>
+  </section>
+</main>
+<div id="toast"></div>
+
+<script>
+const COLORS = {
+  Running:'#34d399', Starting:'#60a5fa', Draining:'#fbbf24', Failed:'#f87171',
+  Stopped:'#6b7280', Pending:'#6b7280', Maintenance:'#a78bfa', Degraded:'#fb923c'
+};
+let grace = 10;
+let busy = new Set();
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+function toast(msg, bad){
+  const el = $('toast');
+  el.textContent = msg;
+  el.style.borderColor = bad ? 'rgba(248,113,113,.5)' : 'rgba(52,211,153,.4)';
+  el.classList.add('show');
+  clearTimeout(el._t);
+  el._t = setTimeout(() => el.classList.remove('show'), 2600);
+}
+
+async function post(url, body){
+  const r = await fetch(url, {method:'POST'});
+  const data = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(data.error || ('HTTP ' + r.status));
+  return data;
+}
+
+async function act(path, label, okMsg){
+  const key = path.split('?')[0];
+  busy.add(key);
+  render();
+  try{
+    const t = await post(path);
+    toast(okMsg + '（任务 ' + t.id + '）');
+  }catch(e){
+    toast(label + ' 失败：' + e.message, true);
+  }finally{
+    busy.delete(key);
+    refresh();
+  }
+}
+
+function zoneCard(z){
+  const color = COLORS[z.state] || '#6b7280';
+  const cls = z.state === 'Failed' ? 'card failed' : 'card';
+  const canStart = z.running === 0;
+  const canStop  = z.running > 0;
+  return `<div class="${cls}">
+    <div class="card-top">
+      <span class="dot" style="background:${color};box-shadow:0 0 8px ${color}66"></span>
+      <h3>${esc(z.name)}</h3>
+      <span class="tag" style="color:${color}">${esc(z.stateLabel)}</span>
+    </div>
+    <div class="metrics">
+      <div class="m"><b>${z.online}</b><i>在线玩家</i></div>
+      <div class="m"><b>${z.running}/${z.instances}</b><i>实例</i></div>
+      <div class="m"><b>${z.entities}</b><i>场景实体</i></div>
+    </div>
+    <div class="actions">
+      <button class="primary" data-start="${z.id}" data-locked="${canStart?0:1}" ${canStart?'':'disabled'}>开服</button>
+      <button class="danger" data-stop="${z.id}" data-locked="${canStop?0:1}" ${canStop?'':'disabled'}>关服</button>
+      <span class="muted" style="margin-left:auto;font-size:11px">${z.id} · 滞后 ${z.maxTickLagMs.toFixed(2)}ms</span>
+    </div>  </div>`;
+}
+
+function instanceRow(i){
+  const color = COLORS[i.state] || '#6b7280';
+  const snap = i.snapshot || {};
+  const merge = i.mergeRatio > 0 ? (i.mergeRatio*100).toFixed(1) + '%' : '—';
+  const up = i.state === 'Running' ? (i.uptimeStr || '—') : '—';
+  const running = i.state === 'Running';
+  return `<tr>
+    <td><span class="mono">${esc(i.id)}</span></td>
+    <td><span class="state"><span class="dot" style="background:${color}"></span>${esc(i.stateLabel)}</span>
+        ${i.lastError ? `<div class="muted" style="font-size:11px;max-width:260px;white-space:normal">${esc(i.lastError)}</div>`:''}</td>
+    <td class="mono">${esc(i.gateAddr)}</td>
+    <td class="mono">${esc(i.adminAddr)}</td>
+    <td class="mono">${i.pid || '—'}</td>
+    <td class="muted">${up}</td>
+    <td>${snap.online ?? '—'}</td>
+    <td>${snap.entities ?? '—'}</td>
+    <td>${snap.tickLagMs !== undefined ? snap.tickLagMs.toFixed(2)+'ms' : '—'}</td>
+    <td class="muted">${merge}</td>
+    <td>
+      <button data-istart="${i.id}" data-locked="${running?1:0}" ${running?'disabled':''}>启动</button>
+      <button class="danger" data-istop="${i.id}" data-locked="${running?0:1}" ${running?'':'disabled'}>停止</button>
+    </td>
+  </tr>`;
+}
+
+function taskCard(t){
+  const color = t.state === 'failed' ? COLORS.Failed : (t.state === 'done' ? COLORS.Running : '#60a5fa');
+  const steps = (t.steps||[]).map(s =>
+    `<span class="step ${s.state}" title="${esc(s.detail||'')}">${esc(s.name)}${s.detail?' · '+esc(s.detail):''}</span>`
+  ).join('');
+  const opName = t.op === 'start' ? '开服' : '关服';
+  const done = (t.steps||[]).filter(s => s.state === 'ok' || s.state === 'warn' || s.state === 'failed').length;
+  const total = Math.max((t.steps||[]).length, 1);
+  const pct = t.state === 'running' ? Math.min(100, done/total*100) : 100;
+  return `<div class="task">
+    <div class="task-head">
+      <span class="dot" style="background:${color}"></span>
+      <b>${opName} · ${esc(t.zoneId)}</b>
+      <span class="mono">${esc(t.id)}</span>
+      <span class="muted" style="margin-left:auto;font-size:11px">${esc(t.message||'')}</span>
+    </div>
+    <div class="steps">${steps || '<span class="muted">排队中…</span>'}</div>
+    <div class="bar"><i style="width:${pct}%"></i></div>
+  </div>`;
+}
+
+let last = null;
+
+function render(){
+  if (!last) return;
+  const d = last;
+  $('s-zones').textContent = d.summary.zones;
+  $('s-running').textContent = d.summary.running + '/' + d.summary.instances;
+  $('s-online').textContent = d.summary.online;
+  $('s-entities').textContent = d.summary.entities;
+  $('s-lag').textContent = (d.summary.maxTickLagMs||0).toFixed(2) + 'ms';
+
+  const zones = [...d.zones].sort((a,b) => {
+    const rank = s => s==='Failed'?0 : s==='Degraded'?1 : s==='Draining'?2 : s==='Starting'?3 : 4;
+    return rank(a.state) - rank(b.state) || a.id.localeCompare(b.id);
+  });
+  $('zones').innerHTML = zones.map(zoneCard).join('') || '<div class="empty">没有配置任何区服</div>';
+  $('instances').innerHTML = d.instances.map(instanceRow).join('') || '<tr><td colspan="11" class="muted">无实例</td></tr>';
+  $('tasks').innerHTML = (d.tasks||[]).map(taskCard).join('') || '<div class="empty">还没有开服 / 关服记录</div>';
+
+  // 注意要把"语义禁用"（运行中不能再开服）和"临时忙"合并起来判断。
+  // 直接写 b.disabled = busy.has(...) 会把模板里的 disabled 属性覆盖掉，
+  // 结果是运行中的区服也能再点一次开服。
+  document.querySelectorAll('[data-start]').forEach(b => {
+    b.disabled = b.dataset.locked === '1' || busy.has('/api/zones/'+b.dataset.start+'/start');
+  });
+  document.querySelectorAll('[data-stop]').forEach(b => {
+    b.disabled = b.dataset.locked === '1' || busy.has('/api/zones/'+b.dataset.stop+'/stop');
+  });
+  document.querySelectorAll('[data-istart]').forEach(b => {
+    b.disabled = b.dataset.locked === '1' || busy.has('/api/instances/'+b.dataset.istart+'/start');
+  });
+  document.querySelectorAll('[data-istop]').forEach(b => {
+    b.disabled = b.dataset.locked === '1' || busy.has('/api/instances/'+b.dataset.istop+'/stop');
+  });
+}
+
+async function refresh(){
+  try{
+    const r = await fetch('/api/overview');
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    last = await r.json();
+    $('live-text').textContent = '已连接 · ' + new Date().toLocaleTimeString('zh-CN', {hour12:false});
+    $('pulse').style.background = '#34d399';
+    render();
+  }catch(e){
+    $('live-text').textContent = '控制面不可达';
+    $('pulse').style.background = '#f87171';
+  }
+}
+
+// connect 建立 SSE 长连接，用服务端推送替代轮询。
+//
+// EventSource 会自动重连，断线期间 live-text 会由 onerror 标红；
+// 重连成功后 onopen 恢复绿灯。SSE 拿到的是完整 overview，和轮询
+// 共用同一个 render，所以"推送"与"轮询"两种数据源切换无感。
+function connect(){
+  const es = new EventSource('/api/stream');
+  es.onopen = () => {
+    $('live-text').textContent = '已连接（推送）· ' + new Date().toLocaleTimeString('zh-CN', {hour12:false});
+    $('pulse').style.background = '#34d399';
+  };
+  es.onmessage = (e) => {
+    try{
+      last = JSON.parse(e.data);
+      $('live-text').textContent = '已连接（推送）· ' + new Date().toLocaleTimeString('zh-CN', {hour12:false});
+      $('pulse').style.background = '#34d399';
+      render();
+    }catch(_){
+      $('live-text').textContent = '数据解析失败';
+      $('pulse').style.background = '#f87171';
+    }
+  };
+  es.onerror = () => {
+    $('live-text').textContent = '连接中断，重连中…';
+    $('pulse').style.background = '#f87171';
+  };
+}
+
+document.addEventListener('click', e => {
+  const b = e.target.closest('button');
+  if (!b) return;
+  if (b.dataset.start) act('/api/zones/'+b.dataset.start+'/start?grace='+grace, '开服', '开服任务已受理');
+  if (b.dataset.stop){
+    const z = (last?.zones||[]).find(x => x.id === b.dataset.stop);
+    if (!confirm(`确认关闭「${z ? z.name : b.dataset.stop}」？\n将先摘流、通知在线玩家 ${grace} 秒后踢线，再优雅退出。`)) return;
+    act('/api/zones/'+b.dataset.stop+'/stop?grace='+grace, '关服', '关服任务已受理');
+  }
+  if (b.dataset.istart) act('/api/instances/'+b.dataset.istart+'/start', '启动', '启动任务已受理');
+  if (b.dataset.istop) act('/api/instances/'+b.dataset.istop+'/stop?grace=0', '停止', '停止任务已受理');
+});
+
+setInterval(() => {
+  $('clock').textContent = new Date().toLocaleString('zh-CN', {hour12:false});
+}, 1000);
+connect();
+</script>
+</body>
+</html>

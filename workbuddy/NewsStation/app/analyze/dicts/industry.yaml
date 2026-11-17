@@ -1,0 +1,138 @@
+# 行业词典。中文按头条语感选词，英文取标题高频词；避免用单个高频词（如 "report"）当关键词。
+# 打分：标题命中 ×2，摘要命中 ×1；每篇文章取前 2 个行业。
+# 扩词原则：宁可多收行业内的具体名词（重卡/新茶饮/ETF/集采），也不收通用动词。
+- value: politics
+  label: 政治
+  keywords:
+    [选举, 大选, 投票, 国会, 议会, 白宫, 总统, 首相, 总理, 内阁, 执政党, 在野党, 外交,
+     外交关系, 外交部, 峰会, 制裁, 联合国, 政局, 政变, 民调, 候选人, 弹劾, 人大, 政协,
+     国务院, 国台办, 两岸, 中期选举, 州长, 参议院, 众议院, 法案, 执政,
+     election, elections, parliament, congress, senate, president, prime minister, cabinet,
+     midterm, midterms, governor, diplomacy, diplomatic, summit, sanction, sanctions,
+     coalition, referendum, impeachment, lawmaker, lawmakers, ballot, vote, votes, polling,
+     王室, 国王, 王储, 执政]
+
+- value: finance
+  label: 财经
+  keywords:
+    [股市, 股价, 美股, 港股, a股, 上证, 深证, 恒生, 纳斯达克, 道琼斯, 标普, 科创板, 创业板,
+     央行, 利率, 加息, 降息, 汇率, 通胀, 通货膨胀, 失业率, 债券, 债市, 国债, 基金, etf,
+     指数, 标的指数, 券商, 银行, 保险, 市值, 回购, 增持, 减持, 分红, 信贷, 货币, 期货,
+     经济增速, 经济衰退, 财政, 关税, 贸易额, 融资余额, 上市公司, 招股,
+     stocks, stock market, bond, bonds, treasury, inflation, interest rate, interest rates,
+     central bank, federal reserve, dollar, euro, yen, currency, investor, investors,
+     wall street, nasdaq, dow jones, s&p, ipo, etf, fund, funds, index, yields, recession,
+     gdp, tariff, tariffs, lender, banking, buyback, dividend,
+     调仓, 私募, 游资, 量化, 信托, reits, 净值, 研报, 评级, 增发, 解禁,
+     涨停, 跌停, 板块, 收涨, 收跌, 主力资金, 行情]
+
+- value: tech
+  label: 科技
+  keywords:
+    [人工智能, 大模型, 模型, 智能体, 具身智能, 芯片, 半导体, 先进制程, 存储, 服务器,
+     光模块, 算力, 数据中心, 云计算, 操作系统, 智能手机, 智能机, 机器人, 人形机器人,
+     自动驾驶, 智能驾驶, 元宇宙, 开源, 开发者, 编程, 软件, 硬件, 互联网, 平台经济, 电商,
+     社交平台, 网络安全, 量子计算, 5g, 6g, 显卡, 处理器, ai,
+     artificial intelligence, ai, ai model, chatbot, chip, chips, semiconductor,
+     semiconductors, nvidia, gpu, cloud, data center, software, hardware, algorithm,
+     robotics, humanoid, autonomous driving, startup, startups, app, apps, internet,
+     cybersecurity, quantum computing, open source, machine learning, llm, llms,
+     tech, technology, model, models, agent, agents,
+     端侧, 多模态, 智能硬件, 算力中心, 大语言模型]
+
+- value: energy
+  label: 能源
+  keywords:
+    [石油, 原油, 油价, 炼化, 天然气, 电力, 电网, 核电, 核电站, 太阳能, 光伏, 风电, 储能,
+     煤炭, 能源转型, 欧佩克, 减产, 增产, 燃料, 氢能, 电池, 锂电, 充电桩,
+     oil, crude, opec, natural gas, gas price, electricity, power grid, nuclear,
+     nuclear plant, solar, wind power, renewable, renewables, energy, battery, batteries,
+     coal, lng, pipeline, refinery, utility, utilities]
+
+- value: auto
+  label: 汽车
+  keywords:
+    [汽车, 车企, 电动车, 新能源汽车, 新能源车, 整车, 车型, 车展, 召回, 交付量, 产销,
+     动力电池, 充电桩, 智能座舱, 座舱, 燃油车, 重卡, 客车, 摩托车, 两轮车, 轮胎, 车企,
+     automobile, automotive, car, cars, vehicle, vehicles, electric vehicle, ev, evs,
+     tesla, byd, model y, model 3, suv, sedan, pickup truck, charging, carmaker, automaker,
+     truck, trucks, motorcycle]
+
+- value: health
+  label: 医疗健康
+  keywords:
+    [疫苗, 药物, 药品, 创新药, 临床, 试验, 适应症, 集采, 患者, 医院, 医保, 疾病, 病毒,
+     感染, 确诊, 死亡率, 公共卫生, 医疗, 制药, 生物科技, 基因, 癌症, 糖尿病, 流感,
+     世卫组织, 疫情, 防控, 医疗器械,
+     vaccine, vaccines, drug, drugs, clinical trial, clinical trials, patient, patients,
+     hospital, fda, disease, virus, infection, outbreak, pandemic, epidemic, healthcare,
+     pharma, pharmaceutical, biotech, world health organization, cancer, diabetes,
+     mental health, obesity, medicine]
+
+- value: consumer
+  label: 消费
+  keywords:
+    [消费, 零售, 电商, 双十一, 促销, 折扣, 消费者, 品牌, 门店, 销量, 销售额, 奢侈品,
+     快消, 餐饮, 咖啡, 茶饮, 新茶饮, 奶茶, 白酒, 乳业, 家电, 服装, 美妆, 酒店, 旅游,
+     免税, 商超, 供应链, 库存, 涨价, 降价, 社零,
+     retail, consumer, shoppers, shopping, e-commerce, brand, brands, sales, discount,
+     luxury, supply chain, inventory, supermarket, restaurant, coffee, hotel, travel,
+     tourism, apparel, cosmetics, market share, walmart, starbucks, nike]
+
+- value: realestate
+  label: 地产
+  keywords:
+    [房地产, 楼市, 房价, 房贷, 按揭, 开发商, 房企, 土地, 用地, 商品房, 二手房, 新房,
+     楼盘, 置业, 租金, 物业, 烂尾, 保交楼, 公积金, 竣工, 土地出让,
+     housing, real estate, property, properties, mortgage, mortgages, home prices,
+     home sales, rent, rents, landlord, construction, developer, commercial real estate,
+     foreclosure, apartment, apartments,
+     售罄, 开盘, 售楼, 户型, 精装, 拿地,
+     基建, 机场, 铁路, 水利, 公路, 工程, 施工]
+
+- value: defense
+  label: 军工
+  keywords:
+    [军事, 军工, 国防, 军演, 演习, 导弹, 战机, 航母, 无人机, 武器, 军队, 部队, 军费,
+     士兵, 空袭, 停火, 战线, 弹药, 防空, 试射, 核潜艇, 战机,
+     military, defense, defence, army, troops, missile, missiles, drone, drones, warplane,
+     fighter jet, aircraft carrier, weapons, arms, airstrike, air strike, ceasefire,
+     frontline, artillery, air defense, pentagon, nato, submarine, test launch]
+
+- value: culture
+  label: 文体娱乐
+  keywords:
+    [电影, 票房, 电视剧, 剧集, 综艺, 演唱会, 音乐, 专辑, 演员, 导演, 明星, 影视, 流媒体,
+     游戏, 电竞, 世界杯, 奥运, 奥运会, 足球, 篮球, 网球, 联赛, 冠军, 决赛, 球员, 球队,
+     赛事, 选秀, 相声, 话剧, 展览,
+     movie, movies, film, films, box office, tv series, streaming, netflix, disney,
+     album, concert, tour, singer, actor, actress, director, celebrity, gaming, esports,
+     world cup, olympics, olympic, football, soccer, basketball, tennis, league, champion,
+     championship, final, player, players, coach, nba, nfl, premier league, uefa, fifa,
+     短视频, 直播, 涨粉, 达人, 博主, 艺术, 展览, 展会, 文创,
+     短剧, 带货, 主播, 剧集, 综艺]
+
+- value: society
+  label: 社会
+  keywords:
+    [警方, 警察, 交警, 犯罪, 嫌疑人, 逮捕, 判决, 法院, 案件, 事故, 车祸, 火灾, 爆炸, 失踪,
+     死亡, 救援, 抗议, 示威, 罢工, 移民, 难民, 教育, 学校, 大学, 高考, 考试, 教师, 学生,
+     就业, 工资, 社保, 养老, 人口, 出生率, 社区, 地铁, 航班, 遗失物,
+     police, crime, criminal, suspect, arrested, arrest, court, verdict, sentence,
+     accident, crash, fire, explosion, missing, rescue, protest, protests, strike,
+     immigration, migrant, migrants, refugee, refugees, school, schools, university,
+     students, teachers, education, jobs, wages, pension, population, birth rate,
+     community, subway, flight, flights,
+     受贿, 纪检, 纪委, 落马, 反腐, 判刑, 刑拘, 公益, 志愿者,
+     实习, 招聘, 职场, 用工, 裁员, 劳动争议, 求职]
+
+- value: climate
+  label: 气候环境
+  keywords:
+    [气候, 气候变化, 全球变暖, 碳排放, 碳中和, 温室气体, 减排, 环保, 污染, 空气质量,
+     极端天气, 洪水, 干旱, 台风, 飓风, 热浪, 森林火灾, 地震, 海啸, 海平面, 生态,
+     生物多样性, 雾霾,
+     climate, climate change, global warming, carbon, carbon emissions, emissions,
+     greenhouse gas, net zero, pollution, air quality, extreme weather, flood, floods,
+     flooding, drought, typhoon, hurricane, heatwave, heat wave, wildfire, wildfires,
+     earthquake, tsunami, sea level, biodiversity, environment, environmental]

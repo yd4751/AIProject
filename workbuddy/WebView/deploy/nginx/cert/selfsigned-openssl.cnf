@@ -1,0 +1,23 @@
+# 由 tools/gen-selfsigned-cert.js 生成，仅用于本地联调，切勿用于生产。
+[req]
+distinguished_name = dn
+prompt = no
+x509_extensions = v3_req
+
+[dn]
+CN = bighat.icu
+O = SiteDock Dev
+C = CN
+
+[v3_req]
+basicConstraints = critical,CA:FALSE
+keyUsage = critical,digitalSignature,keyEncipherment
+extendedKeyUsage = serverAuth
+subjectAltName = @alt_names
+
+[alt_names]
+DNS.1 = bighat.icu
+DNS.2 = localhost
+DNS.3 = *.bighat.icu
+IP.1 = 43.139.101.12
+IP.2 = 127.0.0.1

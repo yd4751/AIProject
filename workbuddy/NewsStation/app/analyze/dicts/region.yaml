@@ -1,0 +1,296 @@
+# 地区词典。口径：ISO 3166-1 alpha-2；港澳台固定 hk/mo/tw，parent 指向 cn。
+# 说明：
+# - aliases 的匹配是大小写不敏感的，除非用 cs: true 标记（用于 US/UK 这类
+#   小写形式是常见英文单词的缩写，必须在原文中以大写出现才命中）。
+# - 国籍形容词（Chinese/American 等）在新闻标题里是强地区信号，保留。
+- value: cn
+  label: 中国
+  aliases: [China, Chinese, 中国, 中华人民共和国, 华夏, 北京, Beijing]
+
+- value: us
+  label: 美国
+  aliases:
+    - United States
+    - United States of America
+    - America
+    - American
+    - 美国
+    - 美利坚
+    - {w: US, cs: true}
+    - {w: U.S., cs: true}
+    - USA
+    - 华盛顿
+    - Washington
+
+- value: ru
+  label: 俄罗斯
+  aliases: [Russia, Russian, 俄罗斯, 俄国, 莫斯科, Moscow]
+
+- value: eu
+  label: 欧盟
+  aliases: [European Union, 欧盟, 欧洲, 欧元区, 欧洲央行, 布鲁塞尔, Brussels, {w: EU, cs: true}]
+
+- value: gb
+  label: 英国
+  aliases:
+    - United Kingdom
+    - Britain
+    - British
+    - 英国
+    - 伦敦
+    - London
+    - {w: UK, cs: true}
+- value: fr
+  label: 法国
+  aliases: [France, French, 法国, 巴黎, Paris]
+
+- value: de
+  label: 德国
+  aliases: [Germany, German, 德国, 柏林, Berlin]
+
+- value: jp
+  label: 日本
+  aliases: [Japan, Japanese, 日本, 东京, Tokyo]
+
+- value: kr
+  label: 韩国
+  aliases: [South Korea, Korean, 韩国, 首尔, Seoul]
+
+- value: kp
+  label: 朝鲜
+  aliases: [North Korea, North Korean, 朝鲜, 平壤, Pyongyang]
+
+- value: in
+  label: 印度
+  aliases: [India, Indian, 印度, 新德里, New Delhi]
+
+- value: tw
+  label: 中国台湾
+  parent: cn
+  aliases: [Taiwan, Taiwanese, 台湾, 台北, Taipei, 中国台北]
+
+- value: hk
+  label: 中国香港
+  parent: cn
+  aliases: [Hong Kong, 香港, 港府]
+
+- value: mo
+  label: 中国澳门
+  parent: cn
+  aliases: [Macau, Macao, 澳门]
+
+- value: sg
+  label: 新加坡
+  aliases: [Singapore, Singaporean, 新加坡, 樟宜, Changi]
+
+- value: au
+  label: 澳大利亚
+  aliases: [Australia, Australian, 澳大利亚, 澳洲, Sydney, 悉尼]
+
+- value: ca
+  label: 加拿大
+  aliases: [Canada, Canadian, 加拿大, 渥太华, Ottawa]
+
+- value: br
+  label: 巴西
+  aliases: [Brazil, Brazilian, 巴西, 巴西利亚, Brasilia]
+
+- value: mx
+  label: 墨西哥
+  aliases: [Mexico, Mexican, 墨西哥]
+
+- value: ar
+  label: 阿根廷
+  aliases: [Argentina, Argentine, 阿根廷]
+
+- value: il
+  label: 以色列
+  aliases: [Israel, Israeli, 以色列, 耶路撒冷, Jerusalem, Tel Aviv, 特拉维夫]
+
+- value: ps
+  label: 巴勒斯坦
+  aliases: [Palestine, Palestinian, 巴勒斯坦, 加沙, Gaza, 约旦河西岸, West Bank]
+
+- value: ir
+  label: 伊朗
+  aliases: [Iran, Iranian, 伊朗, 德黑兰, Tehran]
+
+- value: iq
+  label: 伊拉克
+  aliases: [Iraq, Iraqi, 伊拉克, 巴格达, Baghdad]
+
+- value: sa
+  label: 沙特阿拉伯
+  aliases: [Saudi Arabia, Saudi, 沙特, 沙特阿拉伯, 利雅得, Riyadh]
+
+- value: ae
+  label: 阿联酋
+  aliases: [UAE, United Arab Emirates, 阿联酋, 迪拜, Dubai]
+
+- value: tr
+  label: 土耳其
+  aliases: [Turkey, Turkish, Turkiye, 土耳其, 安卡拉, Ankara]
+
+- value: ua
+  label: 乌克兰
+  aliases: [Ukraine, Ukrainian, 乌克兰, 基辅, Kyiv, Kiev]
+
+- value: it
+  label: 意大利
+  aliases: [Italy, Italian, 意大利, 罗马, Rome]
+
+- value: es
+  label: 西班牙
+  aliases: [Spain, Spanish, 西班牙, 马德里, Madrid]
+
+- value: nl
+  label: 荷兰
+  aliases: [Netherlands, Dutch, 荷兰, 阿姆斯特丹, Amsterdam]
+
+- value: ch
+  label: 瑞士
+  aliases: [Switzerland, Swiss, 瑞士, 日内瓦, Geneva]
+
+- value: se
+  label: 瑞典
+  aliases: [Sweden, Swedish, 瑞典]
+
+- value: "no"
+  label: 挪威
+  aliases: [Norway, Norwegian, 挪威, 奥斯陆, Oslo]
+
+- value: fi
+  label: 芬兰
+  aliases: [Finland, Finnish, 芬兰]
+
+- value: pl
+  label: 波兰
+  aliases: [Poland, Polish, 波兰, 华沙, Warsaw]
+
+- value: at
+  label: 奥地利
+  aliases: [Austria, Austrian, 奥地利, 维也纳, Vienna]
+
+- value: vn
+  label: 越南
+  aliases: [Vietnam, Vietnamese, 越南, 河内, Hanoi]
+
+- value: th
+  label: 泰国
+  aliases: [Thailand, Thai, 泰国, 曼谷, Bangkok]
+
+- value: id
+  label: 印度尼西亚
+  aliases: [Indonesia, Indonesian, 印尼, 印度尼西亚, 雅加达, Jakarta]
+
+- value: my
+  label: 马来西亚
+  aliases: [Malaysia, Malaysian, 马来西亚, 吉隆坡, Kuala Lumpur]
+
+- value: ph
+  label: 菲律宾
+  aliases: [Philippines, Philippine, Filipino, 菲律宾, 马尼拉, Manila]
+
+- value: pk
+  label: 巴基斯坦
+  aliases: [Pakistan, Pakistani, 巴基斯坦, 伊斯兰堡, Islamabad]
+
+- value: bd
+  label: 孟加拉国
+  aliases: [Bangladesh, 孟加拉国, 孟加拉]
+
+- value: lk
+  label: 斯里兰卡
+  aliases: [Sri Lanka, 斯里兰卡, 科伦坡, Colombo]
+
+- value: np
+  label: 尼泊尔
+  aliases: [Nepal, 尼泊尔]
+
+- value: mm
+  label: 缅甸
+  aliases: [Myanmar, Burma, 缅甸, 内比都, 仰光, Yangon]
+
+- value: kh
+  label: 柬埔寨
+  aliases: [Cambodia, Cambodian, 柬埔寨, 金边, Phnom Penh]
+
+- value: la
+  label: 老挝
+  aliases: [Laos, 老挝]
+
+- value: mn
+  label: 蒙古
+  aliases: [Mongolia, Mongolian, 蒙古国, 蒙古, 乌兰巴托, Ulaanbaatar]
+
+- value: kz
+  label: 哈萨克斯坦
+  aliases: [Kazakhstan, 哈萨克斯坦, 哈萨克]
+
+- value: eg
+  label: 埃及
+  aliases: [Egypt, Egyptian, 埃及, 开罗, Cairo]
+
+- value: za
+  label: 南非
+  aliases: [South Africa, South African, 南非, 约翰内斯堡, Johannesburg]
+
+- value: ng
+  label: 尼日利亚
+  aliases: [Nigeria, Nigerian, 尼日利亚]
+
+- value: ke
+  label: 肯尼亚
+  aliases: [Kenya, Kenyan, 肯尼亚, 内罗毕, Nairobi]
+
+- value: et
+  label: 埃塞俄比亚
+  aliases: [Ethiopia, 埃塞俄比亚]
+
+- value: sd
+  label: 苏丹
+  aliases: [Sudan, Sudanese, 苏丹, 喀土穆, Khartoum]
+
+- value: ly
+  label: 利比亚
+  aliases: [Libya, Libyan, 利比亚]
+
+- value: sy
+  label: 叙利亚
+  aliases: [Syria, Syrian, 叙利亚, 大马士革, Damascus]
+
+- value: lb
+  label: 黎巴嫩
+  aliases: [Lebanon, Lebanese, 黎巴嫩, 贝鲁特, Beirut]
+
+- value: ye
+  label: 也门
+  aliases: [Yemen, Yemeni, 也门, 萨那, Sanaa]
+
+- value: af
+  label: 阿富汗
+  aliases: [Afghanistan, Afghan, 阿富汗, 喀布尔, Kabul]
+
+- value: co
+  label: 哥伦比亚
+  aliases: [Colombia, Colombian, 哥伦比亚]
+
+- value: ve
+  label: 委内瑞拉
+  aliases: [Venezuela, Venezuelan, 委内瑞拉, 加拉加斯, Caracas]
+
+- value: cl
+  label: 智利
+  aliases: [Chile, Chilean, 智利, 圣地亚哥, Santiago]
+
+- value: pe
+  label: 秘鲁
+  aliases: [Peru, Peruvian, 秘鲁, 利马, Lima]
+
+- value: nz
+  label: 新西兰
+  aliases: [New Zealand, New Zealander, 新西兰, 惠灵顿, Wellington]
+
+- value: global
+  label: 全球
+  aliases: [global, worldwide, 全球, 全世界, 世界各国, international, 国际社会]

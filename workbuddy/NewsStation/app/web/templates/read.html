@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}{{ page.title or known.title or '站内阅读' }} · NewsStation{% endblock %}
+
+{% block content %}
+{% set p = page %}
+<div class="reader {{ 'is-embed' if embed else '' }}">
+
+  <div class="rd-bar">
+    {% if embed %}
+    <button type="button" class="rd-x" title="关闭阅读面板"
+            onclick="if(window.parent!==window){window.parent.postMessage('ns-reader-close','*')}else{history.back()}">×</button>
+    {% else %}
+    <a class="vtab" href="javascript:history.back()">← 返回</a>
+    {% endif %}
+    <span class="rd-site">{{ p.site or '原文' }}</span>
+    <span class="hint">
+      服务端代取 · {% if p.transport == 'direct' %}直连{% elif p.transport == 'proxy' %}代理{% else %}—{% endif %}
+      {% if p.cached %}· 缓存{% elif p.fetched_at %}· {{ p.fetched_at | localtime }}{% endif %}
+      {% if p.text_len %}· 正文 {{ p.text_len }} 字{% endif %}
+    </span>
+    <div class="rd-actions">
+      <div id="rd-tr-group" class="tr-group" hidden>
+        <button type="button" class="mini" data-rd-scope="title" title="只翻译标题">译标题</button>
+        <button type="button" class="mini" data-rd-scope="para" title="只翻译正文段落">译段落</button>
+        <button type="button" id="rd-tr" class="mini" data-rd-scope="all" title="翻译标题与全部段落">译全文</button>
+      </div>
+      <a class="mini" href="{{ read_url(p.url) }}&embed={{ 1 if embed else 0 }}&refresh=1">重新获取</a>
+    </div>
+  </div>
+
+  <section class="rd-head">
+    <h1 class="rd-title">{{ p.title or known.title or '原文阅读' }}</h1>
+    {% if p.description %}<p class="rd-desc">{{ p.description }}</p>{% endif %}
+    <p class="rd-url" title="原始地址">{{ p.final_url or p.url }}</p>
+  </section>
+
+  {% if p.status != 'ok' %}
+  <div class="notice err">
+    <b>未能取得完整正文</b>：{{ p.note }}
+    <span class="hint">这类站点通常需要登录、Cookie 或前端 JS 渲染，服务端代取只能拿到跳转后的壳页。</span>
+    {% if allow_external %}
+    <div class="rd-fallback">
+      <a href="{{ p.final_url or p.url }}" target="_blank" rel="noopener noreferrer">手动在浏览器打开原站</a>
+      <span class="hint">（仅在你主动点击时才会离开本站）</span>
+    </div>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  {% if known %}
+  <section class="card rd-known">
+    <div class="card-head"><h2>本站已收录</h2><span class="hint">抓取时保存的标题与摘要，不依赖原站当前状态</span></div>
+    <p class="rd-known-title">{{ known.title }}</p>
+    {% if known.summary %}<p class="rd-known-sum">{{ known.summary }}</p>{% endif %}
+    <div class="hint">
+      {% if known.kind == 'article' %}
+      来源 {{ known.source_id }} · {{ known.published_at | localtime }}
+      {% if known.event_id %}<a href="/event/{{ known.event_id }}">查看对应热点事件 →</a>{% endif %}
+      {% else %}
+      {{ known.platform }} 热榜 · {{ known.captured_at | localtime }}
+      {% endif %}
+    </div>
+  </section>
+  {% endif %}
+
+  {% if p.content_html %}
+  <article class="reader-body">{{ p.content_html | safe }}</article>
+  {% elif not known %}
+  <div class="card empty">没有可展示的内容。可点「重新获取」再试一次。</div>
+  {% endif %}
+
+  <p class="rd-foot hint">
+    正文由 NewsStation 服务端代取，按标签白名单清洗后渲染；文中链接与图片同样走站内地址，浏览器不直连外站。
+  </p>
+</div>
+{% endblock %}

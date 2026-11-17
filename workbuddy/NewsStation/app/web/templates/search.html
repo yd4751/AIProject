@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+{% set active = 'search' %}
+{% block title %}{% if q %}{{ q }} · 搜索{% else %}搜索{% endif %} · NewsStation{% endblock %}
+
+{% macro result(it, google=False) %}
+<li class="sch-item">
+  <div class="sch-main">
+    {% if it.kind == 'event' %}
+    <a class="sch-title" href="{{ it.url }}">{{ it.title | highlight(q) }}</a>
+    {% elif google %}
+    <a class="sch-title" href="{{ it.url }}" target="_blank" rel="noopener" title="在 Google 中打开：浏览器会跳转到原文">{{ it.title | highlight(q) }} <span class="sch-ext">↗</span></a>
+    <a class="mini sch-alt" href="{{ read_url(it.url) }}" data-read title="服务端代取；Google 跳转页需执行脚本，可能无法提取正文">站内阅读</a>
+    {% else %}
+    <a class="sch-title" href="{{ read_url(it.url) }}" data-read title="由服务端代取后在站内阅读全文">{{ it.title | highlight(q) }}</a>
+    {% endif %}
+    {% if it.summary %}<p class="sch-sum">{{ it.summary | highlight(q) }}</p>{% endif %}
+  </div>
+  <div class="sch-meta">
+    {% if it.kind == 'event' %}
+    <span class="chip">热点事件</span><span>热度 {{ '%.2f'|format(it.heat) }}</span><span>{{ it.source }}</span>
+    {% elif it.kind == 'article' %}
+    <span class="chip">{{ it.source }}</span><span>{{ it.lang }}</span>
+    {% elif it.kind == 'trend' %}
+    <span class="chip">{{ it.source }} 热榜</span><span>#{{ it.rank }}</span><span>{{ '%.0f'|format(it.heat) }}</span>
+    {% else %}
+    <span class="chip">{{ it.provider_label | default('全网') }}</span><span>{{ it.source }}</span>
+    {% if it.date %}<span>{{ it.date }}</span>{% endif %}
+    {% endif %}
+    {% if it.ts %}<span>{{ it.ts | localtime }}</span>{% endif %}
+  </div>
+</li>
+{% endmacro %}
+
+{% block content %}
+<section class="pagehead">
+  <div>
+    <h1>搜索新闻热点</h1>
+    <p class="hint">按搜索引擎独立检索、独立展示：默认引擎（站内 + 全网聚合）、谷歌引擎（Google 资讯本地版 + 全球版，另附 DuckDuckGo 网页结果与 Google 直达入口）；默认引擎的原文由服务端代取后在站内阅读</p>
+  </div>
+</section>
+
+<section class="card sch-box">
+  <form class="sch-form" method="get" action="/search" role="search">
+    {% set eopts = engine_options|default([], true) %}
+    {% if eopts|length > 1 %}
+    <select id="sch-engine" class="sch-engine-select" name="engines" data-engine-choice aria-label="选择搜索引擎" title="选好引擎后点「搜索」">
+      {% for o in eopts %}
+      <option value="{{ o.value }}" title="{{ o.subtitle }}"{% if o.value == data.engines_param %} selected{% endif %}>{{ o.label }}</option>
+      {% endfor %}
+    </select>
+    {% else %}
+    <input type="hidden" name="engines" value="{{ data.engines_param }}">
+    {% endif %}
+    <input type="search" name="q" value="{{ q }}" placeholder="输入关键字，多个词用空格分隔（取「并且」）" autofocus>
+    <input type="hidden" name="scope" value="{{ scope }}">
+    <button type="submit">搜索</button>
+  </form>
+
+  <div class="sch-engines">
+    <span class="hint">想同时搜多个引擎（可选）：</span>
+    {% for e in data.engine_choices %}
+    <a class="chip {{ 'sel' if e.selected else '' }}" href="{{ e.href }}" title="{{ e.subtitle }}">{{ e.label }}{% if e.selected %} ✓{% endif %}</a>
+    {% endfor %}
+    <span class="hint">上方下拉只选一个即可 · 多个引擎的结果各自独立成区</span>
+  </div>
+
+  <div class="sch-scope">
+    {% for k, label in [('all', '全部'), ('local', '仅站内'), ('external', '仅全网')] %}
+    <a class="chip {{ 'sel' if scope == k else '' }}" href="/search?q={{ q | urlencode }}&scope={{ k }}&engines={{ data.engines_param | urlencode }}">{{ label }}</a>
+    {% endfor %}
+    {% if q %}<a class="chip" href="/search?q={{ q | urlencode }}&scope={{ scope }}&engines={{ data.engines_param | urlencode }}&refresh=1" title="忽略缓存，重新向各引擎代取">强制刷新外部结果</a>{% endif %}
+    <span class="hint">站内检索即时完成；已选 {{ data.selected | length }} 个引擎，各引擎结果独立缓存</span>
+  </div>
+  {% if not q and data.hot %}
+  <div class="hot-terms">
+    <span class="hint">试试当前热词：</span>
+    {% for t in data.hot %}<a class="chip" href="/search?q={{ t | urlencode }}&engines={{ data.engines_param | urlencode }}">{{ t }}</a>{% endfor %}
+  </div>
+  {% endif %}
+</section>
+
+{% if q %}
+<div class="summary-line">
+  <span>「<b>{{ q }}</b>」共 <b>{{ data.total }}</b> 条结果 · {{ data.selected | length }} 个引擎</span>
+  <span>命中条件：{% for t in data.tokens %}<code>{{ t }}</code>{% if not loop.last %} + {% endif %}{% endfor %}</span>
+  <span>谷歌引擎的结果可直接在 Google 中打开</span>
+</div>
+
+{% for eng in data.engines %}
+<section class="card sch-engine" id="engine-{{ eng.id }}">
+  <div class="card-head sch-engine-head">
+    <h2><span class="sch-engine-badge">{{ eng.label }}</span></h2>
+    <span class="hint">{{ eng.count }} 条 · {{ eng.subtitle }}</span>
+  </div>
+
+  {% if eng.direct_urls %}
+  <div class="sch-direct">
+    <span class="sch-direct-label">直接在 Google 中查看</span>
+    {% for d in eng.direct_urls %}
+    <a class="chip" href="{{ d.url }}" target="_blank" rel="noopener" title="{{ d.hint }}">{{ d.label }}</a>
+    {% endfor %}
+    <span class="hint">Google 网页搜索结果页对服务端一律返回反爬页，只能浏览器打开（上方按钮）；下方「资讯结果」来自 Google 资讯 RSS，「网页结果」由 DuckDuckGo 代取</span>
+  </div>
+  {% endif %}
+
+  {% if eng.errors %}
+  <div class="notice err">
+    <b>{{ eng.label }}：部分数据源暂不可用</b>：{% for e in eng.errors %}{{ e }}{% if not loop.last %}；{% endif %}{% endfor %}。
+    <span class="hint">其它引擎不受影响；点「强制刷新外部结果」可重试。</span>
+  </div>
+  {% endif %}
+  {% if eng.note %}<p class="sch-engine-note">{{ eng.note }}</p>{% endif %}
+
+  {% if eng.sections %}
+    {% for sec in eng.sections %}
+      {% if sec['items'] %}
+      <section class="sch-sub">
+        <div class="sch-sub-head"><h3>{{ sec.label }}</h3><span class="hint">{{ sec['items'] | length }} 条 · {{ sec.hint }}</span></div>
+        <ul class="sch-list">{% for it in sec['items'] %}{{ result(it, sec.get('google', false)) }}{% endfor %}</ul>
+      </section>
+      {% endif %}
+    {% endfor %}
+  {% elif eng['items'] %}
+    <ul class="sch-list">{% for it in eng['items'] %}{{ result(it, eng.id == 'google') }}{% endfor %}</ul>
+  {% endif %}
+
+  {% if eng.sources %}
+  <div class="sch-engine-sources">
+    <span class="hint">本引擎数据源（同一关键字结果缓存复用）：</span>
+    {% for s in eng.sources %}
+    <div class="sch-src">
+      <span class="name">{{ s.label }}</span>
+      <span class="hint">{{ s.count }} 条{% if s.cached %} · 命中缓存{% endif %}{% if s.error %} · {{ s.error }}{% endif %}</span>
+      {% if eng.id == 'google' and s.name in ('google_news', 'google_global') %}
+      <a class="mini" href="{{ eng.direct_urls[1].url }}" target="_blank" rel="noopener">在 Google 资讯中打开 ↗</a>
+      {% else %}
+      <a class="mini" href="{{ read_url(s.url) }}" data-read>查看原始搜索页（站内阅读）→</a>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% if eng.count == 0 and not eng.errors and not eng.note %}
+  <p class="hint">该引擎没有匹配结果。</p>
+  {% endif %}
+</section>
+{% endfor %}
+
+{% if data.total == 0 %}
+<section class="card empty">
+  没有找到匹配内容。试试更短的关键字、换一个搜索引擎，或先到 <a href="/sources">媒体源</a> 抓一轮。
+</section>
+{% endif %}
+{% endif %}
+{% endblock %}

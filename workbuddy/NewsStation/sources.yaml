@@ -1,0 +1,344 @@
+# 媒体源清单。proxy_required: true 的源只在配置了 proxy.url 时抓取。
+# 连通性实测于 2026-11-04 / 2026-11-12，未通的不列入（环球网返回 HTML，参考消息 404）。
+# 无官方 RSS 的中文媒体见 C 组：改用镜像 feed 或 type: html 列表页解析。
+
+# ---- A 组：国内直连 ----
+- id: sina-world
+  name: 新浪国际
+  homepage: https://news.sina.com.cn/world/
+  lang: zh
+  feed: https://rss.sina.com.cn/news/world/focus15.xml
+
+- id: people-world
+  name: 人民网 · 国际
+  homepage: http://world.people.com.cn/
+  lang: zh
+  feed: http://www.people.com.cn/rss/world.xml
+
+- id: chinanews-world
+  name: 中新网 · 国际
+  homepage: https://www.chinanews.com.cn/world/
+  lang: zh
+  feed: http://www.chinanews.com.cn/rss/world.xml
+
+- id: jiemian
+  name: 界面新闻
+  homepage: https://www.jiemian.com/
+  lang: zh
+  region: cn
+  feed: https://a.jiemian.com/index.php?m=article&a=rss
+
+- id: ifanr
+  name: 爱范儿
+  homepage: https://www.ifanr.com/
+  lang: zh
+  region: cn
+  feed: https://www.ifanr.com/feed
+
+- id: tmtpost
+  name: 钛媒体
+  homepage: https://www.tmtpost.com/
+  lang: zh
+  region: cn
+  feed: https://www.tmtpost.com/rss
+
+- id: infoq-cn
+  name: InfoQ 中文
+  homepage: https://www.infoq.cn/
+  lang: zh
+  region: cn
+  feed: https://www.infoq.cn/feed
+
+- id: sspai
+  name: 少数派
+  homepage: https://sspai.com/
+  lang: zh
+  region: cn
+  feed: https://sspai.com/feed
+
+# ---- B 组：需代理 ----
+- id: bbc-world
+  name: BBC · World
+  homepage: https://www.bbc.com/news/world
+  lang: en
+  feed: https://feeds.bbci.co.uk/news/world/rss.xml
+  proxy_required: true
+
+- id: guardian-world
+  name: The Guardian · World
+  homepage: https://www.theguardian.com/world
+  lang: en
+  feed: https://www.theguardian.com/world/rss
+  proxy_required: true
+
+- id: nyt-world
+  name: NYT · World
+  homepage: https://www.nytimes.com/section/world
+  lang: en
+  feed: https://rss.nytimes.com/services/xml/rss/nyt/World.xml
+  proxy_required: true
+
+- id: scmp
+  name: SCMP
+  homepage: https://www.scmp.com/
+  lang: en
+  feed: https://www.scmp.com/rss/91/feed
+  proxy_required: true
+
+- id: gnews-world
+  name: Google News · World
+  homepage: https://news.google.com/
+  lang: en
+  feed: https://news.google.com/rss/headlines/section/topic/WORLD?hl=en-US&gl=US&ceid=US:en
+  proxy_required: true
+
+- id: ftchinese
+  name: FT 中文网
+  homepage: https://www.ftchinese.com/
+  lang: zh
+  feed: http://www.ftchinese.com/rss/news
+  proxy_required: true
+
+- id: nytcn
+  name: 纽约时报中文网
+  homepage: https://cn.nytimes.com/
+  lang: zh
+  feed: https://cn.nytimes.com/rss/
+  proxy_required: true
+
+# ---- A 组补充：国内直连（综合 / 时政 / 科技）----
+# 连通性实测 2026-11-12：以下 6 个接口均免鉴权、国内直连 200，feedparser 可解析出条目。
+- id: xinhua-politics
+  name: 新华网 · 时政
+  homepage: https://www.news.cn/politics/
+  lang: zh
+  region: cn
+  feed: http://www.xinhuanet.com/politics/news_politics.xml
+
+- id: people-politics
+  name: 人民网 · 时政
+  homepage: http://politics.people.com.cn/
+  lang: zh
+  region: cn
+  feed: http://www.people.com.cn/rss/politics.xml
+
+- id: chinanews-china
+  name: 中新网 · 国内
+  homepage: https://www.chinanews.com.cn/china/
+  lang: zh
+  region: cn
+  feed: http://www.chinanews.com.cn/rss/scroll-news.xml
+
+- id: sina-china
+  name: 新浪 · 国内
+  homepage: https://news.sina.com.cn/china/
+  lang: zh
+  region: cn
+  feed: https://rss.sina.com.cn/news/china/focus15.xml
+
+- id: sina-tech
+  name: 新浪 · 科技
+  homepage: https://tech.sina.com.cn/
+  lang: zh
+  region: cn
+  feed: https://rss.sina.com.cn/tech/rollnews.xml
+
+- id: geekpark
+  name: 极客公园
+  homepage: https://www.geekpark.net/
+  lang: zh
+  region: cn
+  feed: https://www.geekpark.net/rss
+
+# ---- B 组补充：需代理（全球综合 / 财经 / 科技 / 学术）----
+# 连通性实测 2026-11-12：本地 7890 代理下以下 17 个接口均 200 且 feedparser 可解析。
+- id: bbc-business
+  name: BBC · Business
+  homepage: https://www.bbc.com/news/business
+  lang: en
+  region: global
+  feed: https://feeds.bbci.co.uk/news/business/rss.xml
+  proxy_required: true
+
+- id: bbc-tech
+  name: BBC · Technology
+  homepage: https://www.bbc.com/news/technology
+  lang: en
+  region: global
+  feed: https://feeds.bbci.co.uk/news/technology/rss.xml
+  proxy_required: true
+
+- id: bbc-science
+  name: BBC · Science
+  homepage: https://www.bbc.com/news/science_and_environment
+  lang: en
+  region: global
+  feed: https://feeds.bbci.co.uk/news/science_and_environment/rss.xml
+  proxy_required: true
+
+- id: wapo-world
+  name: Washington Post · World
+  homepage: https://www.washingtonpost.com/world/
+  lang: en
+  region: global
+  feed: https://feeds.washingtonpost.com/rss/world
+  proxy_required: true
+
+- id: economist
+  name: The Economist
+  homepage: https://www.economist.com/
+  lang: en
+  region: global
+  feed: https://www.economist.com/finance-and-economics/rss.xml
+  proxy_required: true
+
+- id: bloomberg
+  name: Bloomberg
+  homepage: https://www.bloomberg.com/
+  lang: en
+  region: global
+  feed: https://feeds.bloomberg.com/markets/news.rss
+  proxy_required: true
+
+- id: aljazeera
+  name: Al Jazeera
+  homepage: https://www.aljazeera.com/
+  lang: en
+  region: global
+  feed: https://www.aljazeera.com/xml/rss/all.xml
+  proxy_required: true
+
+- id: france24
+  name: France 24
+  homepage: https://www.france24.com/en/
+  lang: en
+  region: global
+  feed: https://www.france24.com/en/rss
+  proxy_required: true
+
+- id: dw
+  name: DW（德国之声）
+  homepage: https://www.dw.com/en/
+  lang: en
+  region: global
+  feed: https://rss.dw.com/rdf/rss-en-all
+  proxy_required: true
+
+- id: npr
+  name: NPR
+  homepage: https://www.npr.org/
+  lang: en
+  region: global
+  feed: https://feeds.npr.org/1001/rss.xml
+  proxy_required: true
+
+- id: verge
+  name: The Verge
+  homepage: https://www.theverge.com/
+  lang: en
+  region: global
+  feed: https://www.theverge.com/rss/index.xml
+  proxy_required: true
+
+- id: techcrunch
+  name: TechCrunch
+  homepage: https://techcrunch.com/
+  lang: en
+  region: global
+  feed: https://techcrunch.com/feed/
+  proxy_required: true
+
+- id: arstechnica
+  name: Ars Technica
+  homepage: https://arstechnica.com/
+  lang: en
+  region: global
+  feed: https://feeds.arstechnica.com/arstechnica/index
+  proxy_required: true
+
+- id: wired
+  name: Wired
+  homepage: https://www.wired.com/
+  lang: en
+  region: global
+  feed: https://www.wired.com/feed/rss
+  proxy_required: true
+
+- id: hn-frontpage
+  name: Hacker News
+  homepage: https://news.ycombinator.com/
+  lang: en
+  region: global
+  feed: https://hnrss.org/frontpage
+  proxy_required: true
+
+- id: nature
+  name: Nature
+  homepage: https://www.nature.com/
+  lang: en
+  region: global
+  feed: https://www.nature.com/nature.rss
+  proxy_required: true
+
+- id: science
+  name: Science
+  homepage: https://www.science.org/
+  lang: en
+  region: global
+  feed: https://www.science.org/rss/news_current.xml
+  proxy_required: true
+
+# ---- C 组：无官方 RSS 的中文媒体（2026-11-12 实测补充）----
+# 这 5 家官网都不再供应 RSS：
+#   虎嗅        阿里云 WAF 的 JS 挑战页，所有路径都回同一个 16KB 挑战页（含 acw_tc）
+#   36氪        36kr.com 是 SPA 空壳；官方 feed 只在 www.36kr.com 域有效
+#   澎湃/早报   官网 RSS 路径返回 HTML 或 404
+#   观察者      无任何 RSS，首页 HTML 可稳定提取标题+链接 → 走 type: html 解析
+# 前四家改用免鉴权、直连稳定的 RSS 镜像（anyfeeder 公共源）与官方隐藏 feed；
+# 均无需 Cookie / API key / 代理。镜像若失效，单源失败会被隔离，不影响其它源。
+
+- id: huxiu
+  name: 虎嗅
+  homepage: https://www.huxiu.com/
+  lang: zh
+  region: cn
+  feed: https://plink.anyfeeder.com/huxiu
+
+- id: kr36
+  name: 36氪
+  homepage: https://36kr.com/
+  lang: zh
+  region: cn
+  feed: https://www.36kr.com/feed
+
+- id: thepaper
+  name: 澎湃新闻
+  homepage: https://www.thepaper.cn/
+  lang: zh
+  region: cn
+  feed: https://plink.anyfeeder.com/thepaper
+
+- id: zaobao-china
+  name: 联合早报 · 中国
+  homepage: https://www.zaobao.com.sg/news/china
+  lang: zh
+  region: cn
+  feed: https://plink.anyfeeder.com/zaobao/realtime/china
+
+- id: zaobao-world
+  name: 联合早报 · 国际
+  homepage: https://www.zaobao.com.sg/news/world
+  lang: zh
+  region: cn
+  feed: https://plink.anyfeeder.com/zaobao/realtime/world
+
+- id: guancha
+  name: 观察者网
+  homepage: https://www.guancha.cn/
+  lang: zh
+  region: cn
+  type: html
+  parser: guancha
+  url: https://www.guancha.cn/
+  base_url: https://www.guancha.cn/
+  limit: 30

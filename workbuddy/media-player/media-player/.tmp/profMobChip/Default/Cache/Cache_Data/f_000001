@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="zh-CN" data-skin="midnight">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0d1117">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="小鹅">
+<title>小鹅 · 影音播放器</title>
+<link rel="icon" type="image/svg+xml" href="/penguin.svg">
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <g id="i-film"><rect x="2" y="2" width="20" height="20" rx="2.5"/><path d="M7 2v20M17 2v20M2 12h20M2 7h5M2 17h5M17 7h5M17 17h5"/></g>
+    <g id="i-folder"><path d="M3 7a2 2 0 0 1 2-2h4l2 2.5h8a2 2 0 0 1 2 2V18a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></g>
+    <g id="i-folder-plus"><path d="M3 7a2 2 0 0 1 2-2h4l2 2.5h8a2 2 0 0 1 2 2V18a2 2 0 0 1-2 2h-9"/><path d="M13 16v6M10 19h6"/></g>
+    <g id="i-play"><path d="M6 4.5v15l13-7.5z" fill="currentColor" stroke="none"/></g>
+    <g id="i-pause"><rect x="6.5" y="4.5" width="3.6" height="15" rx="1" fill="currentColor" stroke="none"/><rect x="13.9" y="4.5" width="3.6" height="15" rx="1" fill="currentColor" stroke="none"/></g>
+    <g id="i-prev"><path d="M18 5.5v13L8 12z" fill="currentColor" stroke="none"/><rect x="4.5" y="5" width="2.2" height="14" rx="1" fill="currentColor" stroke="none"/></g>
+    <g id="i-next"><path d="M6 5.5v13L16 12z" fill="currentColor" stroke="none"/><rect x="17.3" y="5" width="2.2" height="14" rx="1" fill="currentColor" stroke="none"/></g>
+    <g id="i-vol"><path d="M11 5L6.5 9H3v6h3.5L11 19z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></g>
+    <g id="i-mute"><path d="M11 5L6.5 9H3v6h3.5L11 19z"/><path d="M16 9.5l5 5M21 9.5l-5 5"/></g>
+    <g id="i-camera"><path d="M3 8.5A2.5 2.5 0 0 1 5.5 6h1.7l1.3-2h6l1.3 2h1.7A2.5 2.5 0 0 1 21 8.5v9a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 17.5z"/><circle cx="12" cy="13" r="3.6"/></g>
+    <g id="i-expand"><path d="M8 3H5.5A2.5 2.5 0 0 0 3 5.5V8M16 3h2.5A2.5 2.5 0 0 1 21 5.5V8M16 21h2.5a2.5 2.5 0 0 0 2.5-2.5V16M8 21H5.5A2.5 2.5 0 0 1 3 18.5V16"/></g>
+    <g id="i-collapse"><path d="M3 8h2.5A2.5 2.5 0 0 0 8 5.5V3M21 8h-2.5A2.5 2.5 0 0 1 16 5.5V3M21 16h-2.5a2.5 2.5 0 0 0-2.5 2.5V21M3 16h2.5A2.5 2.5 0 0 1 8 18.5V21"/></g>
+    <g id="i-pip"><rect x="2.5" y="4.5" width="19" height="15" rx="2.5"/><rect x="12" y="11.5" width="7" height="6" rx="1.5" fill="currentColor" stroke="none"/></g>
+    <g id="i-list"><path d="M8 6h13M8 12h13M8 18h13M3.5 6h.01M3.5 12h.01M3.5 18h.01"/></g>
+    <g id="i-download"><path d="M12 3v12"/><path d="M7.5 10.5L12 15l4.5-4.5"/><path d="M4 19h16"/></g>
+    <g id="i-copy"><rect x="8.5" y="8.5" width="12" height="12" rx="2.5"/><path d="M5.5 15H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v.5"/></g>
+    <g id="i-search"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></g>
+    <g id="i-close"><path d="M6 6l12 12M18 6L6 18"/></g>
+    <g id="i-chev"><path d="M6 9.5l6 6 6-6"/></g>
+    <g id="i-check"><path d="M4.5 12.5l5 5 10-11"/></g>
+    <g id="i-ext"><path d="M14 4h6v6"/><path d="M20 4l-8.5 8.5"/><path d="M18 14v4.5A2.5 2.5 0 0 1 15.5 21h-9A2.5 2.5 0 0 1 4 18.5v-9A2.5 2.5 0 0 1 6.5 7H11"/></g>
+    <g id="i-music"><path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/></g>
+    <g id="i-refresh"><path d="M20 11a8 8 0 1 0-1.6 5.6"/><path d="M20 4v7h-7"/></g>
+    <g id="i-trash"><path d="M4 7h16M9.5 7V4.5h5V7M6.5 7l1 13h9l1-13"/></g>
+    <g id="i-repeat"><path d="M4 10V7.5A2.5 2.5 0 0 1 6.5 5h11"/><path d="M15 3l2.5 2L15 7"/><path d="M20 14v2.5a2.5 2.5 0 0 1-2.5 2.5h-11"/><path d="M9 21l-2.5-2L9 17"/></g>
+    <g id="i-repeat-one"><path d="M4 10V7.5A2.5 2.5 0 0 1 6.5 5h11"/><path d="M15 3l2.5 2L15 7"/><path d="M20 14v2.5a2.5 2.5 0 0 1-2.5 2.5h-11"/><path d="M9 21l-2.5-2L9 17"/><path d="M12 10.5v4l2-1"/></g>
+    <g id="i-gauge"><path d="M12 13a4 4 0 1 0-4-4"/><path d="M12 13l4-4"/><circle cx="12" cy="13" r="9"/></g>
+    <g id="i-star"><path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.1 1 5.9-5.2-2.8-5.2 2.8 1-5.9L4.5 9.7l5.9-.8z"/></g>
+    <g id="i-info"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5h.01"/></g>
+    <g id="i-clock"><circle cx="12" cy="12" r="9"/><path d="M12 7v5.5l3.5 2"/></g>
+    <g id="i-wand"><path d="M4 20L15 9"/><path d="M16.5 4v3M18 5.5h-3M6.5 8v2M7.5 9h-2M18.5 15v2M19.5 16h-2"/></g>
+  </defs>
+</svg>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-ic">
+      <img src="/penguin.svg" alt="小鹅" class="brand-penguin">
+    </span>
+    <span class="brand-text">小鹅<em>影音播放器</em></span>
+  </div>
+
+  <!-- 常驻搜索栏：与播放区同层，不随侧栏开合 -->
+  <div class="searchbar">
+    <select id="dbKindSel" class="db-kind-sel" aria-label="分类，同时决定参与检索的站点">
+      <option value="all">全部</option>
+      <option value="movie">影视</option>
+      <option value="music">音乐</option>
+    </select>
+    <svg class="ic sbar-ic" viewBox="0 0 24 24"><use href="#i-search"/></svg>
+    <input type="text" id="dbQuery" placeholder="搜索影片 / 歌曲，回车即搜…" autocomplete="off">
+    <button class="btn tiny" id="btnDbSearch">搜索</button>
+  </div>
+
+  <div class="top-actions">
+    <!-- 信息 / 列表 / 站点：以菜单方式展开，不常驻占位 -->
+    <div class="nav-group" id="navGroup">
+      <button class="navbtn" data-panel="info" title="媒体信息与资源站点">
+        <svg class="ic" viewBox="0 0 24 24"><use href="#i-info"/></svg><span>信息</span>
+        <small id="siteTabN" hidden>0</small>
+      </button>
+      <button class="navbtn" data-panel="list" title="播放列表">
+        <svg class="ic" viewBox="0 0 24 24"><use href="#i-list"/></svg><span>列表</span>
+      </button>
+      <button class="navbtn" data-panel="sites" title="抓取站点管理">
+        <svg class="ic" viewBox="0 0 24 24"><use href="#i-wand"/></svg><span>站点</span>
+      </button>
+    </div>
+
+    <!-- 资源导入：直接弹出文件选择框 -->
+    <button class="btn" id="btnImport" title="选择本地音频 / 视频文件">
+      <svg class="ic" viewBox="0 0 24 24"><use href="#i-folder-plus"/></svg>资源导入
+    </button>
+
+    <!-- 换肤：下拉聚合 -->
+    <div class="skin-pick" id="skinPick">
+      <button class="btn" id="skinBtn" title="换肤" aria-haspopup="true" aria-expanded="false">
+        <span class="skin-dot" id="skinDot"></span>
+        <span class="skin-cur" id="skinCur">极夜</span>
+        <svg class="ic chev" viewBox="0 0 24 24"><use href="#i-chev"/></svg>
+      </button>
+      <div class="skin-menu" id="skinMenu" role="menu" hidden></div>
+    </div>
+  </div>
+</header>
+
+<main class="layout">
+  <section class="stage-col">
+    <div class="player" id="player" tabindex="0">
+      <video id="media" playsinline preload="metadata"></video>
+      <canvas id="viz" class="viz"></canvas>
+
+      <div class="audio-stage" id="audioStage">
+        <div class="disc" id="disc">
+          <img id="discImg" alt="" hidden>
+          <div class="disc-hole"></div>
+        </div>
+        <div class="audio-title" id="audioTitle">未载入音频</div>
+      </div>
+
+      <div class="drop-hint" id="dropHint">
+        <svg class="ic big" viewBox="0 0 24 24"><use href="#i-film"/></svg>
+        <p>把音频 / 视频文件拖到这里，或点击上方「资源导入」</p>
+        <small>支持 mp4 / mkv / mov / webm / avi / mp3 / flac / wav / m4a / aac / ogg 等格式</small>
+      </div>
+
+      <div class="lyric-box" id="lyricBox" hidden>
+        <div class="lyric-head">
+          <svg class="ic" viewBox="0 0 24 24"><use href="#i-music"/></svg>
+          <span class="lyric-src" id="lyricSrc">歌词</span>
+          <div class="spacer"></div>
+          <button class="lbtn" id="btnLyricPick" title="选择本地 .lrc 歌词文件">本地</button>
+          <button class="lbtn" id="btnLyricFetch" title="从已启用的音乐站点抓取歌词">抓歌词</button>
+          <button class="lbtn" id="btnLyricSave" title="把当前歌词保存到音频文件旁边">保存</button>
+          <button class="lbtn" id="btnLyricClose" title="关闭歌词 (L)"><svg class="ic" viewBox="0 0 24 24"><use href="#i-close"/></svg></button>
+        </div>
+        <div class="lyric-scroll" id="lyricScroll"><div class="lyric-inner" id="lyricInner"></div></div>
+      </div>
+
+      <div class="center-play" id="centerPlay" hidden><svg class="ic" viewBox="0 0 24 24"><use href="#i-play"/></svg></div>
+      <div class="spinner" id="spinner" hidden></div>
+      <div class="toast" id="toast" hidden></div>
+
+      <div class="player-top">
+        <div class="pt-title" id="ptTitle"></div>
+        <div class="pt-badge" id="ptBadge" hidden></div>
+      </div>
+
+      <!-- 在线播放时的缓存提示：抽屉收起、控制条隐藏时也一直可见 -->
+      <div class="pt-cache" id="ptCache" hidden>
+        <svg class="ic" viewBox="0 0 24 24"><use href="#i-download"/></svg>
+        <span id="ptCacheTxt">缓存中</span>
+      </div>
+
+      <div class="controls" id="controls">
+        <div class="pwrap" id="pwrap">
+          <div class="ptrack" id="ptrack">
+            <div class="pbuf" id="pbuf"></div>
+            <div class="pplayed" id="pplayed"></div>
+            <div class="pknob" id="pknob"></div>
+          </div>
+          <div class="ptip" id="ptip" hidden>
+            <canvas id="pthumb" width="180" height="101"></canvas>
+            <span id="ptipTime">00:00</span>
+          </div>
+        </div>
+
+        <div class="bar">
+          <div class="bar-left">
+            <button class="cbtn" id="btnPrev" title="上一个 (P)"><svg class="ic" viewBox="0 0 24 24"><use href="#i-prev"/></svg></button>
+            <button class="cbtn play" id="btnPlay" title="播放/暂停 (空格)"><svg class="ic" viewBox="0 0 24 24"><use href="#i-play"/></svg></button>
+            <button class="cbtn" id="btnNext" title="下一个 (N)"><svg class="ic" viewBox="0 0 24 24"><use href="#i-next"/></svg></button>
+            <button class="cbtn" id="btnRepeat" title="循环模式 (R)"><svg class="ic" viewBox="0 0 24 24"><use href="#i-repeat"/></svg></button>
+            <div class="time"><span id="tCur">00:00</span><i>/</i><span id="tDur">00:00</span></div>
+          </div>
+
+          <div class="bar-right">
+            <div class="vol-wrap">
+              <button class="cbtn" id="btnMute" title="静音 (M)"><svg class="ic" viewBox="0 0 24 24"><use href="#i-vol"/></svg></button>
+              <input type="range" id="vol" class="vol" min="0" max="1" step="0.01" value="1" aria-label="音量">
+            </div>
+
+            <div class="pop-host">
+              <button class="cbtn text" id="btnSpeed" title="倍速 ( [ / ] )">1.00<em>×</em></button>
+              <div class="pop" id="popSpeed">
+                <div class="pop-title">播放倍速</div>
+                <input type="range" id="speedRange" min="0.25" max="4" step="0.05" value="1">
+                <div class="chips" id="speedChips">
+                  <button data-r="0.5">0.5×</button><button data-r="0.75">0.75×</button>
+                  <button data-r="1">1×</button><button data-r="1.25">1.25×</button>
+                  <button data-r="1.5">1.5×</button><button data-r="2">2×</button>
+                  <button data-r="3">3×</button><button data-r="4">4×</button>
+                </div>
+                <label class="switch"><input type="checkbox" id="pitch" checked><span>变速不变调</span></label>
+              </div>
+            </div>
+
+            <button class="cbtn" id="btnLyric" title="歌词 (L)"><svg class="ic" viewBox="0 0 24 24"><use href="#i-music"/></svg></button>
+            <button class="cbtn" id="btnShot" title="截图 (S)"><svg class="ic" viewBox="0 0 24 24"><use href="#i-camera"/></svg></button>
+            <button class="cbtn" id="btnPip" title="画中画"><svg class="ic" viewBox="0 0 24 24"><use href="#i-pip"/></svg></button>
+            <button class="cbtn" id="btnFull" title="全屏 (F)"><svg class="ic" viewBox="0 0 24 24"><use href="#i-expand"/></svg></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <aside class="drawer" id="drawer">
+    <div class="drawer-head">
+      <svg class="ic" viewBox="0 0 24 24"><use href="#i-info"/></svg>
+      <span id="drawerTitle">信息</span>
+      <div class="spacer"></div>
+      <button class="lbtn" id="drawerClose" title="关闭 (Esc)"><svg class="ic" viewBox="0 0 24 24"><use href="#i-close"/></svg></button>
+    </div>
+
+    <div class="panel active" data-panel="info">
+      <div class="subtabs" id="infoTabs" role="tablist">
+        <button class="subtab active" data-sub="douban"><svg class="ic" viewBox="0 0 24 24"><use href="#i-star"/></svg>豆瓣信息</button>
+        <button class="subtab" data-sub="sites"><svg class="ic" viewBox="0 0 24 24"><use href="#i-wand"/></svg>站点资源</button>
+      </div>
+
+      <!-- 豆瓣：默认信息源，展示最优匹配，其余结果折叠在下方 -->
+      <div class="subpanel active" data-sub="douban">
+        <div class="db-card" id="dbCard" hidden>
+          <div class="db-head">
+            <div class="db-cover"><img id="dbCover" alt="" hidden><span id="dbCoverPh">无封面</span></div>
+            <div class="db-meta">
+              <h3 id="dbTitle">—</h3>
+              <div class="db-sub" id="dbSub"></div>
+              <div class="db-rate" id="dbRate" hidden>
+                <span class="stars" id="dbStars"></span>
+                <b id="dbScore">0.0</b>
+                <small id="dbCount"></small>
+              </div>
+            </div>
+          </div>
+          <div class="db-best" id="dbBest" hidden>豆瓣最佳匹配</div>
+          <div class="db-rows" id="dbRows"></div>
+          <p class="db-intro" id="dbIntro"></p>
+          <div class="db-actions">
+            <a class="btn tiny ghost" id="dbLink" href="#" target="_blank" rel="noreferrer"><svg class="ic" viewBox="0 0 24 24"><use href="#i-ext"/></svg>条目页面</a>
+            <button class="btn tiny ghost" id="btnUseCover">用封面作媒体信息</button>
+          </div>
+        </div>
+
+        <div class="db-cands" id="dbCands"></div>
+        <div class="empty" id="dbEmpty">载入媒体文件后，会自动从豆瓣抓取匹配的信息</div>
+      </div>
+
+      <!-- 资源站点：作为信息页的子页 -->
+      <div class="subpanel" data-sub="sites">
+        <div class="site-row" id="siteRow"></div>
+        <div class="db-cands" id="siteCands"></div>
+        <div class="sites-empty" id="siteEmpty">在上方输入关键词并搜索，会从勾选的站点并行检索</div>
+      </div>
+    </div>
+
+    <div class="panel" data-panel="list">
+      <div class="panel-head">
+        <span id="listInfo">还没有文件</span>
+        <button class="btn tiny ghost" id="btnClearList"><svg class="ic" viewBox="0 0 24 24"><use href="#i-trash"/></svg>清空</button>
+      </div>
+      <ul class="plist" id="plist"></ul>
+    </div>
+
+    <div class="panel" data-panel="sites">
+      <div class="panel-head">
+        <span>资源抓取站点</span>
+        <button class="btn tiny ghost" id="btnSiteAdd"><svg class="ic" viewBox="0 0 24 24"><use href="#i-folder-plus"/></svg>新增站点</button>
+      </div>
+      <label class="switch site-auto"><input type="checkbox" id="autoLyric" checked><span>本地没有歌词时，自动从音乐站点补抓歌词</span></label>
+      <ul class="site-list" id="siteList"></ul>
+      <div class="site-form" id="siteForm" hidden>
+        <div class="sf-grid">
+          <label>名称<input type="text" id="sfName" placeholder="例如：爱听音乐网"></label>
+          <label>类型<select id="sfKind"><option value="music">音乐</option><option value="movie">影视</option></select></label>
+          <label class="wide">搜索地址<input type="text" id="sfSearch" placeholder="https://site/search?wd={q}"></label>
+          <label class="wide">详情地址<input type="text" id="sfDetail" placeholder="https://site/song/{id}.html"></label>
+          <label class="wide">歌词地址<input type="text" id="sfLyric" placeholder="https://site/lrc/{id} （可留空）"></label>
+          <label class="wide">条目链接正则<input type="text" id="sfPattern" placeholder="可留空，如 /song/([A-Za-z0-9_-]+)"></label>
+        </div>
+        <label class="switch"><input type="checkbox" id="sfEnabled" checked><span>启用该站点</span></label>
+        <div class="form-actions">
+          <button class="btn tiny" id="sfSave">保存</button>
+          <button class="btn tiny ghost" id="sfCancel">取消</button>
+        </div>
+        <p class="site-tip">占位符：<code>{q}</code> 查询词（自动编码）、<code>{id}</code> 条目 ID。配置保存在项目目录 <code>sources.json</code>，可直接编辑。</p>
+      </div>
+    </div>
+
+    <details class="help">
+      <summary><svg class="ic" viewBox="0 0 24 24"><use href="#i-info"/></svg>快捷键 & 格式支持</summary>
+      <div class="help-body">
+        <ul class="keys">
+          <li><kbd>空格</kbd> 播放/暂停</li>
+          <li><kbd>←</kbd><kbd>→</kbd> 快退/快进 5 秒</li>
+          <li><kbd>J</kbd><kbd>L</kbd> ±10 秒</li>
+          <li><kbd>,</kbd><kbd>.</kbd> 逐帧</li>
+          <li><kbd>↑</kbd><kbd>↓</kbd> 音量</li>
+          <li><kbd>[</kbd><kbd>]</kbd> 倍速 ±0.25</li>
+          <li><kbd>S</kbd> 截图</li>
+          <li><kbd>L</kbd> 歌词开关</li>
+          <li><kbd>F</kbd> 全屏</li>
+          <li><kbd>M</kbd> 静音</li>
+          <li><kbd>0-9</kbd> 跳到百分比</li>
+        </ul>
+        <div class="fmt-list" id="fmtList"></div>
+      </div>
+    </details>
+  </aside>
+</main>
+
+<!-- 截图：非必要信息，做成左下角浮层，仅在截图后出现 -->
+<div class="shots" id="shotsWrap" hidden>
+  <div class="shots-head">
+    <span>截图</span>
+    <small id="shotsCount">0</small>
+    <div class="spacer"></div>
+    <button class="btn tiny ghost" id="btnShotsClear"><svg class="ic" viewBox="0 0 24 24"><use href="#i-trash"/></svg>清空</button>
+  </div>
+  <div class="shots-list" id="shotsList"></div>
+</div>
+
+<input type="file" id="fileInput" hidden multiple
+  accept=".mp4,.m4v,.webm,.mkv,.mov,.avi,.wmv,.flv,.ogv,.mpg,.mpeg,.ts,.3gp,.mp3,.m4a,.wav,.flac,.aac,.opus,.ogg,.oga,.aiff,.aif,video/*,audio/*">
+<input type="file" id="lrcInput" accept=".lrc,.txt" hidden>
+
+<!-- 站点人机验证码弹层（如歌曲宝对部分曲目要求图片验证码） -->
+<div class="cap-mask" id="capMask" hidden>
+  <div class="cap-pop" role="dialog" aria-label="人机验证">
+    <div class="cap-head">
+      <svg class="ic" viewBox="0 0 24 24"><use href="#i-info"/></svg>
+      <span>站点要求人机验证</span>
+      <button class="lbtn" id="capClose" title="取消 (Esc)"><svg class="ic" viewBox="0 0 24 24"><use href="#i-close"/></svg></button>
+    </div>
+    <p class="cap-tip" id="capTip">输入图中字符后确认，即可继续抓取该曲目</p>
+    <div class="cap-img-row">
+      <img id="capImg" alt="验证码图片">
+      <button class="btn tiny ghost" id="capRefresh" title="换一张"><svg class="ic" viewBox="0 0 24 24"><use href="#i-refresh"/></svg>换一张</button>
+    </div>
+    <input type="text" id="capInput" class="cap-input" placeholder="输入验证码" autocomplete="off" maxlength="10">
+    <div class="cap-actions">
+      <button class="btn tiny" id="capOk">确认</button>
+      <button class="btn tiny ghost" id="capCancel">取消</button>
+    </div>
+  </div>
+</div>
+
+<script src="/app.js"></script>
+</body>
+</html>

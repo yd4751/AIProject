@@ -1,0 +1,24 @@
+; Godot 4.7 项目配置 —— OpenWorld 客户端框架
+; 引擎：E:/install/gobot/Godot_v4.7.2-stable_win64.exe
+;
+; 用 GL Compatibility 渲染器：纯 2D 画面，兼容无 GPU 的 headless/虚拟机环境。
+config_version=5
+
+[application]
+
+config/name="OpenWorld Client"
+config/description="开放世界服务端框架的 Godot 客户端（手写二进制协议对接）"
+run/main_scene="res://scenes/main.tscn"
+config/features=PackedStringArray("4.7", "GL Compatibility")
+config/icon="res://icon.svg"
+
+[display]
+
+window/size/viewport_width=1280
+window/size/viewport_height=720
+window/stretch/mode="canvas_items"
+
+[rendering]
+
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"

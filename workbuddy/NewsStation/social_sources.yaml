@@ -1,0 +1,101 @@
+# 社交媒体热榜源清单（M6）。parser 对应 app/ingest/social/parsers.py::PARSERS 的键。
+# 连通性实测于 2026-11-12：国内 5 个接口免鉴权、直连 200。
+# 境外源（HN / Lobsters / GitHub）实测经本地代理（config.yaml proxy.url）可达，
+# 故打 proxy_required:true，抓取编排会自动走代理客户端；直连则被跳过（source_state 记 skipped）。
+# Reddit r/popular 经代理仍 403（反爬，与 UA 无关）、X/YouTube 需 API key —— 暂未列入。
+# 以后新增平台：写解析器 -> 在 PARSERS 注册 -> 这里加一条，无需改抓取编排。
+# inject_top 可选：覆盖全局 social.inject_top，控制该平台注入主事件流的前 N 条。
+
+- id: "social:weibo"
+  name: 微博热搜
+  platform: weibo
+  parser: weibo
+  homepage: https://s.weibo.com/top/summary
+  url: https://weibo.com/ajax/side/hotSearch
+  headers:
+    Referer: "https://weibo.com/"
+  lang: zh
+  region: cn
+  limit: 30
+
+- id: "social:baidu"
+  name: 百度热搜
+  platform: baidu
+  parser: baidu
+  homepage: https://top.baidu.com/board?tab=realtime
+  url: https://top.baidu.com/board?tab=realtime
+  lang: zh
+  region: cn
+  limit: 30
+
+- id: "social:toutiao"
+  name: 今日头条热榜
+  platform: toutiao
+  parser: toutiao
+  homepage: https://www.toutiao.com/
+  url: https://www.toutiao.com/hot-event/hot-board/?origin=toutiao_pc
+  lang: zh
+  region: cn
+  limit: 30
+
+- id: "social:douyin"
+  name: 抖音热点
+  platform: douyin
+  parser: douyin
+  homepage: https://www.douyin.com/hot
+  url: https://www.iesdouyin.com/web/api/v2/hotsearch/billboard/word/
+  lang: zh
+  region: cn
+  limit: 30
+
+- id: "social:bilibili"
+  name: B 站热门
+  platform: bilibili
+  parser: bilibili
+  homepage: https://www.bilibili.com/v/popular/all
+  url: https://api.bilibili.com/x/web-interface/popular?ps=30&pn=1
+  headers:
+    Referer: "https://www.bilibili.com/"
+  lang: zh
+  region: cn
+  limit: 30
+
+# ----------------------------- 境外平台（需代理） -----------------------------
+
+- id: "social:hackernews"
+  name: Hacker News
+  platform: hackernews
+  parser: hackernews
+  homepage: https://news.ycombinator.com/
+  url: https://hn.algolia.com/api/v1/search?tags=front_page&hitsPerPage=30
+  lang: en
+  region: global
+  proxy_required: true
+  limit: 30
+  inject_top: 10
+
+- id: "social:lobsters"
+  name: Lobsters
+  platform: lobsters
+  parser: lobsters
+  homepage: https://lobste.rs/
+  url: https://lobste.rs/hottest.json
+  lang: en
+  region: global
+  proxy_required: true
+  limit: 30
+  inject_top: 10
+
+- id: "social:github"
+  name: GitHub 趋势
+  platform: github
+  parser: github
+  homepage: https://github.com/trending
+  url: https://github.com/trending
+  headers:
+    User-Agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+  lang: en
+  region: global
+  proxy_required: true
+  limit: 30
+  inject_top: 10

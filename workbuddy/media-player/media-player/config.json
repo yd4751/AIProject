@@ -1,0 +1,9 @@
+{
+  "port": 6001,
+  "host": "127.0.0.1",
+  "appDir": ".",
+  "publicDir": "public",
+  "downloadDir": "downloads",
+  "sourcesFile": "sources.json",
+  "mediaDir": ""
+}

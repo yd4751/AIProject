@@ -1,0 +1,16 @@
+2026/11/04 09:05:38 starting 50 bots against 127.0.0.1:7001 (move=100ms, rampup=5ms)
+2026/11/04 09:05:39 [    1s] online=50 logined=50 failed=0 fps=551/s avgRTT=0s attr/s=94 switches=0 hits=21 kills=0
+2026/11/04 09:05:40 [    2s] online=50 logined=50 failed=0 fps=601/s avgRTT=0s attr/s=26 switches=0 hits=33 kills=1
+2026/11/04 09:05:41 [    3s] online=50 logined=50 failed=0 fps=485/s avgRTT=0s attr/s=31 switches=0 hits=47 kills=1
+2026/11/04 09:05:42 [    4s] online=50 logined=50 failed=0 fps=483/s avgRTT=0s attr/s=30 switches=0 hits=54 kills=1
+2026/11/04 09:05:43 [    5s] online=50 logined=50 failed=0 fps=489/s avgRTT=766µs attr/s=31 switches=0 hits=56 kills=1
+2026/11/04 09:05:44 [    6s] online=50 logined=50 failed=0 fps=534/s avgRTT=781µs attr/s=31 switches=0 hits=56 kills=1
+2026/11/04 09:05:45 [    7s] online=50 logined=50 failed=0 fps=489/s avgRTT=781µs attr/s=31 switches=0 hits=59 kills=1
+2026/11/04 09:05:46 [    8s] online=50 logined=50 failed=0 fps=472/s avgRTT=781µs attr/s=31 switches=0 hits=64 kills=4
+2026/11/04 09:05:47 [    9s] online=50 logined=50 failed=0 fps=481/s avgRTT=781µs attr/s=22 switches=0 hits=66 kills=4
+2026/11/04 09:05:48 [   10s] online=50 logined=50 failed=0 fps=511/s avgRTT=1.333ms attr/s=23 switches=0 hits=66 kills=4
+2026/11/04 09:05:49 [   11s] online=50 logined=50 failed=0 fps=523/s avgRTT=1.332ms attr/s=23 switches=0 hits=66 kills=4
+2026/11/04 09:05:50 [   12s] online=50 logined=50 failed=0 fps=437/s avgRTT=1.332ms attr/s=20 switches=0 hits=67 kills=4
+2026/11/04 09:05:51 [   13s] online=50 logined=50 failed=0 fps=501/s avgRTT=1.332ms attr/s=22 switches=0 hits=68 kills=4
+2026/11/04 09:05:52 [   14s] online=50 logined=50 failed=0 fps=477/s avgRTT=1.332ms attr/s=23 switches=0 hits=73 kills=4
+2026/11/04 09:05:53 done. logined=50 failed=0 online=0 totalFrames=7388 totalAttrs=465 sceneSwitches=0 hits=78 kills=4

@@ -1,0 +1,26 @@
+2026/11/03 17:39:38 starting 40 bots against 127.0.0.1:7001 (move=100ms, rampup=5ms)
+2026/11/03 17:39:39 [    1s] online=40 logined=40 failed=0 fps=479/s avgRTT=0s attr/s=51 switches=1
+2026/11/03 17:39:40 [    2s] online=40 logined=40 failed=0 fps=391/s avgRTT=0s attr/s=1 switches=1
+2026/11/03 17:39:41 [    3s] online=40 logined=40 failed=0 fps=465/s avgRTT=0s attr/s=0 switches=1
+2026/11/03 17:39:42 [    4s] online=40 logined=40 failed=0 fps=372/s avgRTT=0s attr/s=1 switches=3
+2026/11/03 17:39:43 [    5s] online=40 logined=40 failed=0 fps=382/s avgRTT=2.477ms attr/s=2 switches=3
+2026/11/03 17:39:44 [    6s] online=40 logined=40 failed=0 fps=451/s avgRTT=2.331ms attr/s=0 switches=3
+2026/11/03 17:39:45 [    7s] online=40 logined=40 failed=0 fps=444/s avgRTT=2.331ms attr/s=0 switches=3
+2026/11/03 17:39:46 [    8s] online=40 logined=40 failed=0 fps=382/s avgRTT=2.331ms attr/s=0 switches=3
+2026/11/03 17:39:47 [    9s] online=40 logined=40 failed=0 fps=366/s avgRTT=2.331ms attr/s=0 switches=3
+2026/11/03 17:39:48 [   10s] online=40 logined=40 failed=0 fps=413/s avgRTT=2.249ms attr/s=0 switches=3
+2026/11/03 17:39:49 [   11s] online=40 logined=40 failed=0 fps=440/s avgRTT=2.231ms attr/s=0 switches=3
+2026/11/03 17:39:50 [   12s] online=40 logined=40 failed=0 fps=403/s avgRTT=2.231ms attr/s=0 switches=4
+2026/11/03 17:39:51 [   13s] online=40 logined=40 failed=0 fps=458/s avgRTT=2.231ms attr/s=1 switches=6
+2026/11/03 17:39:52 [   14s] online=40 logined=40 failed=0 fps=414/s avgRTT=2.231ms attr/s=4 switches=6
+2026/11/03 17:39:53 [   15s] online=40 logined=40 failed=0 fps=359/s avgRTT=1.733ms attr/s=0 switches=6
+2026/11/03 17:39:54 [   16s] online=40 logined=40 failed=0 fps=371/s avgRTT=1.671ms attr/s=0 switches=6
+2026/11/03 17:39:55 [   17s] online=40 logined=40 failed=0 fps=446/s avgRTT=1.671ms attr/s=0 switches=6
+2026/11/03 17:39:56 [   18s] online=40 logined=40 failed=0 fps=478/s avgRTT=1.671ms attr/s=1 switches=8
+2026/11/03 17:39:57 [   19s] online=40 logined=40 failed=0 fps=391/s avgRTT=1.671ms attr/s=1 switches=8
+2026/11/03 17:39:58 [   20s] online=40 logined=40 failed=0 fps=464/s avgRTT=1.902ms attr/s=0 switches=9
+2026/11/03 17:39:59 [   21s] online=40 logined=40 failed=0 fps=413/s avgRTT=1.942ms attr/s=1 switches=10
+2026/11/03 17:40:00 [   22s] online=40 logined=40 failed=0 fps=419/s avgRTT=1.942ms attr/s=2 switches=10
+2026/11/03 17:40:01 [   23s] online=40 logined=40 failed=0 fps=390/s avgRTT=1.942ms attr/s=0 switches=10
+2026/11/03 17:40:02 [   24s] online=40 logined=40 failed=0 fps=421/s avgRTT=1.942ms attr/s=0 switches=10
+2026/11/03 17:40:03 done. logined=40 failed=0 online=0 totalFrames=10390 totalAttrs=65 sceneSwitches=11

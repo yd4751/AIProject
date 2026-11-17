@@ -1,0 +1,65 @@
+{
+  "_note": "独立鉴权网关配置。改完重启网关生效；whitelist.json / records.json 为数据文件，改完即时生效。对外端口不要用浏览器禁用端口（6000、6666、6697 等），否则 Chrome 报 ERR_UNSAFE_PORT。",
+  "loginMode": "device",
+  "_loginModeNote": "device=设备登录：浏览器自动采集设备 ID + 指纹，服务端生成机器码，未授权显示「无权访问 + 机器码」并等待管理员放行；微信扫码/小程序码/回调/code 换 token 全部停用。wechat=恢复微信登录（按 mode 与 wechat 凭证自动选方式）。微信凭证保留不改，随时可切回；切换后需重启网关。",
+  "port": 7000,
+  "host": "0.0.0.0",
+  "upstreams": [
+    {
+      "name": "影音播放器",
+      "prefix": "/",
+      "host": "127.0.0.1",
+      "port": 6000,
+      "stripPrefix": false,
+      "enabled": true,
+      "_note": "prefix 为 URL 路径前缀，'/' 表示兜底转发；stripPrefix=true 时转发前会去掉该前缀",
+      "id": "r_939437dd46",
+      "hosts": []
+    },
+    {
+      "name": "示例服务（按需启用）",
+      "prefix": "/demo",
+      "host": "127.0.0.1",
+      "port": 6002,
+      "stripPrefix": true,
+      "enabled": true,
+      "hosts": [],
+      "_note": "hosts 可选，填域名数组后仅匹配这些 Host；留空表示不限。把 enabled 改 true 即接入第二个转发",
+      "id": "r_fc3bf064ba"
+    }
+  ],
+  "enabled": true,
+  "mode": "auto",
+  "publicBaseUrl": "",
+  "lanBaseUrl": "",
+  "whitelistFile": "whitelist.json",
+  "recordFile": "records.json",
+  "sessionHours": 168,
+  "adminSessionHours": 12,
+  "secret": "4ed1d5241bff2a089554696767869b2f36f2b95453a74021da8493abec02541b",
+  "allowTokenInQuery": true,
+  "corsOrigins": [],
+  "landing": "",
+  "admins": [
+    {
+      "username": "admin",
+      "salt": "4475338b73934c2d962c8f36737ec4ee",
+      "passwordHash": "64ce847f60555e7ddaf0f73b2a1398254f7615b97b8faec1f290dcb80b7b6d0b",
+      "_note": "留空时网关首次启动会生成随机初始密码并打印在控制台，随后自动转为哈希存储；也可直接填自定义密码"
+    }
+  ],
+  "wechat": {
+    "openAppId": "",
+    "openAppSecret": "",
+    "mpAppId": "",
+    "mpAppSecret": "",
+    "miniAppId": "wxbe134b379fe76ead",
+    "miniAppSecret": "3cee5ac93b037db37c7cfdb7c89c1d5a",
+    "miniPage": "pages/gate/index",
+    "miniEnv": "release",
+    "apiBase": "https://api.weixin.qq.com",
+    "authorizeBase": "https://open.weixin.qq.com",
+    "_note": "三种登录方式，个人开发者请用 mini。mini=个人主体小程序码扫码（0 元，无需营业执照/公章/开发者认证，也不需要 publicBaseUrl，推荐）；open=开放平台网站应用扫码（需企业资质 + 300 元开发者资质认证 + 《网站信息登记表》盖章；网站备案主体为个人时可手写签名代替公章，且必须 publicBaseUrl）；mp=认证服务号网页授权（需企业认证服务号 + publicBaseUrl）。mode=auto 时按 mini > open > mp 选可用的一组，也可显式填 wechat-mini / wechat-open / wechat-mp。都没填则任何人都无法通过鉴权，不提供口令绕过。apiBase/authorizeBase 一般不用改，可用于企业代理或本地联调",
+    "_miniGuide": "个人接入步骤：微信公众平台注册「个人主体」小程序（身份证实名即可）→ 填入 miniAppId / miniAppSecret → 小程序后台把网关公网 HTTPS 地址加入 request 合法域名（用 web-view 还要配业务域名）→ 把 auth-gateway/miniprogram/pages/gate 拷进小程序并改 BASE → 发布小程序（未发布可用体验版 + miniEnv=trial）→ 重启网关。小程序码由 getwxacodeunlimit 生成，scene 携带登录票据；小程序内 wx.login 拿 code 交给 /__auth/mp-login 换 openid 校验白名单。"
+  }
+}

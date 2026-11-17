@@ -1,0 +1,18 @@
+{
+  "role": "client",
+  "server_addr": "127.0.0.1",
+  "server_port": 17000,
+  "token": "test-token",
+  "heartbeat_interval": 5,
+  "heartbeat_timeout": 30,
+  "reconnect_interval": 1,
+  "max_reconnect_interval": 5,
+  "services": [
+    {
+      "name": "echo",
+      "local_ip": "127.0.0.1",
+      "local_port": 19081,
+      "remote_port": 19080
+    }
+  ]
+}
